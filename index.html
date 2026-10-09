@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<!--
+  WAAV — WhatsApp Archive Viewer v1.9.8
+  Copyright (C) 2026 R&R (Régori & Rabrielle)
+
+  Ce programme est un logiciel libre : vous pouvez le redistribuer et/ou le modifier
+  selon les termes de la licence publique générale GNU (GNU GPL), version 3 ou, à votre
+  choix, toute version ultérieure. Il est distribué SANS AUCUNE GARANTIE.
+  Voir le fichier LICENSE ou <https://www.gnu.org/licenses/>.
+
+  SPDX-License-Identifier: GPL-3.0-or-later
+-->
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WAAV v1.9.8</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0f0d;--bg2:#111812;--bg3:#1a2419;
+  --surface:#1e2b1f;--surface2:#243326;--border:#2e3f2f;
+  --green:#25d366;--green-dim:#1a9e4a;--green-glow:rgba(37,211,102,0.15);
+  --text:#e8f5e9;--text2:#9ab89c;--text3:#5a7a5c;
+  --bubble-out:#005c4b;--bubble-in:#1e2b1f;
+  --dup-bg:rgba(255,160,0,.1);--dup-border:rgba(255,160,0,.5);--dup-color:#ffb300;
+  --radius:16px;--shadow:0 8px 32px rgba(0,0,0,.5);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);height:100vh;display:flex;overflow:hidden;}
+
+/* ── SIDEBAR TOGGLE ── */
+#sidebar{
+  width:310px;min-width:310px;background:var(--bg2);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;z-index:20;overflow:hidden;
+  transition:width .28s cubic-bezier(.4,0,.2,1), min-width .28s cubic-bezier(.4,0,.2,1);
+  flex-shrink:0;
+}
+body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidden;}
+
+/* Overlay for mobile */
+#sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:19;backdrop-filter:blur(2px);}
+#sidebar-overlay.show{display:block;}
+
+/* Toggle button — inside chat-header, always visible */
+#btn-sidebar-toggle{
+  background:var(--surface);border:1px solid var(--border);border-radius:9px;
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .2s;color:var(--text2);flex-shrink:0;
+}
+#btn-sidebar-toggle:hover{background:var(--surface2);color:var(--green);border-color:var(--green-dim);}
+
+/* Mobile: sidebar floats as a drawer */
+@media(max-width:600px){
+  #sidebar{
+    position:fixed;top:0;left:0;bottom:0;
+    transform:translateX(-100%);
+    transition:transform .28s cubic-bezier(.4,0,.2,1);
+    width:300px!important;min-width:300px!important;
+    box-shadow:none;
+  }
+  body.sidebar-visible #sidebar{transform:translateX(0);box-shadow:8px 0 32px rgba(0,0,0,.5);}
+  #chat-header{padding-left:14px;}
+}
+#sidebar-header{padding:14px 18px 10px;border-bottom:1px solid var(--border);background:var(--bg3);flex-shrink:0;}
+#sidebar-header h1{font-size:1rem;font-weight:700;color:var(--green);letter-spacing:-.02em;display:flex;align-items:center;gap:7px;}
+.version-badge{font-size:.58rem;font-family:'DM Mono',monospace;background:var(--green-dim);color:#fff;border-radius:6px;padding:2px 6px;font-weight:600;cursor:pointer;transition:background .2s;user-select:none;}
+.version-badge:hover{background:var(--green);}
+#sidebar-header p{font-size:.66rem;color:var(--text3);margin-top:3px;}
+
+#import-section{padding:9px 13px;border-bottom:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:5px;}
+.section-label{font-size:.65rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;}
+#files-list{display:flex;flex-direction:column;gap:3px;max-height:110px;overflow-y:auto;}
+.file-chip{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:4px 8px;font-size:.68rem;color:var(--text2);flex-shrink:0;}
+.file-chip .fname{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.file-chip .fcount{font-family:'DM Mono',monospace;color:var(--green);font-weight:600;font-size:.64rem;white-space:nowrap;}
+.file-chip .fdel{cursor:pointer;color:var(--text3);padding:0 3px;transition:color .15s;font-size:.9rem;line-height:1;}
+.file-chip .fdel:hover{color:#f44336;}
+
+#collapse-level-wrap{display:flex;align-items:center;gap:6px;padding:2px 0;}
+#collapse-level-wrap label{font-size:.66rem;color:var(--text3);white-space:nowrap;}
+#collapse-level{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:3px 22px 3px 8px;color:var(--text2);font-family:inherit;font-size:.68rem;outline:none;cursor:pointer;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='9' viewBox='0 0 24 24' fill='none' stroke='%235a7a5c' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center;}
+#collapse-level option{background:var(--bg2);}
+
+.import-actions{display:flex;gap:5px;}
+.import-btn{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:5px 8px;color:var(--text2);font-family:inherit;font-size:.7rem;font-weight:600;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:4px;}
+.import-btn:hover{background:var(--green-dim);border-color:var(--green-dim);color:#fff;}
+.import-btn.primary{background:var(--green-dim);border-color:var(--green-dim);color:#fff;}
+.import-btn.primary:hover{filter:brightness(1.1);}
+
+#dedup-banner{display:none;background:var(--dup-bg);border-top:2px solid var(--dup-border);padding:10px 13px;font-size:.7rem;color:var(--dup-color);line-height:1.5;flex-shrink:0;}
+.dedup-actions{display:flex;gap:5px;margin-top:6px;}
+.dedup-btn{flex:1;background:transparent;border:1px solid var(--dup-border);border-radius:12px;padding:4px 8px;color:var(--dup-color);font-family:inherit;font-size:.68rem;font-weight:600;cursor:pointer;transition:all .2s;text-align:center;}
+.dedup-btn:hover{background:rgba(255,160,0,.2);}
+.dedup-btn.confirm{background:var(--dup-color);color:#000;}
+.dedup-btn.confirm:hover{filter:brightness(1.1);}
+
+#search-wrap{padding:8px 13px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.search-inner{position:relative;}
+#search-input{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:22px;padding:7px 13px 7px 32px;color:var(--text);font-family:inherit;font-size:.78rem;outline:none;transition:border-color .2s,box-shadow .2s;}
+#search-input::placeholder{color:var(--text3);}
+#search-input:focus{border-color:var(--green-dim);box-shadow:0 0 0 3px var(--green-glow);}
+#search-input{padding-right:30px;}
+#search-clear{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:20px;height:20px;border-radius:50%;border:1px solid var(--green-dim);background:var(--surface);color:var(--green);display:none;align-items:center;justify-content:center;cursor:pointer;padding:0;transition:all .2s;}
+#search-clear.show{display:flex;}
+#search-clear:hover{background:var(--green-glow);border-color:var(--green);}
+.search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;}
+
+.settings-btn{margin-left:auto;background:none;border:none;color:var(--text3);cursor:pointer;padding:3px;border-radius:7px;display:flex;align-items:center;transition:all .2s;}
+.settings-btn:hover{color:var(--green);background:var(--surface);transform:rotate(30deg);}
+#settings-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:997;backdrop-filter:blur(4px);}
+#settings-modal.show{display:flex;}
+.th-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;font-size:.7rem;color:var(--text2);}
+.th-row label{flex:1;line-height:1.3;}
+.th-row label small{display:block;color:var(--text3);font-size:.62rem;}
+.th-row input{width:80px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:3px 8px;color:var(--text);font-family:'DM Mono',monospace;font-size:.7rem;outline:none;text-align:right;transition:border-color .2s,box-shadow .2s;}
+.th-row input:focus{border-color:var(--green-dim);box-shadow:0 0 0 3px var(--green-glow);}
+.th-row select{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:3px 8px;color:var(--text);font-family:inherit;font-size:.7rem;outline:none;cursor:pointer;transition:border-color .2s,box-shadow .2s;}
+.th-row select:focus{border-color:var(--green-dim);box-shadow:0 0 0 3px var(--green-glow);}
+.th-row select option{background:var(--bg2);}
+.th-warn{font-size:.64rem;line-height:1.5;color:var(--dup-color);background:rgba(255,152,0,.07);border:1px solid var(--dup-color);border-radius:10px;padding:6px 9px;margin-top:2px;}
+.th-hint{font-size:.62rem;color:var(--text3);line-height:1.4;}
+.th-reset{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:2px 9px;font-family:inherit;font-size:.62rem;color:var(--text3);cursor:pointer;margin-top:5px;transition:all .2s;}
+.th-reset:hover{color:var(--green);border-color:var(--green-dim);}
+#period-section{padding:8px 13px;border-bottom:1px solid var(--border);flex-shrink:0;}
+#period-section label{font-size:.65rem;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;display:block;margin-bottom:5px;}
+#period-select{width:100%;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 28px 5px 12px;color:var(--text);font-family:inherit;font-size:.74rem;outline:none;cursor:pointer;transition:border-color .2s;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%235a7a5c' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center;}
+#period-select option,#period-select optgroup{background:var(--bg2);color:var(--text);}
+
+#participants-legend{display:flex;flex-wrap:wrap;gap:5px;padding:7px 13px;border-bottom:1px solid var(--border);flex-shrink:0;}
+.legend-chip{display:flex;align-items:center;gap:5px;background:var(--surface);border:1px solid var(--border);border-radius:13px;padding:3px 9px;font-size:.66rem;font-weight:600;cursor:pointer;transition:all .2s;user-select:none;}
+.legend-chip .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;transition:opacity .2s;}
+.legend-chip .chip-label{white-space:nowrap;}
+/* left: dot before name — green border */
+.legend-chip.state-left{border-color:var(--green-dim);}
+.legend-chip.state-left:hover{background:var(--surface2);}
+/* right: dot after name — teal border (HTML order: label then dot) */
+.legend-chip.state-right{border-color:#00bcd4;}
+.legend-chip.state-right:hover{background:var(--surface2);}
+/* hidden: faded + dashed */
+.legend-chip.state-hidden{opacity:.4;border-style:dashed;}
+.legend-chip.state-hidden:hover{opacity:.65;}
+
+
+
+#main{flex:1;display:flex;flex-direction:column;background:var(--bg);position:relative;overflow:hidden;}
+
+#drop-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);z-index:5;transition:background .2s;}
+#drop-overlay.drag-over{background:var(--bg3);}
+.drop-inner{border:2px dashed var(--border);border-radius:20px;padding:44px 60px;text-align:center;transition:border-color .2s,transform .2s;cursor:pointer;}
+#drop-overlay.drag-over .drop-inner{border-color:var(--green);transform:scale(1.02);}
+.drop-btn{background:var(--green);color:#000;font-family:inherit;font-size:.83rem;font-weight:700;border:none;border-radius:26px;padding:10px 24px;cursor:pointer;transition:all .2s;margin-top:4px;}
+.drop-btn:hover{background:#2ae872;transform:translateY(-1px);}
+.drop-icon{font-size:3rem;margin-bottom:12px;}
+.drop-title{font-size:1.2rem;font-weight:700;margin-bottom:7px;letter-spacing:-.02em;}
+.drop-sub{font-size:.79rem;color:var(--text3);margin-bottom:18px;line-height:1.6;}
+
+
+#chat-header{padding:10px 18px;background:var(--bg2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:11px;flex-shrink:0;}
+.chat-title{font-size:.91rem;font-weight:700;}
+.chat-meta{font-size:.68rem;color:var(--text3);margin-top:1px;}
+.header-actions{margin-left:auto;display:flex;gap:5px;}
+.icon-btn{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:5px 10px;color:var(--text2);cursor:pointer;transition:all .2s;font-size:.71rem;font-family:inherit;display:flex;align-items:center;gap:5px;white-space:nowrap;}
+.icon-btn:hover{background:var(--surface2);color:var(--green);border-color:var(--green-dim);}
+.icon-btn.toggled{background:var(--surface2);color:var(--green);border-color:var(--green-dim);}
+.icon-btn.warn{background:rgba(255,160,0,.1);border-color:var(--dup-border);color:var(--dup-color);}
+.icon-btn.warn:hover{background:rgba(255,160,0,.2);}
+.export-menu-item{display:block;width:100%;padding:9px 14px;background:none;border:none;color:var(--text2);font-family:inherit;font-size:.76rem;cursor:pointer;text-align:left;transition:background .15s;}
+.export-menu-item:hover{background:var(--surface2);color:var(--text);}
+.export-sidebar-btn{background:var(--surface);border:1px solid var(--border);border-radius:9px;padding:6px 8px;color:var(--text2);font-family:inherit;font-size:.7rem;cursor:pointer;transition:all .2s;text-align:left;}
+.export-sidebar-btn:hover{background:var(--green-dim);border-color:var(--green-dim);color:#fff;}
+
+/* Messages scroll container */
+#messages-area{flex:1;overflow-y:auto;padding:10px 18px 14px;display:flex;flex-direction:column;gap:0;scroll-behavior:smooth;}
+#messages-area::-webkit-scrollbar{width:5px;}
+#messages-area::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* Year group */
+.year-group{margin-bottom:4px;}
+.year-group-sep{display:flex;align-items:center;gap:9px;margin:18px 0 4px;cursor:pointer;user-select:none;}
+.year-group-sep::before,.year-group-sep::after{content:'';flex:1;height:2px;background:var(--border);}
+.year-group-label{background:var(--bg3);border:1px solid var(--green-dim);border-radius:15px;padding:4px 16px;font-size:.75rem;font-weight:700;color:var(--green);white-space:nowrap;display:flex;align-items:center;gap:5px;transition:all .2s;}
+.year-group-sep:hover .year-group-label{background:var(--surface2);}
+.year-group-toggle{font-size:.6rem;color:var(--text3);transition:transform .25s;}
+.year-group.collapsed .year-group-toggle{transform:rotate(-90deg);}
+.year-group.collapsed .year-group-body{display:none;}
+
+/* Month group */
+.month-group{margin-bottom:2px;}
+.month-group-sep{display:flex;align-items:center;gap:9px;margin:14px 0 4px;cursor:pointer;user-select:none;}
+.month-group-sep::before,.month-group-sep::after{content:'';flex:1;height:1px;background:var(--border);}
+.month-group-label{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:3px 13px;font-size:.69rem;font-weight:700;color:var(--green);white-space:nowrap;display:flex;align-items:center;gap:5px;transition:all .2s;text-transform:uppercase;letter-spacing:.04em;}
+.month-group-sep:hover .month-group-label{background:var(--surface2);}
+.month-group-toggle{font-size:.6rem;color:var(--text3);transition:transform .25s;}
+.month-group.collapsed .month-group-toggle{transform:rotate(-90deg);}
+.month-group.collapsed .month-group-body{display:none;}
+
+/* Day group — lazy: messages only injected when expanded */
+.day-group{margin-bottom:1px;}
+.day-separator{display:flex;align-items:center;gap:9px;margin:10px 0 4px;cursor:pointer;user-select:none;}
+.day-separator::before,.day-separator::after{content:'';flex:1;height:1px;background:var(--border);}
+.day-label{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:3px 10px;font-size:.67rem;font-weight:600;color:var(--text2);white-space:nowrap;display:flex;align-items:center;gap:4px;transition:all .2s;}
+.day-separator:hover .day-label{background:var(--surface2);color:var(--text);}
+.day-toggle{font-size:.6rem;color:var(--text3);transition:transform .25s;}
+.day-group.collapsed .day-toggle{transform:rotate(-90deg);}
+.day-group.collapsed .day-messages{display:none;}
+/* Unloaded day placeholder */
+.day-group.unloaded .day-messages{display:none;}
+.day-count-badge{font-size:.58rem;font-family:'DM Mono',monospace;color:var(--text3);margin-left:4px;}
+
+/* Bubbles */
+.msg-row{display:flex;margin:2px 0;}
+.msg-row.out{justify-content:flex-end;}
+.msg-row.in{justify-content:flex-start;}
+.bubble{max-width:64%;padding:6px 11px 5px;border-radius:var(--radius);word-break:break-word;line-height:1.45;position:relative;}
+.msg-row.out .bubble{background:var(--bubble-out);border-bottom-right-radius:4px;}
+.msg-row.in .bubble{background:var(--bubble-in);border:1px solid var(--border);border-bottom-left-radius:4px;}
+.bubble.highlighted{outline:2px solid var(--green);outline-offset:2px;}
+.bubble::after{content:attr(data-date);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:3px 9px;font-size:.62rem;font-family:'DM Mono',monospace;color:var(--text2);white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .15s;z-index:20;}
+.bubble:hover::after{opacity:1;}
+.msg-row.is-dup:not(.dup-hidden) .bubble{background:var(--dup-bg)!important;border:1.5px solid var(--dup-border)!important;border-radius:var(--radius)!important;}
+.dup-label{font-size:.6rem;font-weight:700;color:var(--dup-color);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px;display:flex;align-items:center;gap:4px;}
+.msg-row.dup-hidden .dup-label{display:none;}
+.bubble-sender{font-size:.68rem;font-weight:700;margin-bottom:2px;}
+.bubble-text{font-size:.81rem;white-space:pre-wrap;}
+.bubble-text mark{background:rgba(255,220,50,.3);color:#ffe680;border-radius:3px;padding:0 2px;}
+.bubble-time{font-size:.61rem;color:var(--text3);text-align:right;margin-top:3px;font-family:'DM Mono',monospace;}
+.media-placeholder{display:flex;align-items:center;gap:6px;color:var(--text3);font-size:.76rem;font-style:italic;padding:1px 0;}
+
+#empty-state{flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:var(--text3);}
+#empty-state p{font-size:.82rem;}
+
+#sidebar-stats{font-size:.67rem;color:var(--text3);}
+.stat-item{display:flex;align-items:center;gap:4px;}
+.stat-value{color:var(--green);font-weight:700;font-family:'DM Mono',monospace;}
+.stat-dup{color:var(--dup-color)!important;}
+
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--surface2);border:1px solid var(--border);border-radius:26px;padding:8px 18px;font-size:.79rem;color:var(--text);box-shadow:var(--shadow);transition:transform .3s cubic-bezier(.34,1.56,.64,1);z-index:999;pointer-events:none;}
+#toast.show{transform:translateX(-50%) translateY(0);}
+
+#progress-modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:998;backdrop-filter:blur(4px);}
+#progress-modal.show{display:flex;}
+.progress-box{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:26px 42px;text-align:center;min-width:260px;}
+.progress-title{font-size:.92rem;font-weight:700;margin-bottom:5px;}
+.progress-sub{font-size:.72rem;color:var(--text3);margin-bottom:16px;}
+.progress-track{background:var(--surface);border-radius:5px;height:5px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green-dim),var(--green));border-radius:5px;transition:width .3s;}
+.progress-pct{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--text3);margin-top:7px;}
+
+/* Changelog */
+#changelog-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:997;backdrop-filter:blur(4px);}
+#changelog-modal.show{display:flex;}
+.changelog-box{background:var(--bg2);border:1px solid var(--border);border-radius:18px;width:520px;max-width:92vw;max-height:80vh;display:flex;flex-direction:column;box-shadow:var(--shadow);}
+.changelog-header{padding:18px 22px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.changelog-header h2{font-size:.95rem;font-weight:700;color:var(--green);flex:1;}
+.changelog-close{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:4px 10px;color:var(--text2);cursor:pointer;font-family:inherit;font-size:.72rem;transition:all .2s;}
+.changelog-close:hover{background:var(--surface2);color:var(--text);}
+.changelog-body{overflow-y:auto;padding:14px 22px 20px;display:flex;flex-direction:column;gap:18px;}
+.cl-version{border-left:3px solid var(--green-dim);padding-left:12px;}
+.cl-version.current{border-left-color:var(--green);}
+.cl-ver-label{font-size:.72rem;font-family:'DM Mono',monospace;font-weight:700;color:var(--green);margin-bottom:6px;display:flex;align-items:center;gap:7px;}
+.cl-ver-label span{font-size:.62rem;color:var(--text3);font-weight:400;font-family:'Plus Jakarta Sans',sans-serif;}
+.cl-badge-current{font-size:.58rem;background:var(--green);color:#000;border-radius:5px;padding:1px 6px;font-weight:700;}
+.cl-items{display:flex;flex-direction:column;gap:4px;}
+.cl-item{font-size:.74rem;color:var(--text2);display:block;position:relative;padding-left:18px;line-height:1.5;}
+.cl-item code{font-family:'DM Mono',monospace;font-size:.68rem;background:var(--surface);padding:0 4px;border-radius:5px;color:var(--text);}
+.cl-item::before{content:'•';color:var(--green-dim);position:absolute;left:2px;top:0;}
+.cl-item.removed::before{content:'✕';color:#f44336;}
+.cl-item.fixed::before{content:'⚙';color:var(--dup-color);}
+
+/* Fold button at bottom of expanded groups */
+.fold-btn{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;padding:5px 0 2px;font-size:.64rem;color:var(--text3);cursor:pointer;user-select:none;transition:color .15s;border:none;background:none;font-family:inherit;margin-top:3px;}
+.fold-btn:hover{color:var(--green);}
+
+/* ── RESUME MODAL ── */
+#resume-modal,#search-warn-modal,#confirm-modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:1000;backdrop-filter:blur(6px);}
+#resume-modal.show,#search-warn-modal.show,#confirm-modal.show{display:flex;}
+#confirm-modal{z-index:1100;}
+.resume-box{background:var(--bg2);border:1px solid var(--border);border-radius:18px;padding:32px 40px;text-align:center;max-width:420px;width:92vw;box-shadow:var(--shadow);}
+.resume-box h2{font-size:1rem;font-weight:700;color:var(--green);margin-bottom:8px;}
+.resume-box p{font-size:.78rem;color:var(--text2);line-height:1.65;margin-bottom:20px;}
+.resume-box strong{color:var(--text);}
+.resume-actions{display:flex;flex-direction:column;gap:8px;}
+.resume-btn{width:100%;padding:10px 16px;border-radius:14px;font-family:inherit;font-size:.8rem;font-weight:600;cursor:pointer;border:1px solid var(--border);transition:all .2s;}
+.resume-btn.primary{background:var(--green-dim);border-color:var(--green-dim);color:#fff;}
+.resume-btn.primary:hover{filter:brightness(1.1);}
+.resume-btn.secondary{background:var(--surface);color:var(--text2);}
+.resume-btn.secondary:hover{background:var(--surface2);color:var(--text);}
+.resume-btn.danger{background:transparent;border-color:#f44336;color:#f44336;}
+.legacy-list{margin:6px 0 0 18px;padding:0;font-size:.68rem;color:var(--text2);text-align:left;word-break:break-all;}
+.resume-legacy-box{border:1px solid var(--dup-color);border-radius:12px;padding:10px 12px;margin-bottom:12px;text-align:left;background:rgba(255,152,0,.06);}
+.resume-legacy-box .rl-title{font-size:.72rem;font-weight:700;color:var(--dup-color);}
+.resume-legacy-box .resume-btn{margin-top:8px;padding:6px 12px;font-size:.7rem;}
+.resume-box{max-height:92vh;overflow-y:auto;}
+.th-reset:disabled{opacity:.4;cursor:default;}
+.resume-btn.danger:hover{background:rgba(244,67,54,.1);}
+
+/* ── HELP MODAL ── */
+#help-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:997;backdrop-filter:blur(4px);}
+#help-modal.show{display:flex;}
+.help-box{background:var(--bg2);border:1px solid var(--border);border-radius:18px;width:580px;max-width:93vw;max-height:84vh;display:flex;flex-direction:column;box-shadow:var(--shadow);}
+.help-header{padding:16px 20px 13px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.help-header h2{font-size:.92rem;font-weight:700;color:var(--green);flex:1;margin:0;}
+.help-close{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:4px 12px;color:var(--text2);cursor:pointer;font-family:inherit;font-size:.72rem;transition:all .2s;white-space:nowrap;}
+.help-close:hover{background:var(--surface2);color:var(--text);}
+.help-body{overflow-y:auto;padding:0 0 8px;}
+.help-section{padding:12px 20px;border-bottom:1px solid var(--border);}
+.help-section:last-child{border-bottom:none;}
+.help-section h3{font-size:.75rem;font-weight:700;color:var(--green);margin:0 0 8px;display:flex;align-items:center;gap:6px;text-transform:uppercase;letter-spacing:.04em;}
+.help-item{font-size:.76rem;color:var(--text2);line-height:1.6;padding:2px 0 2px 14px;position:relative;}
+.help-item+.help-item{margin-top:3px;}
+.help-item::before{content:'·';position:absolute;left:4px;color:var(--green-dim);font-weight:700;}
+.help-item .hi-key{display:inline-block;background:var(--surface);border:1px solid var(--border);border-radius:5px;padding:0 6px;font-family:'DM Mono',monospace;font-size:.65rem;color:var(--green);line-height:1.6;vertical-align:middle;}
+.help-chips{display:flex;flex-direction:column;gap:6px;margin-top:4px;}
+.help-chip-row{display:flex;align-items:center;gap:10px;font-size:.75rem;color:var(--text2);}
+.help-chip-row .chip-ex{display:inline-flex;align-items:center;gap:4px;border-radius:12px;padding:2px 9px;font-size:.7rem;font-weight:600;white-space:nowrap;flex-shrink:0;min-width:90px;justify-content:flex-start;}
+.help-chip-row .chip-desc{flex:1;color:var(--text3);}
+
+/* Easter egg R&R */
+#rr-egg{position:fixed;left:0;right:0;bottom:18px;height:70px;pointer-events:none;z-index:9999;overflow:hidden;}
+#rr-egg .rr-a{position:absolute;bottom:0;font-size:2.4rem;line-height:1;will-change:left;}
+#rr-egg .rr-a span{display:inline-block;transform:scaleX(-1);animation:rr-hop .42s ease-in-out infinite;}
+#rr-egg .rr-turtle{left:30%;animation:rr-turtle 8s linear forwards;}
+#rr-egg .rr-turtle span{animation-duration:.9s;}
+#rr-egg .rr-goose{left:-8%;font-size:2.8rem;animation:rr-goose 8s cubic-bezier(.35,.1,.7,.9) forwards;}
+#rr-egg .rr-bubble{position:absolute;bottom:46px;font-size:.62rem;font-weight:700;color:var(--green);background:var(--bg2);border:1px solid var(--green-dim);border-radius:10px;padding:1px 7px;white-space:nowrap;transform:translateX(-50%);animation:rr-bub 8s linear forwards;}
+@keyframes rr-turtle{from{left:30%}to{left:112%}}
+@keyframes rr-goose{from{left:-8%}to{left:108%}}
+@keyframes rr-bub{from{left:-4%}to{left:106%}}
+@keyframes rr-hop{0%,100%{transform:scaleX(-1) translateY(0)}50%{transform:scaleX(-1) translateY(-7px)}}
+.rr-link{color:var(--green);cursor:pointer;font-weight:700;border-bottom:1px dotted var(--green-dim);}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+<div id="progress-modal">
+  <div class="progress-box">
+    <div class="progress-title">📂 Traitement en cours…</div>
+    <div class="progress-sub" id="progress-sub">Lecture</div>
+    <div class="progress-track"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+    <div class="progress-pct" id="progress-pct">0 %</div>
+  </div>
+</div>
+
+<div id="changelog-modal">
+  <div class="changelog-box">
+    <div class="changelog-header">
+      <h2>📋 Historique des versions</h2>
+      <button class="changelog-close" onclick="closeChangelog()">Fermer</button>
+    </div>
+    <div class="changelog-body">
+      <div class="cl-version current">
+        <div class="cl-ver-label">v1.9.8 <span>confirmations HTML &amp; nom de fichier</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Suppressions : toutes les confirmations (bouton « Effacer », « Supprimer les doublons », « Effacer et repartir de zéro » au démarrage, anciennes bases dans ⚙ Réglages) sont maintenant des fenêtres HTML, comme l'avertissement de recherche — « Annuler » est le choix par défaut (Entrée / Échap)</div>
+          <div class="cl-item">⚙ Réglages › « Stockage lié à » : avertissement si le fichier ne s'appelle pas <code>waav.html</code> (sous Firefox, le stockage est lié au chemin complet du fichier : même nom + même dossier = données partagées entre versions)</div>
+          <div class="cl-item">Version validée par test (v1.9.8-test) : une nouvelle version enregistrée sous le même nom retrouve les données de la précédente</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.9.7 <span>détection anciennes bases (Firefox)</span></div>
+        <div class="cl-items">
+          <div class="cl-item fixed">Firefox avant la version 126 : <code>indexedDB.databases()</code> n'existe pas, la recherche d'anciennes bases IndexedDB ne pouvait rien lister — repli par sondage de noms connus, et message d'information dans ⚙ Réglages</div>
+          <div class="cl-item">⚙ Réglages : « Stockage lié à » indique maintenant ce que contient réellement le stockage de ce fichier (nombre d'archives, version qui les a enregistrées)</div>
+          <div class="cl-item">Explication de l'isolation du stockage par fichier sous Firefox et solution durable (adresse fixe)</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.9.6 <span>corrections &amp; réglages</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Recherche : l'avertissement « beaucoup de résultats » est maintenant une fenêtre HTML (comme celle du démarrage) avec « Afficher », « Annuler la recherche » et « Régler les seuils »</div>
+          <div class="cl-item">⚙ Réglages : « Empiler par » par défaut (Mois, Jour, Année, Aucun), mémorisé, avec un texte d'avertissement sur la lenteur — Mois par défaut</div>
+          <div class="cl-item">Choix de période : liste « Année 2025 / Janvier 2025 / … / Décembre 2025 », année par année (années récentes d'abord, mois de janvier à décembre)</div>
+          <div class="cl-item fixed">Historique des versions : mise en page de la section v1.9.5 corrigée</div>
+          <div class="cl-item fixed">Paramètre de nettoyage à la fermeture : définitivement retiré</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.9.5 <span>détection des anciennes bases</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Anciennes bases : détection à l'ouverture (clés localStorage obsolètes v1.0–v1.7 et bases IndexedDB <code>wa_*</code> autres que <code>wa_archive</code>), affichée dans la fenêtre de démarrage ; suppression uniquement sur demande, avec confirmation détaillée</div>
+          <div class="cl-item">Les archives sont désormais « signées » avec la version de WAAV et la date de dernière sauvegarde — la fenêtre de reprise indique avec quelle version elles ont été enregistrées</div>
+          <div class="cl-item">Fenêtre de démarrage affichée aussi s'il n'y a que d'anciennes bases, ou si la base d'archives ne peut pas être ouverte (schéma d'une autre version)</div>
+          <div class="cl-item">⚙ Réglages : état des anciennes bases, « Rechercher à nouveau », « Supprimer les anciennes bases », et emplacement du stockage (explication sur l'isolation entre fichiers HTML)</div>
+          <div class="cl-item fixed">Pas de nettoyage à la fermeture (non fiable : fermeture brutale du navigateur) ; le nettoyage du démarrage de la v1.9.3 est aussi retiré</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.9.4 <span>réinitialisation recherche &amp; réglages</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Nouveau bouton ⚙ Réglages (engrenage à côté du titre) — fenêtre prévue pour accueillir les futurs réglages. Premier réglage : seuils d'avertissement de recherche : 🟡 avertissement (défaut 1 000) et 🔴 avertissement fort (défaut 5 000), mémorisés entre les sessions, 0 = désactivé — remplace le seuil fixe de 50</div>
+          <div class="cl-item">Recherche : bouton ✕ vert dans le champ pour réinitialiser la recherche (même action que Échap)</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.9.3 <span>corrections &amp; easter egg</span></div>
+        <div class="cl-items">
+          <div class="cl-item">"Empiler par" : Mois par défaut</div>
+          <div class="cl-item">Recherche : confirmation demandée avant l'affichage si plus de 50 résultats</div>
+          <div class="cl-item">Easter egg R&amp;R 🪿🐢 — à découvrir (indice : dans l'aide)</div>
+          <div class="cl-item">Crédits ajoutés dans l'aide</div>
+          <div class="cl-item">Nettoyage automatique des données obsolètes des versions précédentes (localStorage)</div>
+          <div class="cl-item fixed">"Voir tout ce jour" et navigation jour précédent/suivant retirés (non fonctionnels, reportés en v2.0)</div>
+          <div class="cl-item fixed">Aide : mention du bouton "Ajouter" (supprimé en v1.8.8) corrigée</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.9.2 <span>tentative recherche contexte (abandonnée)</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Boutons "Voir tout ce jour" et navigation jour : présents mais non fonctionnels, retirés en v1.9.3</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.8.8 <span>exports & import JSON</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Export MySQL (.sql) — fichier importable directement dans phpMyAdmin, utf8mb4, inserts par lots de 500</div>
+          <div class="cl-item">Import JSON — les fichiers .json exportés par WAAV sont maintenant réimportables</div>
+          <div class="cl-item fixed">Bulle d'aide entièrement redessinée — alignements, espacement, section exports mise à jour</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.8.7 <span>exports multi-formats</span></div>
+        <div class="cl-items">
+          <div class="cl-item">"Empiler par" forcé à Jour par défaut — évite de charger des milliers de bulles au démarrage</div>
+          <div class="cl-item">Modale de choix au démarrage quand des archives sont sauvegardées : Reprendre / Démarrer sans charger / Effacer</div>
+          <div class="cl-item fixed">Bouton "🗑 Supprimer les doublons" rendu plus visible dans la bannière orange</div>
+          <div class="cl-item fixed">Suppression des doublons corrigée — seules les copies sont supprimées, la première occurrence est toujours conservée</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.8.5 <span>aide utilisateur</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Panneau gauche masquable — bouton ☰ dans le header, slide sur desktop, tiroir sur mobile</div>
+          <div class="cl-item fixed">Badge de version cliquable restauré</div>
+          <div class="cl-item fixed">Bouton ☰ toujours visible (classe body)</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.8.1 <span>micro-corrections</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Renommage : Archive Viewer → WAAV / WhatsApp Archive Viewer</div>
+          <div class="cl-item removed">Bouton "Parcourir" natif masqué</div>
+          <div class="cl-item">Recherche déclenchée après fin de saisie (600ms) + Entrée pour lancer</div>
+          <div class="cl-item">Versionnage en trois chiffres pour les micro-corrections (1.8.X)</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.8 <span>performances gros volumes</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Rendu lazy par jour — les bulles ne sont créées dans le DOM qu'à l'ouverture du groupe</div>
+          <div class="cl-item">Stockage IndexedDB — remplace localStorage, supporte les très grands volumes (100k+)</div>
+          <div class="cl-item">Index pré-calculé par période — filtrage instantané sans parcourir tout le tableau</div>
+          <div class="cl-item">Parsing chunké — les gros fichiers sont découpés en morceaux pour ne pas geler l'UI</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.7 <span>structure hiérarchique</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Empilage par Jour / Mois / Année</div>
+          <div class="cl-item">Sélecteur de période : années et mois</div>
+          <div class="cl-item">Clic sur participant → inverse le côté des bulles</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.6 <span>options avancées</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Case à cocher empiler par défaut</div>
+          <div class="cl-item">Masquer/afficher marquage orange doublons</div>
+          <div class="cl-item">Badge version cliquable → changelog</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.5 <span>correctifs import</span></div>
+        <div class="cl-items">
+          <div class="cl-item fixed">Input file unique piloté par mode — plus de confusion replace/merge</div>
+          <div class="cl-item">Tooltip date au survol des bulles</div>
+          <div class="cl-item">Doublons encadrés orange + décompte</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.0–v1.4 <span>fonctions de base</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Import .txt, bulles, regroupement jours/mois, recherche, localStorage, export JSON</div>
+          <div class="cl-item">Multi-import, déduplication cross-fichiers, empiler/dépiler, période mois/année</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESUME MODAL — shown on startup when saved data exists -->
+<div id="resume-modal">
+  <div class="resume-box">
+    <h2 id="resume-title">💬 Archives sauvegardées</h2>
+    <p id="resume-desc">Des données sont disponibles depuis votre dernière session.</p>
+    <div class="resume-legacy-box" id="resume-legacy" style="display:none">
+      <div class="rl-title">🗂 Anciennes bases détectées</div>
+      <div id="resume-legacy-list"></div>
+      <div style="font-size:.64rem;color:var(--text3);margin-top:6px;line-height:1.5">Ces données viennent de versions précédentes et ne sont plus utilisées. Elles ne seront supprimées que si vous le demandez.</div>
+      <button class="resume-btn secondary" onclick="deleteLegacyData().then(afterLegacyDelete)">🧹 Supprimer ces anciennes bases</button>
+    </div>
+    <div class="resume-actions">
+      <button class="resume-btn primary" id="btn-resume-load" onclick="resumeLoad()">▶ Reprendre la session</button>
+      <button class="resume-btn secondary" id="btn-resume-skip" onclick="resumeSkip()">⏭ Démarrer sans charger</button>
+      <button class="resume-btn danger" id="btn-resume-clear" onclick="resumeClear()">🗑 Effacer et repartir de zéro</button>
+    </div>
+  </div>
+</div>
+
+<!-- HELP MODAL -->
+<div id="help-modal">
+  <div class="help-box">
+    <div class="help-header">
+      <h2>💬 Aide — WAAV</h2>
+      <button class="help-close" onclick="closeHelp()">Fermer</button>
+    </div>
+    <div class="help-body">
+
+      <div class="help-section">
+        <h3>📂 Importer des archives</h3>
+        <div class="help-item">Exportez depuis WhatsApp : <em>Paramètres → Discussions → Exporter</em>, sans médias → fichier <strong>.txt</strong>.</div>
+        <div class="help-item">Formats acceptés : <strong>.txt</strong> (WhatsApp) et <strong>.json</strong> (export WAAV).</div>
+        <div class="help-item">Glissez les fichiers sur la zone de droite ou utilisez le bouton <strong>Importer</strong>.</div>
+        <div class="help-item">Importez plusieurs exports à la suite pour les fusionner — les doublons sont détectés automatiquement.</div>
+        <div class="help-item">Chaque archive apparaît dans la liste avec son nombre de messages. Cliquez <strong>✕</strong> pour en retirer une.</div>
+      </div>
+
+      <div class="help-section">
+        <h3>🔍 Recherche</h3>
+        <div class="help-item">Tapez un mot-clé puis appuyez sur <span class="hi-key">Entrée</span> ou cliquez ailleurs pour lancer.</div>
+        <div class="help-item">Les résultats sont surlignés en jaune — seuls les jours contenant des résultats sont dépliés.</div>
+        <div class="help-item">Si la recherche donne beaucoup de résultats, une confirmation est demandée avant l'affichage : 🟡 au-delà de <strong>1 000</strong> (un peu long), 🔴 au-delà de <strong>5 000</strong> (très long). Ces seuils se règlent dans <strong>⚙ Réglages</strong> (icône engrenage à côté du titre) — 0 = désactivé.</div>
+        <div class="help-item">Appuyez sur <span class="hi-key">Échap</span> ou cliquez sur le bouton <strong>✕</strong> du champ pour effacer la recherche et revenir à la vue normale.</div>
+      </div>
+
+      <div class="help-section">
+        <h3>📅 Période & Empilement</h3>
+        <div class="help-item">Le sélecteur <strong>Période</strong> filtre par année ou par mois. <em>Tous les messages</em> réaffiche tout.</div>
+        <div class="help-item">Le sélecteur <strong>Empiler par</strong> regroupe les messages par Mois (par défaut), Jour ou Année — s'applique immédiatement. La valeur au démarrage se règle dans ⚙ Réglages.</div>
+        <div class="help-item">Le bouton <strong>▾ Empiler</strong> replie ou déplie tous les groupes du niveau actif d'un seul coup.</div>
+        <div class="help-item">Un bouton <strong>↑ replier</strong> apparaît en bas de chaque groupe ouvert pour le refermer après lecture.</div>
+        <div class="help-item">Cliquez sur un séparateur de jour, mois ou année pour le replier/déplier individuellement.</div>
+      </div>
+
+      <div class="help-section">
+        <h3>👥 Participants</h3>
+        <div class="help-item">Cliquez sur un participant dans le panneau gauche pour changer le côté d'affichage de ses bulles :</div>
+        <div class="help-chips">
+          <div class="help-chip-row">
+            <span class="chip-ex" style="background:var(--surface);border:1px solid var(--green-dim)"><span style="width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block"></span> Nom</span>
+            <span class="chip-desc">dot à gauche → bulles à droite</span>
+          </div>
+          <div class="help-chip-row">
+            <span class="chip-ex" style="background:var(--surface);border:1px solid #00bcd4;justify-content:flex-end">Nom <span style="width:7px;height:7px;border-radius:50%;background:#00bcd4;display:inline-block"></span></span>
+            <span class="chip-desc">dot à droite → bulles à gauche</span>
+          </div>
+          <div class="help-chip-row">
+            <span class="chip-ex" style="background:var(--surface);border:1px dashed var(--border);opacity:.45"><span style="width:7px;height:7px;border-radius:50%;background:var(--text3);display:inline-block"></span> Nom</span>
+            <span class="chip-desc">estompé → participant masqué</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <h3>⚠️ Doublons</h3>
+        <div class="help-item">Les messages communs entre archives sont détectés et encadrés en orange.</div>
+        <div class="help-item"><strong>🟠 Masquer</strong> — désactive le marquage orange sans rien supprimer.</div>
+        <div class="help-item"><strong>🗑 Supprimer les doublons</strong> — supprime les copies, conserve la première occurrence.</div>
+      </div>
+
+      <div class="help-section">
+        <h3>📤 Exports</h3>
+        <div class="help-item"><strong>JSON</strong> — tableau d'objets avec toutes les métadonnées, réimportable dans WAAV.</div>
+        <div class="help-item"><strong>TXT</strong> — format WhatsApp original, réimportable dans WAAV ou lisible dans tout éditeur.</div>
+        <div class="help-item"><strong>SQLite</strong> — base de données .db, ouvrable avec DB Browser for SQLite.</div>
+        <div class="help-item"><strong>MySQL</strong> — fichier .sql importable directement dans phpMyAdmin (utf8mb4).</div>
+        <div class="help-item">Tous les exports respectent la période et les filtres actifs au moment de l'export.</div>
+      </div>
+
+      <div class="help-section">
+        <h3>📱 Panneau gauche & Mobile</h3>
+        <div class="help-item">Le bouton <strong>☰</strong> dans le header masque ou affiche le panneau gauche.</div>
+        <div class="help-item">Sur mobile, le panneau s'ouvre en tiroir. Tapez en dehors pour le refermer.</div>
+      </div>
+
+      <div class="help-section">
+        <h3>💾 Données & Confidentialité</h3>
+        <div class="help-item">Toutes les données restent sur votre appareil — aucun serveur, aucun réseau. Fonctionne hors ligne.</div>
+        <div class="help-item">Les archives sont stockées dans <strong>IndexedDB</strong> et rechargées automatiquement à la prochaine ouverture.</div>
+        <div class="help-item">À l'ouverture, WAAV détecte les <strong>anciennes bases obsolètes</strong> (versions 1.0 à 1.7) et vous propose de les supprimer — jamais automatiquement. Vos archives (base <em>wa_archive</em>) ne sont jamais touchées. Voir ⚙ Réglages pour l'état et la suppression, ainsi que l'emplacement du stockage.</div>
+        <div class="help-item">Pour tout effacer : bouton <strong>Effacer</strong> dans le panneau gauche, ou F12 → Stockage → Base de données indexée → <em>wa_archive</em>.</div>
+      </div>
+
+      <div class="help-section">
+        <h3>✨ Crédits</h3>
+        <div class="help-item">Concept original : <span class="rr-link" onclick="startEasterEgg()" title="…">R&amp;R</span> (Régori &amp; Rabrielle)</div>
+        <div class="help-item">Développement : Claude (Anthropic)</div>
+        <div class="help-item">WAAV v1.9.8 — WhatsApp Archive Viewer</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM MODAL (suppressions) -->
+<div id="confirm-modal">
+  <div class="resume-box">
+    <h2 id="cf-title">Confirmer</h2>
+    <p id="cf-desc"></p>
+    <div class="resume-actions">
+      <button class="resume-btn primary" id="cf-cancel" type="button">↩ Annuler</button>
+      <button class="resume-btn danger" id="cf-ok" type="button">🗑 Supprimer</button>
+    </div>
+  </div>
+</div>
+
+<!-- SEARCH WARNING MODAL -->
+<div id="search-warn-modal">
+  <div class="resume-box">
+    <h2 id="sw-title">🟡 Beaucoup de résultats</h2>
+    <p id="sw-desc"></p>
+    <div class="resume-actions">
+      <button class="resume-btn primary" id="sw-ok" type="button">▶ Afficher les résultats</button>
+      <button class="resume-btn secondary" id="sw-cancel" type="button">↩ Annuler la recherche</button>
+      <button class="resume-btn secondary" id="sw-settings" type="button">⚙ Régler les seuils d'avertissement</button>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div id="settings-modal" onclick="if(event.target===this)closeSettings()">
+  <div class="help-box">
+    <div class="help-header">
+      <h2>⚙ Réglages — WAAV</h2>
+      <button class="help-close" onclick="closeSettings()">Fermer</button>
+    </div>
+    <div class="help-body">
+
+      <div class="help-section">
+        <h3>🔍 Recherche — seuils d'avertissement</h3>
+        <div class="th-row">
+          <label for="th-warn">🟡 Avertissement<small>affichage un peu long</small></label>
+          <input type="number" id="th-warn" min="0" step="100" onchange="onThresholdChange()">
+        </div>
+        <div class="th-row">
+          <label for="th-strong">🔴 Avertissement fort<small>affichage très long</small></label>
+          <input type="number" id="th-strong" min="0" step="100" onchange="onThresholdChange()">
+        </div>
+        <div class="th-hint">Nombre de messages trouvés au-delà duquel une confirmation est demandée avant l'affichage. <strong>0</strong> = désactivé. Les réglages sont enregistrés automatiquement.</div>
+        <button class="th-reset" type="button" onclick="resetThresholds()">Valeurs par défaut</button>
+      </div>
+
+      <div class="help-section">
+        <h3>📚 Affichage — empiler par défaut</h3>
+        <div class="th-row">
+          <label for="set-collapse">Empiler par<small>appliqué au démarrage (et tout de suite)</small></label>
+          <select id="set-collapse" onchange="onDefaultCollapseChange()">
+            <option value="month">Mois (recommandé)</option>
+            <option value="day">Jour</option>
+            <option value="year">Année</option>
+            <option value="none">Aucun (tout déplié)</option>
+          </select>
+        </div>
+        <div class="th-warn">⚠️ Plus le regroupement est fin, plus l'affichage est lourd. « Jour » crée beaucoup de groupes et « Aucun » affiche tous les messages dépliés : cela peut devenir très lent, voire figer le navigateur, sur de gros volumes (plusieurs dizaines de milliers de messages). « Mois » est le meilleur compromis.</div>
+        <div class="th-hint" style="margin-top:6px">Le sélecteur « Empiler par » du panneau gauche reste utilisable pour changer temporairement ; ce réglage définit la valeur au démarrage.</div>
+        <button class="th-reset" type="button" onclick="resetDefaultCollapse()">Valeur par défaut (Mois)</button>
+      </div>
+
+      <div class="help-section">
+        <h3>🗂 Données — anciennes bases</h3>
+        <div class="th-hint" id="legacy-status" style="margin-bottom:8px"></div>
+        <div class="th-hint">Détection à l'ouverture de WAAV ; rien n'est supprimé sans votre confirmation. 🔒 Jamais concernés : vos archives actuelles (<code>wa_archive</code>, utilisée par les versions 1.8 à 1.9.x) et vos réglages.</div>
+        <button class="th-reset" type="button" onclick="rescanLegacy()">Rechercher à nouveau</button>
+        <button class="th-reset" type="button" id="btn-legacy-delete" onclick="deleteLegacyData()">🧹 Supprimer les anciennes bases</button>
+      </div>
+
+      <div class="help-section">
+        <h3>📍 Stockage lié à</h3>
+        <div class="th-hint" style="word-break:break-all;margin-bottom:6px"><code id="storage-origin"></code></div>
+        <div class="th-hint" id="storage-info" style="margin-bottom:6px"></div>
+        <div class="th-warn" id="storage-name-warn" style="display:none;margin-bottom:6px"></div>
+        <div class="th-hint">Un navigateur sépare les données selon le fichier/site qui les a créées. Selon le navigateur, un autre fichier HTML (autre nom ou autre dossier, par exemple une nouvelle version) peut avoir son propre stockage, <strong>invisible</strong> pour cette page : WAAV ne peut alors pas détecter ce qu'une autre version y a laissé. Pour retrouver ces données, rouvrez l'ancien fichier et utilisez <strong>Export → JSON</strong>, puis <strong>Importer</strong> ici. Conserver <strong>le même nom et le même dossier</strong> de fichier d'une version à l'autre permet en général de partager le stockage. <strong>Firefox</strong> isole chaque fichier HTML (stockage lié à son chemin complet) : une nouvelle version enregistrée sous un autre nom ne voit pas les archives de la précédente. Une solution durable : ouvrir WAAV depuis une adresse fixe (hébergement web, ou petit serveur local), car toutes les versions servies par la même adresse partagent alors le même stockage.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div id="sidebar-header">
+    <h1>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" onclick="openHelp()" style="cursor:pointer;flex-shrink:0;" title="Aide à l'utilisation"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      WAAV
+      <span class="version-badge" onclick="openChangelog()">v1.9.8</span>
+      <button class="settings-btn" type="button" onclick="openSettings()" title="Réglages" aria-label="Réglages">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </h1>
+    <p>WhatsApp Archive Viewer</p>
+  </div>
+
+  <div id="import-section">
+    <div class="section-label">Archives importées</div>
+    <div id="files-list"></div>
+    <div id="collapse-level-wrap">
+      <label for="collapse-level">Empiler par :</label>
+      <select id="collapse-level" onchange="if(rendered)renderMessages(false)">
+        <option value="month" selected>Mois</option>
+        <option value="day">Jour</option>
+        <option value="year">Année</option>
+        <option value="none">Aucun (tout déplié — lent)</option>
+      </select>
+    </div>
+    <div class="import-actions">
+      <button class="import-btn primary" onclick="triggerImport('merge')">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        Importer
+      </button>
+      <div style="position:relative;flex:1;" id="export-wrap">
+        <button class="import-btn" id="btn-export" onclick="toggleExportMenu()" style="display:none;width:100%">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Export
+        </button>
+        <div id="export-menu" style="display:none;position:absolute;left:0;top:calc(100% + 4px);background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow);z-index:50;min-width:180px;">
+          <button class="export-menu-item" onclick="exportJSON();toggleExportMenu()">📄 JSON</button>
+          <button class="export-menu-item" onclick="exportTXT();toggleExportMenu()">💬 TXT (format WhatsApp)</button>
+          <button class="export-menu-item" onclick="exportSQLite();toggleExportMenu()">🗄 SQLite (.db)</button>
+          <button class="export-menu-item" onclick="exportMySQL();toggleExportMenu()">🐬 MySQL (.sql)</button>
+        </div>
+      </div>
+      <button class="import-btn" id="btn-clear" onclick="clearData()" style="display:none">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+        Effacer
+      </button>
+    </div>
+    <input type="file" id="file-input" accept=".txt,.json" multiple style="display:none">
+  </div>
+
+  <div id="search-wrap">
+    <div class="search-inner">
+      <svg class="search-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search-input" placeholder="Rechercher… (Entrée ou clic ailleurs)" onkeydown="handleSearchKey(event)" oninput="updateSearchClear()" onblur="handleSearchBlur(this.value)">
+      <button id="search-clear" type="button" title="Réinitialiser la recherche (Échap)" aria-label="Réinitialiser la recherche" onmousedown="event.preventDefault()" onclick="clearSearch()">
+        <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="period-section">
+    <label>Période</label>
+    <select id="period-select" onchange="handlePeriodChange()">
+      <option value="all">Tous les messages</option>
+    </select>
+  </div>
+
+  <div id="participants-legend"></div>
+
+  <!-- Spacer — pousse stats et dedup vers le bas -->
+  <div style="flex:1;min-height:0;"></div>
+
+  <!-- Dedup banner -->
+  <div id="dedup-banner">
+    <strong id="dedup-count-label"></strong> — messages identiques entre archives.
+    <div class="dedup-actions">
+      <button class="dedup-btn" id="btn-dup-view" onclick="toggleDupHighlight()">🟠 Masquer</button>
+      <button class="dedup-btn confirm" onclick="confirmDedup()">🗑 Supprimer les doublons</button>
+    </div>
+  </div>
+
+  <!-- Stats — tout en bas du panneau gauche -->
+  <div id="sidebar-stats" style="display:none;flex-wrap:wrap;gap:8px;padding:7px 13px;border-top:1px solid var(--border);background:var(--bg3);flex-shrink:0;">
+    <div class="stat-item">📩 <span class="stat-value" id="stat-total">0</span> msgs</div>
+    <div class="stat-item">👥 <span class="stat-value" id="stat-contacts">0</span> participants</div>
+    <div class="stat-item">📅 <span class="stat-value" id="stat-days">0</span> jours</div>
+    <div class="stat-item">📁 <span class="stat-value" id="stat-files">0</span> fichier(s)</div>
+    <div class="stat-item" id="stat-dup-item" style="display:none">⚠️ <span class="stat-value stat-dup" id="stat-dup">0</span> doublon(s)</div>
+    <div class="stat-item" id="stat-search-wrap" style="display:none">🔍 <span class="stat-value" id="stat-results">0</span> résultats</div>
+  </div>
+
+</div><!-- /#sidebar -->
+
+<!-- Overlay (mobile: tap outside to close sidebar) -->
+<div id="sidebar-overlay" onclick="toggleSidebar()"></div>
+
+<!-- MAIN -->
+<div id="main">
+  <div id="drop-overlay"
+       ondragover="event.preventDefault();this.classList.add('drag-over')"
+       ondragleave="this.classList.remove('drag-over')"
+       ondrop="handleDrop(event)">
+    <!-- Toggle button visible before import too -->
+    <button id="btn-sidebar-toggle-drop" onclick="toggleSidebar()" title="Afficher / masquer le panneau" style="position:absolute;top:10px;left:10px;background:var(--surface);border:1px solid var(--border);border-radius:9px;width:32px;height:32px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--text2);">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div class="drop-inner" onclick="triggerImport('merge')">
+      <div class="drop-icon">💬</div>
+      <div class="drop-title">WAAV</div>
+      <div class="drop-sub">Glissez un ou plusieurs fichiers <strong>.txt</strong> exportés depuis WhatsApp<br>ou cliquez pour sélectionner vos archives<br><br>Optimisé pour les très grandes archives (100 000+ messages)</div>
+      <button class="drop-btn" onclick="event.stopPropagation();triggerImport('merge')">Choisir un ou plusieurs fichiers</button>
+    </div>
+  </div>
+
+  <div id="chat-header" style="display:none">
+    <button id="btn-sidebar-toggle" onclick="toggleSidebar()" title="Afficher / masquer le panneau">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <div id="header-avatars" style="position:relative;width:44px;height:40px;flex-shrink:0"></div>
+    <div>
+      <div class="chat-title" id="header-title">Conversation</div>
+      <div class="chat-meta" id="header-meta"></div>
+    </div>
+    <div class="header-actions">
+      <button class="icon-btn" id="btn-collapse-all" onclick="toggleCollapseAll()" style="display:none">▾ Empiler</button>
+      <button class="icon-btn warn" id="btn-dup-highlight" onclick="toggleDupHighlight()" style="display:none">🟠 Masquer doublons</button>
+    </div>
+  </div>
+
+  <div id="messages-area" style="display:none"></div>
+
+  <div id="empty-state" style="display:none">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity:.25"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    <p id="empty-msg">Aucun message pour cette période</p>
+  </div>
+
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+let importedFiles  = [];  // [{name, rawMessages}]
+let allMessages    = [];  // sorted, annotated with isDup
+let dupKeys        = new Set();
+let participants   = [];
+let mutedSenders   = new Set();  // kept for filter compat — driven by senderState
+let senderState    = new Map();  // name -> 'left' | 'right' | 'hidden'  (default: 'left' for p[0], 'right' for others)
+let selectedPeriod = 'all';
+let searchQuery    = '';
+let rendered       = false;
+let allCollapsed   = false;
+let dupHighlight   = true;
+let _importMode    = 'replace';
+
+// Pre-computed index: periodKey -> array of message indices in allMessages
+// periodKey: 'all' | 'year-YYYY' | 'YYYY-MM'
+let periodIndex    = {};
+// Filtered message indices (current view)
+let filteredMsgs   = [];
+
+const COLORS=['#25d366','#00bcd4','#ff9800','#e91e63','#9c27b0','#3f51b5','#8bc34a','#f44336','#009688','#ff5722'];
+const MEDIA_KW=['<media omis>','<media omitted>','image omise','vidéo omise','audio omis','document omis','gif omis','autocollant omis','sticker omitted','image omitted','video omitted','audio omitted','gif omitted','(fichier joint)'];
+const MN=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+
+// Default side: participants[0] = left (out), others = right (in)
+// senderState overrides: 'left' | 'right' | 'hidden'
+function defaultSide(name){ return name===participants[0]?'left':'right'; }
+function getState(name){ return senderState.get(name)||defaultSide(name); }
+function cycleState(name){
+  const cur=getState(name);
+  // Cycle: left → right → hidden → left
+  const next=cur==='left'?'right':cur==='right'?'hidden':'left';
+  senderState.set(name,next);
+  // Sync mutedSenders for filter
+  if(next==='hidden')mutedSenders.add(name);else mutedSenders.delete(name);
+}
+const colorFor=n=>{let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))&0xffff;return COLORS[h%COLORS.length];};
+const initials=n=>n.split(/\s+/).map(w=>w[0]||'').join('').toUpperCase().slice(0,2)||'?';
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+// ═══════════════════════════════════════════════════════════
+// SIDEBAR TOGGLE
+// ═══════════════════════════════════════════════════════════
+function toggleSidebar(){
+  const overlay=document.getElementById('sidebar-overlay');
+  const isMobile=window.innerWidth<=600;
+  if(isMobile){
+    const isVisible=document.body.classList.toggle('sidebar-visible');
+    overlay.classList.toggle('show',isVisible);
+  }else{
+    document.body.classList.toggle('sidebar-hidden');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// CHANGELOG
+// ═══════════════════════════════════════════════════════════
+function openChangelog(){document.getElementById('changelog-modal').classList.add('show');}
+function closeChangelog(){document.getElementById('changelog-modal').classList.remove('show');}
+function openSettings(){syncThresholdInputs();
+  const sc=document.getElementById('set-collapse');if(sc)sc.value=collapseDefault;
+  try{document.getElementById('storage-origin').textContent=decodeURIComponent(location.href.split('#')[0]);}catch(e){}
+  scanLegacyData();showStorageInfo();updateFileNameWarning();document.getElementById('settings-modal').classList.add('show');}
+function closeSettings(){document.getElementById('settings-modal').classList.remove('show');}
+function openHelp(){document.getElementById('help-modal').classList.add('show');}
+function closeHelp(){document.getElementById('help-modal').classList.remove('show');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeChangelog();closeHelp();}});
+
+// ═══════════════════════════════════════════════════════════
+// MSG KEY
+// ═══════════════════════════════════════════════════════════
+function msgKey(m){
+  const ts=Math.floor(m.date.getTime()/60000)*60000;
+  return ts+'|'+m.sender+'|'+m.text.slice(0,80);
+}
+
+// ═══════════════════════════════════════════════════════════
+// PARSER — chunked to avoid freezing on huge files
+// ═══════════════════════════════════════════════════════════
+const RE=/^(?:\[)?(\d{1,2})[\/\-\.](\d{1,2})[\/\-\.](\d{2,4})(?:\])?(?:[,\s]+|(?:\s+à\s+))(\d{1,2}:\d{2})(?::\d{2})?(?:\])?,?\s[-–]\s(.+?):\s([\s\S]*)$/;
+
+function parseText(text){
+  const lines=text.split(/\r?\n/);
+  const msgs=[];let cur=null;
+  for(const line of lines){
+    const m=line.match(RE);
+    if(m){
+      if(cur)msgs.push(cur);
+      const[,d,mo,y,time,sender,body]=m;
+      const yr=y.length===2?'20'+y:y;
+      const date=new Date(yr+'-'+mo.padStart(2,'0')+'-'+d.padStart(2,'0')+'T'+time+':00');
+      const txt=body.trim();
+      cur={date,sender:sender.trim(),text:txt,isMedia:MEDIA_KW.some(k=>txt.toLowerCase().includes(k))};
+    }else if(cur){cur.text+='\n'+line;}
+  }
+  if(cur)msgs.push(cur);
+  return msgs;
+}
+
+// ═══════════════════════════════════════════════════════════
+// MERGE & DEDUP
+// ═══════════════════════════════════════════════════════════
+function rebuildMerge(){
+  const keyFiles=new Map();
+  for(const f of importedFiles){
+    const seenHere=new Set();
+    for(const m of f.rawMessages){
+      const k=msgKey(m);
+      if(seenHere.has(k))continue;
+      seenHere.add(k);
+      if(!keyFiles.has(k))keyFiles.set(k,new Set());
+      keyFiles.get(k).add(f.name);
+    }
+  }
+  dupKeys=new Set();
+  for(const[k,files] of keyFiles)if(files.size>1)dupKeys.add(k);
+  const seen=new Map();
+  for(const f of importedFiles)
+    for(const m of f.rawMessages){
+      const k=msgKey(m);
+      if(!seen.has(k))seen.set(k,{...m,isDup:dupKeys.has(k)});
+    }
+  allMessages=[...seen.values()].sort((a,b)=>a.date-b.date);
+  buildParticipants();
+  buildPeriodIndex();
+}
+
+function buildParticipants(){
+  const c={};
+  for(const m of allMessages)c[m.sender]=(c[m.sender]||0)+1;
+  participants=Object.keys(c).sort((a,b)=>c[b]-c[a]);
+}
+
+// ═══════════════════════════════════════════════════════════
+// PERIOD INDEX — O(n) once, then O(1) lookups
+// ═══════════════════════════════════════════════════════════
+function buildPeriodIndex(){
+  periodIndex={all:[]};
+  for(let i=0;i<allMessages.length;i++){
+    const m=allMessages[i];
+    const yr=m.date.getFullYear();
+    const mo=String(m.date.getMonth()+1).padStart(2,'0');
+    const yk='year-'+yr;
+    const mk=yr+'-'+mo;
+    periodIndex.all.push(i);
+    if(!periodIndex[yk])periodIndex[yk]=[];
+    periodIndex[yk].push(i);
+    if(!periodIndex[mk])periodIndex[mk]=[];
+    periodIndex[mk].push(i);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// FILTER — uses index, O(k) where k = messages in period
+// ═══════════════════════════════════════════════════════════
+function computeFiltered(){
+  const base=periodIndex[selectedPeriod]||periodIndex.all||[];
+  if(!searchQuery&&!mutedSenders.size){
+    filteredMsgs=base.map(i=>allMessages[i]);
+    return;
+  }
+  const q=searchQuery?searchQuery.toLowerCase():null;
+  filteredMsgs=[];
+  for(const i of base){
+    const m=allMessages[i];
+    if(mutedSenders.has(m.sender))continue;
+    if(q&&!m.text.toLowerCase().includes(q)&&!m.sender.toLowerCase().includes(q))continue;
+    filteredMsgs.push(m);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// INDEXEDDB STORAGE
+// ═══════════════════════════════════════════════════════════
+let _db=null;
+function openDB(){
+  return new Promise((res,rej)=>{
+    const req=indexedDB.open('wa_archive',2);
+    req.onupgradeneeded=e=>{
+      const db=e.target.result;
+      if(!db.objectStoreNames.contains('files'))db.createObjectStore('files',{keyPath:'name'});
+      if(!db.objectStoreNames.contains('meta'))db.createObjectStore('meta',{keyPath:'k'});
+    };
+    req.onsuccess=e=>{_db=e.target.result;res(_db);};
+    req.onerror=()=>rej(req.error);
+  });
+}
+function dbPut(store,val){
+  return new Promise((res,rej)=>{
+    const tx=_db.transaction(store,'readwrite');
+    tx.objectStore(store).put(val);
+    tx.oncomplete=res;tx.onerror=()=>rej(tx.error);
+  });
+}
+function dbGetAll(store){
+  return new Promise((res,rej)=>{
+    const tx=_db.transaction(store,'readonly');
+    const req=tx.objectStore(store).getAll();
+    req.onsuccess=()=>res(req.result);req.onerror=()=>rej(req.error);
+  });
+}
+function dbClear(store){
+  return new Promise((res,rej)=>{
+    const tx=_db.transaction(store,'readwrite');
+    tx.objectStore(store).clear();
+    tx.oncomplete=res;tx.onerror=()=>rej(tx.error);
+  });
+}
+
+async function saveToStorage(){
+  try{
+    await openDB();
+    // Save each file separately (avoids single-object size limits)
+    for(const f of importedFiles){
+      await dbPut('files',{
+        name:f.name,
+        raw:f.rawMessages.map(m=>({...m,date:m.date.toISOString()}))
+      });
+    }
+    // Save meta (dupKeys, participants)
+    await dbPut('meta',{k:'dupKeys',v:[...dupKeys]});
+    await dbPut('meta',{k:'fileNames',v:importedFiles.map(f=>f.name)});
+    await dbPut('meta',{k:'appVersion',v:APP_VERSION});
+    await dbPut('meta',{k:'savedAt',v:Date.now()});
+  }catch(e){console.warn('IndexedDB save error',e);}
+}
+
+let _resumeHasArchives=false;
+async function loadFromStorage(){
+  let metaMap={},fileNames=[],dbError=null;
+  try{
+    await openDB();
+    const meta=await dbGetAll('meta');
+    for(const m of meta)metaMap[m.k]=m.v;
+    fileNames=metaMap.fileNames||[];
+  }catch(e){dbError=e;console.warn('IndexedDB peek error',e);}
+  // Détection des anciennes bases (aucune suppression automatique)
+  const legacy=await scanLegacyData();
+  _resumeHasArchives=fileNames.length>0;
+  if(!_resumeHasArchives&&!legacy.length&&!dbError)return;
+
+  const desc=document.getElementById('resume-desc');
+  if(_resumeHasArchives){
+    const dupCount=(metaMap.dupKeys||[]).length;
+    const ver=metaMap.appVersion;
+    const when=metaMap.savedAt?new Date(metaMap.savedAt).toLocaleString('fr-FR'):'';
+    let origin=ver?('enregistrées avec WAAV v'+esc(ver)+(when?' le '+when:'')):'enregistrées avec une version antérieure à 1.9.5';
+    if(ver!==APP_VERSION)origin+=' <span style="color:var(--dup-color)">(vous êtes en v'+APP_VERSION+')</span>';
+    desc.innerHTML='<strong>'+fileNames.length+' archive'+(fileNames.length>1?'s':'')+' sauvegardée'+(fileNames.length>1?'s':'')+'</strong><br>'
+      +'<span style="font-size:.7rem;color:var(--text3)">'+origin+'</span><br>'
+      +fileNames.map(n=>'📄 '+esc(n)).join('<br>')
+      +(dupCount>0?'<br><span style="color:var(--dup-color)">⚠️ '+dupCount+' doublon(s) détecté(s)</span>':'');
+    document.getElementById('resume-title').textContent='💬 Archives sauvegardées';
+  }else{
+    desc.innerHTML=dbError
+      ?'<span style="color:var(--dup-color)">⚠️ La base d\'archives n\'a pas pu être ouverte ('+esc(dbError.name||'erreur')+'). Elle a peut-être été créée par une autre version.</span>'
+      :'Aucune archive sauvegardée dans ce fichier.';
+    document.getElementById('resume-title').textContent='🗂 Données précédentes';
+  }
+  document.getElementById('btn-resume-load').style.display=_resumeHasArchives?'':'none';
+  document.getElementById('btn-resume-clear').style.display=_resumeHasArchives?'':'none';
+  document.getElementById('btn-resume-skip').textContent=_resumeHasArchives?'⏭ Démarrer sans charger':'Continuer';
+  document.getElementById('resume-modal').classList.add('show');
+}
+// Après suppression depuis la fenêtre de démarrage : fermer si plus rien à proposer
+function afterLegacyDelete(){
+  if(!_resumeHasArchives&&!_legacyItems.length&&!document.getElementById('resume-desc').textContent.includes('⚠️'))
+    document.getElementById('resume-modal').classList.remove('show');
+}
+
+async function resumeLoad(){
+  document.getElementById('resume-modal').classList.remove('show');
+  showProgress(true,'Chargement des archives…',20);
+  try{
+    await openDB();
+    const files=await dbGetAll('files');
+    if(!files.length){showProgress(false);return;}
+    const meta=await dbGetAll('meta');
+    const metaMap={};for(const m of meta)metaMap[m.k]=m.v;
+    const order=metaMap.fileNames||files.map(f=>f.name);
+    importedFiles=order.map(n=>files.find(f=>f.name===n)).filter(Boolean).map(f=>({
+      name:f.name,
+      rawMessages:f.raw.map(m=>({...m,date:new Date(m.date)}))
+    }));
+    showProgress(true,'Construction de l\'index…',60);
+    dupKeys=new Set(metaMap.dupKeys||[]);
+    const seen=new Map();
+    for(const f of importedFiles)
+      for(const m of f.rawMessages){
+        const k=msgKey(m);
+        if(!seen.has(k))seen.set(k,{...m,isDup:dupKeys.has(k)});
+      }
+    allMessages=[...seen.values()].sort((a,b)=>a.date-b.date);
+    buildParticipants();
+    buildPeriodIndex();
+    showProgress(true,'Affichage…',90);
+    setTimeout(()=>{showProgress(false);afterLoad();},100);
+  }catch(e){showProgress(false);console.warn('IndexedDB load error',e);}
+}
+
+function resumeSkip(){
+  // Don't load data — just dismiss and show fresh import screen
+  document.getElementById('resume-modal').classList.remove('show');
+}
+
+// Fenêtre HTML de confirmation pour les actions destructrices → Promise<boolean>
+// « Annuler » est le bouton par défaut (focus, Entrée, Échap) pour éviter une suppression par erreur
+function askConfirm(o){
+  return new Promise(resolve=>{
+    const modal=document.getElementById('confirm-modal');
+    const ok=document.getElementById('cf-ok'),cancel=document.getElementById('cf-cancel');
+    document.getElementById('cf-title').textContent=o.title||'Confirmer';
+    document.getElementById('cf-desc').innerHTML=o.html||'';
+    ok.textContent=o.okLabel||'🗑 Supprimer';
+    cancel.textContent=o.cancelLabel||'↩ Annuler';
+    const onKey=e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();done(false);}};
+    function done(v){
+      modal.classList.remove('show');
+      document.removeEventListener('keydown',onKey,true);
+      ok.onclick=cancel.onclick=null;
+      resolve(v);
+    }
+    ok.onclick=()=>done(true);
+    cancel.onclick=()=>done(false);
+    document.addEventListener('keydown',onKey,true);
+    modal.classList.add('show');
+    cancel.focus();
+  });
+}
+
+async function resumeClear(){
+  if(!await askConfirm({
+    title:'🗑 Effacer les archives sauvegardées ?',
+    html:'Toutes les archives enregistrées dans ce stockage seront <strong>supprimées</strong>.<br>Vos fichiers .txt d\'origine ne sont pas touchés.<br><span style="color:var(--dup-color)">Cette action est irréversible.</span>',
+    okLabel:'🗑 Tout effacer'}))return;
+  document.getElementById('resume-modal').classList.remove('show');
+  await clearStorage();
+  showToast('🗑️ Données supprimées');
+}
+
+async function clearStorage(){
+  try{
+    await openDB();
+    await dbClear('files');
+    await dbClear('meta');
+  }catch(e){}
+}
+
+// ═══════════════════════════════════════════════════════════
+// FILE INPUT
+// ═══════════════════════════════════════════════════════════
+function triggerImport(mode){
+  _importMode=mode;
+  const inp=document.getElementById('file-input');
+  inp.value='';inp.click();
+}
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('drop-overlay').classList.remove('drag-over');
+  if(e.dataTransfer.files.length)processFiles([...e.dataTransfer.files],'replace');
+}
+function onFileInputChange(){
+  const files=[...document.getElementById('file-input').files];
+  if(files.length)processFiles(files,_importMode);
+}
+
+// ── JSON IMPORT PARSER ────────────────────────────────────
+function parseJSON(text, filename){
+  try{
+    const arr=JSON.parse(text);
+    if(!Array.isArray(arr))throw new Error('Format invalide');
+    return arr.map(m=>({
+      date: new Date(m.date||m.timestamp||m.Date),
+      sender: String(m.sender||m.Sender||''),
+      text: String(m.text||m.Text||m.message||''),
+      isMedia: !!(m.isMedia||m.is_media||false)
+    })).filter(m=>m.sender&&!isNaN(m.date.getTime()));
+  }catch(e){
+    showToast('⚠️ JSON invalide dans '+filename);
+    return [];
+  }
+}
+
+function processFiles(files,mode){
+  const valid=files.filter(f=>f.name.endsWith('.txt')||f.name.endsWith('.json'));
+  if(!valid.length){showToast('⚠️ Fichiers .txt ou .json uniquement');return;}
+  if(mode==='replace'){importedFiles=[];mutedSenders.clear();senderState.clear();}
+  showProgress(true,'Lecture des fichiers…',5);
+  const results=[];let remaining=valid.length;
+  valid.forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      showProgress(true,'Analyse : '+file.name,5+Math.round((valid.length-remaining+1)/valid.length*55));
+      setTimeout(()=>{
+        const rawMessages=file.name.endsWith('.json')
+          ? parseJSON(ev.target.result,file.name)
+          : parseText(ev.target.result);
+        results.push({name:file.name,rawMessages});
+        remaining--;
+        if(remaining===0){
+          showProgress(true,'Fusion & déduplication…',65);
+          setTimeout(()=>{
+            for(const r of results){
+              if(!r.rawMessages.length)continue;
+              const idx=importedFiles.findIndex(f=>f.name===r.name);
+              if(idx>=0)importedFiles[idx]=r; else importedFiles.push(r);
+            }
+            showProgress(true,'Construction de l\'index…',80);
+            setTimeout(()=>{
+              rebuildMerge();
+              showProgress(true,'Sauvegarde…',90);
+              saveToStorage().then(()=>{
+                showProgress(true,'Affichage…',96);
+                setTimeout(()=>{
+                  showProgress(false);
+                  afterLoad();
+                  const dc=dupKeys.size;
+                  showToast(dc>0
+                    ?'✅ '+allMessages.length+' msgs · ⚠️ '+dc+' doublon(s)'
+                    :'✅ '+allMessages.length+' messages — '+importedFiles.length+' fichier(s)');
+                },100);
+              });
+            },50);
+          },50);
+        }
+      },0);
+    };
+    reader.readAsText(file,'UTF-8');
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// UI REFRESH
+// ═══════════════════════════════════════════════════════════
+function afterLoad(){
+  buildPeriodSelector();
+  renderLegend();
+  renderFilesList();
+  updateDedupBanner();
+  computeFiltered();
+  
+  document.getElementById('drop-overlay').style.display='none';
+  document.getElementById('btn-export').style.display='flex';
+  document.getElementById('btn-clear').style.display='flex';
+  rendered=true;
+  renderMessages();
+}
+
+// ═══════════════════════════════════════════════════════════
+// EXPORT MENU
+// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+function toggleCollapseAll(){
+  const level=getCollapseLevel();
+  if(level==='none'){showToast('Choisissez d\'abord un niveau d\'empilement');return;}
+  allCollapsed=!allCollapsed;
+  const selector=level==='day'?'.day-group'
+                :level==='month'?'.month-group'
+                :'.year-group'; // year
+  document.querySelectorAll(selector).forEach(g=>{
+    g.classList.toggle('collapsed',allCollapsed);
+    // If expanding day groups, load their bubbles lazily
+    if(!allCollapsed&&g.classList.contains('day-group'))loadDayGroup(g);
+  });
+  const btn=document.getElementById('btn-collapse-all');
+  btn.textContent=allCollapsed?'▸ Dépiler':'▾ Empiler';
+  btn.classList.toggle('toggled',allCollapsed);
+}
+
+// Réglage « Empiler par » par défaut (mémorisé) — Mois par défaut
+const COLLAPSE_KEY='waav_collapse_default';
+const COLLAPSE_VALUES=['month','day','year','none'];
+let collapseDefault='month';
+function loadCollapseDefault(){
+  try{const v=localStorage.getItem(COLLAPSE_KEY);if(COLLAPSE_VALUES.includes(v))collapseDefault=v;}catch(e){}
+  try{localStorage.removeItem('waav_cleanup_on_close');}catch(e){} // reliquat inutile de la v1.9.5
+  const sel=document.getElementById('collapse-level');if(sel)sel.value=collapseDefault;
+  const st=document.getElementById('set-collapse');if(st)st.value=collapseDefault;
+}
+function applyDefaultCollapse(v){
+  collapseDefault=v;
+  try{localStorage.setItem(COLLAPSE_KEY,v);}catch(e){}
+  const st=document.getElementById('set-collapse');if(st)st.value=v;
+  const sel=document.getElementById('collapse-level');if(sel)sel.value=v;
+  if(rendered)renderMessages(false);
+}
+function onDefaultCollapseChange(){
+  applyDefaultCollapse(document.getElementById('set-collapse').value);
+  showToast('📚 Empiler par défaut : '+({month:'Mois',day:'Jour',year:'Année',none:'Aucun'})[collapseDefault]);
+}
+function resetDefaultCollapse(){applyDefaultCollapse('month');showToast('📚 Empiler par défaut : Mois');}
+function getCollapseLevel(){return document.getElementById('collapse-level')?.value||'none';}
+
+// ═══════════════════════════════════════════════════════════
+// DEDUP
+// ═══════════════════════════════════════════════════════════
+function updateDedupBanner(){
+  const n=dupKeys.size;
+  document.getElementById('dedup-banner').style.display=n>0?'block':'none';
+  document.getElementById('stat-dup-item').style.display=n>0?'flex':'none';
+  document.getElementById('btn-dup-highlight').style.display=n>0?'flex':'none';
+  if(n>0){
+    document.getElementById('dedup-count-label').textContent=n+' doublon'+(n>1?'s':'');
+    document.getElementById('stat-dup').textContent=n;
+  }
+}
+
+function toggleDupHighlight(){
+  dupHighlight=!dupHighlight;
+  document.querySelectorAll('.msg-row.is-dup').forEach(r=>r.classList.toggle('dup-hidden',!dupHighlight));
+  const b1=document.getElementById('btn-dup-highlight');
+  const b2=document.getElementById('btn-dup-view');
+  b1.textContent=dupHighlight?'🟠 Masquer doublons':'⚪ Afficher doublons';
+  if(b2)b2.textContent=dupHighlight?'🟠 Masquer':'⚪ Afficher';
+}
+
+async function confirmDedup(){
+  const n=dupKeys.size;
+  if(!n){showToast('Aucun doublon à supprimer');return;}
+  if(!await askConfirm({
+    title:'🗑 Supprimer les doublons ?',
+    html:'<strong>'+n.toLocaleString('fr-FR')+' doublon'+(n>1?'s':'')+'</strong> '+(n>1?'vont':'va')+' être supprimé'+(n>1?'s':'')+'.<br>Une seule occurrence de chaque message est conservée, les copies sont supprimées.<br><span style="color:var(--dup-color)">Cette action est irréversible.</span>',
+    okLabel:'🗑 Supprimer '+(n>1?'les '+n.toLocaleString('fr-FR')+' doublons':'le doublon')}))return;
+
+  // Keep only the FIRST occurrence of each key — dedup within allMessages
+  const seen=new Set();
+  let removed=0;
+  allMessages=allMessages.filter(m=>{
+    const k=msgKey(m);
+    if(seen.has(k)){removed++;return false;} // remove copy
+    seen.add(k);
+    m.isDup=false; // no longer a dup
+    return true;
+  });
+
+  // Clean rawMessages in each file too (remove copies, keep first seen globally)
+  const seenGlobal=new Set();
+  for(const f of importedFiles){
+    f.rawMessages=f.rawMessages.filter(m=>{
+      const k=msgKey(m);
+      if(seenGlobal.has(k))return false;
+      seenGlobal.add(k);return true;
+    });
+  }
+
+  dupKeys=new Set();dupHighlight=true;
+  buildPeriodIndex();computeFiltered();
+  saveToStorage();updateDedupBanner();renderMessages();
+  showToast('✅ '+removed+' copie'+(removed>1?'s':'')+' supprimée'+(removed>1?'s':''));
+}
+
+// ═══════════════════════════════════════════════════════════
+// PERIOD SELECTOR
+// ═══════════════════════════════════════════════════════════
+function buildPeriodSelector(){
+  const keys=Object.keys(periodIndex).filter(k=>k!=='all');
+  const years=[...new Set(keys.filter(k=>k.startsWith('year-')).map(k=>k.slice(5)))].sort().reverse(); // année la plus récente d'abord
+  const monthKeys=keys.filter(k=>!k.startsWith('year-')).sort();                                       // janvier → décembre
+  const sel=document.getElementById('period-select');
+  const prev=sel.value;
+  sel.innerHTML='<option value="all">Tous les messages</option>';
+  for(const yr of years){
+    const oy=document.createElement('option');
+    oy.value='year-'+yr;oy.textContent='Année '+yr;oy.style.fontWeight='700';
+    sel.appendChild(oy);
+    for(const ym of monthKeys.filter(k=>k.startsWith(yr+'-'))){
+      const om=document.createElement('option');
+      om.value=ym;om.textContent=MN[parseInt(ym.split('-')[1],10)-1]+' '+yr;
+      sel.appendChild(om);
+    }
+  }
+  sel.value=([...sel.options].some(o=>o.value===prev)?prev:'all');
+  selectedPeriod=sel.value;
+}
+function handlePeriodChange(){
+  selectedPeriod=document.getElementById('period-select').value;
+  computeFiltered();if(rendered)renderMessages();
+}
+
+// ═══════════════════════════════════════════════════════════
+// LEGEND — 3-state cycle per participant: left ⇒ right ⇐ hidden
+// Dot position shows bubble side: dot LEFT = left, dot RIGHT = right
+// ═══════════════════════════════════════════════════════════
+function renderLegend(){
+  const el=document.getElementById('participants-legend');el.innerHTML='';
+  for(const name of participants){
+    const state=getState(name);  // 'left' | 'right' | 'hidden'
+    const chip=document.createElement('div');
+    chip.className='legend-chip state-'+state;
+    const dot='<span class="dot" style="background:'+colorFor(name)+(state==='hidden'?';opacity:.3':'')+';"></span>';
+    const label='<span class="chip-label">'+esc(name)+'</span>';
+    const tip=state==='right'?'Bulles à gauche — cliquer pour masquer'
+              :state==='left'?'Bulles à droite — cliquer pour passer à gauche'
+              :'Masqué — cliquer pour afficher à gauche';
+    chip.title=tip;
+    // dot AFTER name = left side (bubbles align left, dot near left edge of chip)
+    // dot BEFORE name = right side (bubbles align right, dot near right edge of chip)
+    chip.innerHTML=state==='right' ? dot+label : label+dot;
+    chip.onclick=()=>{
+      cycleState(name);
+      computeFiltered();
+      if(rendered)renderMessages(true); // preserve collapse state
+      renderLegend();
+    };
+    el.appendChild(chip);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// FILES LIST
+// ═══════════════════════════════════════════════════════════
+function renderFilesList(){
+  const list=document.getElementById('files-list');list.innerHTML='';
+  for(const f of importedFiles){
+    const chip=document.createElement('div');chip.className='file-chip';
+    chip.innerHTML='<span style="font-size:.75rem">📄</span><span class="fname" title="'+esc(f.name)+'">'+esc(f.name)+'</span><span class="fcount">'+f.rawMessages.length+'</span><span class="fdel">✕</span>';
+    chip.querySelector('.fdel').onclick=()=>removeFile(f.name);
+    list.appendChild(chip);
+  }
+}
+function removeFile(name){
+  importedFiles=importedFiles.filter(f=>f.name!==name);
+  if(!importedFiles.length){clearData();return;}
+  rebuildMerge();computeFiltered();
+  saveToStorage();
+  buildPeriodSelector();renderLegend();renderFilesList();updateDedupBanner();
+  if(rendered)renderMessages();
+  showToast('🗑️ "'+name+'" retiré');
+}
+
+
+// ═══════════════════════════════════════════════════════════
+// RENDER MESSAGES — lazy day loading
+// Only day separators + placeholders are built upfront.
+// Bubble DOM is injected only when a day is expanded.
+// ═══════════════════════════════════════════════════════════
+function isOutSender(s){return getState(s)==='left';}
+
+function buildBubble(msg){
+  const isDup=msg.isDup;
+  const row=document.createElement('div');
+  row.className='msg-row '+(isOutSender(msg.sender)?'out':'in')+(isDup?' is-dup':'')+(isDup&&!dupHighlight?' dup-hidden':'');
+  const bbl=document.createElement('div');bbl.className='bubble';
+  const fd=msg.date.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' · '+msg.date.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+  bbl.setAttribute('data-date',fd);
+  if(searchQuery){const q=searchQuery.toLowerCase();if(msg.text.toLowerCase().includes(q)||msg.sender.toLowerCase().includes(q))bbl.classList.add('highlighted');}
+  const dupLabel=isDup&&dupHighlight?'<div class="dup-label">⚠️ doublon</div>':'';
+  const sender='<div class="bubble-sender" style="color:'+colorFor(msg.sender)+'">'+esc(msg.sender)+'</div>';
+  const body=msg.isMedia?'<div class="media-placeholder">📎 <em>Média non disponible</em></div>':'<div class="bubble-text">'+hlSearch(esc(msg.text))+'</div>';
+  bbl.innerHTML=dupLabel+sender+body+'<div class="bubble-time">'+msg.date.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})+'</div>';
+  row.appendChild(bbl);return row;
+}
+
+// Load bubbles into an already-rendered day group
+// (en mode recherche, group._msgs ne contient déjà que les messages correspondants)
+function loadDayGroup(group,foldLabel){
+  if(!group.classList.contains('unloaded'))return;
+  group.classList.remove('unloaded');
+  const wrap=group.querySelector('.day-messages');
+  if(!wrap)return;
+  const msgs=group._msgs;
+  if(!msgs)return;
+  const label=foldLabel||group.dataset.foldlabel||'';
+  const frag=document.createDocumentFragment();
+  for(const m of msgs)frag.appendChild(buildBubble(m));
+  const foldBtn=document.createElement('button');
+  foldBtn.className='fold-btn';
+  foldBtn.innerHTML='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg> replier '+label;
+  foldBtn.onclick=e=>{e.stopPropagation();group.classList.add('collapsed');};
+  frag.appendChild(foldBtn);
+  wrap.appendChild(frag);
+  delete group._msgs; // libère la mémoire
+}
+
+// Capture current collapse state of all groups by their data-key attribute
+function captureCollapseState(){
+  const state={};
+  document.querySelectorAll('[data-gkey]').forEach(g=>{
+    state[g.dataset.gkey]=g.classList.contains('collapsed');
+  });
+  return state;
+}
+
+function renderMessages(preserveState){
+  const area=document.getElementById('messages-area');
+  const header=document.getElementById('chat-header');
+  const empty=document.getElementById('empty-state');
+  const statBar=document.getElementById('sidebar-stats');
+
+  header.style.display='flex';statBar.style.display='flex';
+
+  // Header avatars
+  const hav=document.getElementById('header-avatars');hav.innerHTML='';
+  if(participants.length===1){hav.innerHTML='<div style="width:36px;height:36px;border-radius:50%;background:'+colorFor(participants[0])+';display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;color:#fff">'+initials(participants[0])+'</div>';}
+  else{participants.slice(0,2).forEach((p,i)=>{hav.innerHTML+='<div style="width:25px;height:25px;border-radius:50%;background:'+colorFor(p)+';display:flex;align-items:center;justify-content:center;font-size:.6rem;font-weight:700;color:#fff;border:2px solid var(--bg2);position:absolute;'+(i===0?'top:0;left:0;z-index:2':'bottom:0;right:0;z-index:1')+'">'+initials(p)+'</div>';});}
+
+  const convTitle=participants.length<=3?participants.join(', '):participants.slice(0,2).join(', ')+' +'+(participants.length-2);
+  document.getElementById('header-title').textContent=convTitle||'Conversation';
+
+  const days=new Set(filteredMsgs.map(m=>m.date.toDateString())).size;
+  const pLabel=selectedPeriod==='all'?'toute la période'
+    :selectedPeriod.startsWith('year-')?selectedPeriod.slice(5)
+    :(()=>{const[yr,mo]=selectedPeriod.split('-');return new Date(+yr,+mo-1,1).toLocaleDateString('fr-FR',{month:'long',year:'numeric'});})();
+  document.getElementById('header-meta').textContent=filteredMsgs.length+' messages · '+days+' jour'+(days>1?'s':'')+' · '+pLabel;
+
+  document.getElementById('stat-total').textContent=allMessages.length;
+  document.getElementById('stat-contacts').textContent=participants.length;
+  document.getElementById('stat-days').textContent=new Set(allMessages.map(m=>m.date.toDateString())).size;
+  document.getElementById('stat-files').textContent=importedFiles.length;
+  const sw=document.getElementById('stat-search-wrap');
+  if(searchQuery){sw.style.display='flex';document.getElementById('stat-results').textContent=filteredMsgs.length;}else sw.style.display='none';
+
+  const bcaBtn=document.getElementById('btn-collapse-all');
+  bcaBtn.style.display=filteredMsgs.length?'flex':'none';
+
+  if(!filteredMsgs.length){
+    area.style.display='none';empty.style.display='flex';
+    document.getElementById('empty-msg').textContent='Aucun message pour cette période';return;
+  }
+  area.style.display='flex';empty.style.display='none';
+
+  // Capture collapse state before clearing if preserving
+  const savedState=preserveState?captureCollapseState():{};
+
+  area.innerHTML='';
+  allCollapsed=false;bcaBtn.textContent='▾ Empiler';bcaBtn.classList.remove('toggled');
+
+  const collapseLevel=getCollapseLevel();
+
+  // Build year → month → day map
+  const yearMap={};
+  for(const m of filteredMsgs){
+    const yr=String(m.date.getFullYear());
+    const mk=yr+'-'+String(m.date.getMonth()+1).padStart(2,'0');
+    const dk=m.date.toDateString();
+    if(!yearMap[yr])yearMap[yr]={};
+    if(!yearMap[yr][mk])yearMap[yr][mk]={};
+    if(!yearMap[yr][mk][dk])yearMap[yr][mk][dk]=[];
+    yearMap[yr][mk][dk].push(m);
+  }
+
+  // Helper: make a fold button that collapses its parent group
+  function makeFoldBtn(group,label){
+    const btn=document.createElement('button');
+    btn.className='fold-btn';
+    btn.innerHTML='<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg> replier '+label;
+    btn.onclick=e=>{e.stopPropagation();group.classList.add('collapsed');};
+    return btn;
+  }
+
+  const frag=document.createDocumentFragment();
+
+  for(const yr of Object.keys(yearMap).sort()){
+    const ygKey='y-'+yr;
+    const yg=document.createElement('div');yg.className='year-group';yg.dataset.gkey=ygKey;
+    // Restore or apply collapse level
+    const yrCollapsed=preserveState&&savedState[ygKey]!==undefined?savedState[ygKey]:collapseLevel==='year';
+    if(yrCollapsed)yg.classList.add('collapsed');
+
+    const ys=document.createElement('div');ys.className='year-group-sep';
+    ys.innerHTML='<div class="year-group-label"><span>'+yr+'</span><span class="year-group-toggle">▾</span></div>';
+    ys.onclick=()=>{
+      yg.classList.toggle('collapsed');
+      if(!yg.classList.contains('collapsed'))yg.querySelectorAll('.day-group.unloaded:not(.collapsed)').forEach(loadDayGroup);
+    };
+    const yb=document.createElement('div');yb.className='year-group-body';
+    yg.appendChild(ys);yg.appendChild(yb);
+
+    for(const mk of Object.keys(yearMap[yr]).sort()){
+      const mgKey='m-'+mk;
+      const mDate=new Date(mk+'-01');
+      const mg=document.createElement('div');mg.className='month-group';mg.dataset.gkey=mgKey;
+      const mCollapsed=preserveState&&savedState[mgKey]!==undefined?savedState[mgKey]:(collapseLevel==='month'||collapseLevel==='year');
+      if(mCollapsed)mg.classList.add('collapsed');
+
+      const ms=document.createElement('div');ms.className='month-group-sep';
+      ms.innerHTML='<div class="month-group-label"><span>'+MN[mDate.getMonth()]+'</span><span class="month-group-toggle">▾</span></div>';
+      ms.onclick=e=>{
+        e.stopPropagation();mg.classList.toggle('collapsed');
+        if(!mg.classList.contains('collapsed'))mg.querySelectorAll('.day-group.unloaded:not(.collapsed)').forEach(loadDayGroup);
+      };
+      const mb=document.createElement('div');mb.className='month-group-body';
+      mg.appendChild(ms);mg.appendChild(mb);
+
+      for(const dk of Object.keys(yearMap[yr][mk]).sort((a,b)=>new Date(a)-new Date(b))){
+        const dgKey='d-'+dk.replace(/\s/g,'-');
+        const dayMsgs=yearMap[yr][mk][dk];
+        const d=new Date(dk);
+        const dg=document.createElement('div');dg.className='day-group';dg.dataset.gkey=dgKey;
+        const dCollapsed=preserveState&&savedState[dgKey]!==undefined?savedState[dgKey]:(collapseLevel==='day'||collapseLevel==='month'||collapseLevel==='year');
+        if(dCollapsed)dg.classList.add('collapsed');
+
+        dg.classList.add('unloaded');
+        dg._msgs=dayMsgs;
+        dg.dataset.foldlabel=formatDay(d); // used by lazy loadDayGroup
+
+        const sep=document.createElement('div');sep.className='day-separator';
+        sep.innerHTML='<div class="day-label"><span>'+formatDay(d)+'</span><span class="day-count-badge">('+dayMsgs.length+')</span><span class="day-toggle">▾</span></div>';
+        sep.onclick=e=>{
+          e.stopPropagation();
+          const wasCollapsed=dg.classList.contains('collapsed');
+          dg.classList.toggle('collapsed');
+          if(wasCollapsed)loadDayGroup(dg); // fold label read from dataset.foldlabel
+        };
+        const wrap=document.createElement('div');wrap.className='day-messages';
+        dg.appendChild(sep);dg.appendChild(wrap);
+
+        if(!dCollapsed){
+          dg._msgs=dayMsgs;
+          loadDayGroup(dg,formatDay(d)); // immediate load, fold btn added inside
+        }
+
+        mb.appendChild(dg);
+      }
+      // Add fold button at bottom of month body
+      mb.appendChild(makeFoldBtn(mg,MN[mDate.getMonth()]+' '+mk.split('-')[0]));
+      yb.appendChild(mg);
+    }
+    // Add fold button at bottom of year body
+    yb.appendChild(makeFoldBtn(yg,yr));
+    frag.appendChild(yg);
+  }
+
+  area.appendChild(frag);
+
+  // If search is active: expand all groups that contain results and load their bubbles
+  if(searchQuery){
+    // Expand years and months containing results
+    area.querySelectorAll('.year-group,.month-group').forEach(g=>g.classList.remove('collapsed'));
+    // Expand and load days that have matching messages
+    area.querySelectorAll('.day-group').forEach(dg=>{
+      const msgs=dg._msgs||[];
+      const q=searchQuery.toLowerCase();
+      const hasMatch=msgs.some(m=>m.text.toLowerCase().includes(q)||m.sender.toLowerCase().includes(q));
+      if(hasMatch){
+        dg.classList.remove('collapsed');
+        loadDayGroup(dg);
+      }
+    });
+  }
+
+  setTimeout(()=>{
+    if(searchQuery){
+      const first=area.querySelector('.bubble.highlighted');
+      if(first)first.scrollIntoView({behavior:'smooth',block:'center'});
+      else area.scrollTop=area.scrollHeight;
+    }else{
+      area.scrollTop=area.scrollHeight;
+    }
+  },80);
+}
+
+function hlSearch(t){
+  if(!searchQuery)return t;
+  const q=searchQuery.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  return t.replace(new RegExp('('+q+')','gi'),'<mark>$1</mark>');
+}
+
+// ═══════════════════════════════════════════════════════════
+// SEARCH — triggers only on Enter or focus loss, never on each keystroke
+// ═══════════════════════════════════════════════════════════
+// Seuils d'avertissement (nombre de messages trouvés) — réglables, mémorisés dans localStorage
+const THRESHOLD_DEFAULTS={warn:1000,strong:5000};
+const THRESHOLD_KEY='waav_thresholds';
+let searchThresholds={...THRESHOLD_DEFAULTS};
+let _searchBusy=false;
+
+function loadThresholds(){
+  try{
+    const v=JSON.parse(localStorage.getItem(THRESHOLD_KEY)||'null');
+    if(v&&Number.isInteger(v.warn)&&Number.isInteger(v.strong)&&v.warn>=0&&v.strong>=0)
+      searchThresholds={warn:v.warn,strong:v.strong};
+  }catch(e){}
+  syncThresholdInputs();
+}
+function saveThresholds(){
+  try{localStorage.setItem(THRESHOLD_KEY,JSON.stringify(searchThresholds));}catch(e){}
+}
+function syncThresholdInputs(){
+  document.getElementById('th-warn').value=searchThresholds.warn;
+  document.getElementById('th-strong').value=searchThresholds.strong;
+}
+function onThresholdChange(){
+  const rd=(id,fallback)=>{
+    const n=parseInt(document.getElementById(id).value,10);
+    return Number.isFinite(n)&&n>=0?n:fallback;
+  };
+  let w=rd('th-warn',searchThresholds.warn);
+  let st=rd('th-strong',searchThresholds.strong);
+  // cohérence : le seuil fort ne peut pas être inférieur au seuil d'avertissement (sauf s'il est désactivé)
+  if(w>0&&st>0&&st<w){
+    if(document.activeElement&&document.activeElement.id==='th-warn')w=st;else st=w;
+  }
+  searchThresholds={warn:w,strong:st};
+  syncThresholdInputs();
+  saveThresholds();
+  showToast('⚙ Seuils enregistrés');
+}
+function resetThresholds(){
+  searchThresholds={...THRESHOLD_DEFAULTS};
+  syncThresholdInputs();
+  saveThresholds();
+  showToast('⚙ Seuils par défaut rétablis');
+}
+// Niveau d'avertissement atteint : 'strong' | 'warn' | null
+function searchWarningLevel(n){
+  const {warn,strong}=searchThresholds;
+  if(strong>0&&n>strong)return 'strong';
+  if(warn>0&&n>warn)return 'warn';
+  return null;
+}
+// Fenêtre HTML de confirmation (même style que la fenêtre de démarrage) → 'show' | 'cancel' | 'settings'
+function askSearchConfirm(q,n,level){
+  return new Promise(resolve=>{
+    const modal=document.getElementById('search-warn-modal');
+    const ok=document.getElementById('sw-ok'),cancel=document.getElementById('sw-cancel'),set=document.getElementById('sw-settings');
+    const strong=level==='strong';
+    const nf=n.toLocaleString('fr-FR');
+    document.getElementById('sw-title').textContent=strong?'🔴 Affichage très long':'🟡 Beaucoup de résultats';
+    document.getElementById('sw-desc').innerHTML='La recherche <strong>« '+esc(q)+' »</strong> donne <strong>'+nf+' résultats</strong>.<br>'
+      +(strong?'L\'affichage risque d\'être <strong>très long</strong>. Vous pouvez restreindre la période ou affiner le mot-clé.'
+              :'L\'affichage peut être un peu long.');
+    ok.textContent='▶ Afficher les '+nf+' résultats';
+    const onKey=e=>{if(e.key==='Escape'){e.preventDefault();e.stopPropagation();done('cancel');}};
+    function done(v){
+      modal.classList.remove('show');
+      document.removeEventListener('keydown',onKey,true);
+      ok.onclick=cancel.onclick=set.onclick=null;
+      resolve(v);
+    }
+    ok.onclick=()=>done('show');
+    cancel.onclick=()=>done('cancel');
+    set.onclick=()=>done('settings');
+    document.addEventListener('keydown',onKey,true);
+    modal.classList.add('show');
+    ok.focus();
+  });
+}
+
+// Applique une nouvelle recherche ; demande confirmation si un seuil est dépassé.
+async function applySearch(v,preserve){
+  if(_searchBusy)return;
+  _searchBusy=true;   // reste actif pendant la fenêtre : le blur du champ ne doit pas relancer la recherche
+  try{
+    const input=document.getElementById('search-input');
+    const prev=searchQuery;
+    if(/^r\s*&\s*r$/i.test(v))startEasterEgg();
+    searchQuery=v;
+    computeFiltered();
+    const level=v?searchWarningLevel(filteredMsgs.length):null;
+    if(level){
+      const choice=await askSearchConfirm(v,filteredMsgs.length,level);
+      if(choice!=='show'){
+        searchQuery=prev;input.value=prev;updateSearchClear();
+        computeFiltered();
+        if(choice==='settings')openSettings();
+        return;
+      }
+    }
+    if(rendered)renderMessages(preserve);
+  }finally{
+    setTimeout(()=>{_searchBusy=false;},0);
+  }
+}
+function handleSearchKey(e){
+  if(e.key==='Enter'){
+    e.preventDefault();
+    const v=e.target.value.trim();
+    if(v===searchQuery)return;
+    applySearch(v,true);
+  }
+  if(e.key==='Escape')clearSearch();
+}
+// Réinitialise la recherche (Échap ou bouton ✕)
+function clearSearch(){
+  const input=document.getElementById('search-input');
+  input.value='';
+  updateSearchClear();
+  if(searchQuery==='')return;
+  searchQuery='';
+  computeFiltered();if(rendered)renderMessages(false);
+}
+function updateSearchClear(){
+  const input=document.getElementById('search-input');
+  document.getElementById('search-clear').classList.toggle('show',input.value.length>0);
+}
+function handleSearchBlur(v){
+  const trimmed=v.trim();
+  if(trimmed===searchQuery)return;
+  applySearch(trimmed,true);
+}
+
+// ═══════════════════════════════════════════════════════════
+// EASTER EGG R&R — une oie court après une tortue
+// ═══════════════════════════════════════════════════════════
+let _eggRunning=false;
+function startEasterEgg(){
+  if(_eggRunning)return;
+  _eggRunning=true;
+  closeHelp();
+  const egg=document.createElement('div');
+  egg.id='rr-egg';
+  egg.innerHTML='<div class="rr-a rr-turtle"><span>🐢</span></div>'
+    +'<div class="rr-a rr-goose"><span>🪿</span></div>'
+    +'<div class="rr-bubble">R&amp;R</div>';
+  document.body.appendChild(egg);
+  setTimeout(()=>{egg.remove();_eggRunning=false;showToast('🪿🐢 R&R — Régori & Rabrielle');},8400);
+}
+
+// ═══════════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════════
+function formatDay(d){
+  const now=new Date(),yest=new Date(now-86400000);
+  if(d.toDateString()===now.toDateString())return"Aujourd'hui";
+  if(d.toDateString()===yest.toDateString())return'Hier';
+  return d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
+}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),3500);}
+function showProgress(show,text,pct){
+  const m=document.getElementById('progress-modal');
+  if(show){m.classList.add('show');if(text)document.getElementById('progress-sub').textContent=text;if(pct!==undefined){document.getElementById('progress-fill').style.width=pct+'%';document.getElementById('progress-pct').textContent=Math.round(pct)+' %';}}
+  else m.classList.remove('show');
+}
+
+async function clearData(){
+  if(importedFiles.length&&!await askConfirm({
+    title:'🗑 Effacer les archives ?',
+    html:'<strong>'+importedFiles.length+' archive'+(importedFiles.length>1?'s':'')+'</strong> ('+allMessages.length.toLocaleString('fr-FR')+' messages) '+(importedFiles.length>1?'seront supprimées':'sera supprimée')+' de WAAV et du stockage du navigateur.<br>Vos fichiers .txt d\'origine ne sont pas touchés.<br><span style="color:var(--dup-color)">Cette action est irréversible.</span>',
+    okLabel:'🗑 Tout effacer'}))return;
+  clearStorage();
+  importedFiles=[];allMessages=[];dupKeys=new Set();participants=[];mutedSenders.clear();senderState.clear();
+  periodIndex={};filteredMsgs=[];
+  rendered=false;selectedPeriod='all';searchQuery='';allCollapsed=false;dupHighlight=true;
+  document.getElementById('search-input').value='';updateSearchClear();
+  document.getElementById('participants-legend').innerHTML='';
+  document.getElementById('files-list').innerHTML='';
+  document.getElementById('dedup-banner').style.display='none';
+  document.getElementById('btn-dup-highlight').style.display='none';
+  document.getElementById('btn-collapse-all').style.display='none';
+  document.getElementById('period-select').innerHTML='<option value="all">Tous les messages</option>';
+
+  ['messages-area','chat-header','sidebar-stats'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('empty-state').style.display='none';
+  document.getElementById('drop-overlay').style.display='flex';
+  document.getElementById('btn-export').style.display='none';
+  document.getElementById('btn-clear').style.display='none';
+  showToast('🗑️ Données supprimées');
+}
+
+// ── MYSQL ─────────────────────────────────────────────────
+function exportMySQL(){
+  const msgs=filteredMsgs;
+  const dbName='waav_archive';
+  const tbl='messages';
+  const esc_sql=s=>s.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/\n/g,'\\n').replace(/\r/g,'');
+
+  const lines=[];
+  lines.push('-- WAAV MySQL Export');
+  lines.push('-- Généré le '+new Date().toLocaleString('fr-FR'));
+  lines.push('-- '+msgs.length+' messages');
+  lines.push('-- Période : '+(selectedPeriod==='all'?'Tous les messages':selectedPeriod));
+  lines.push('');
+  lines.push('SET NAMES utf8mb4;');
+  lines.push('SET CHARACTER SET utf8mb4;');
+  lines.push('');
+  lines.push('CREATE DATABASE IF NOT EXISTS `'+dbName+'`');
+  lines.push('  DEFAULT CHARACTER SET utf8mb4');
+  lines.push('  DEFAULT COLLATE utf8mb4_unicode_ci;');
+  lines.push('');
+  lines.push('USE `'+dbName+'`;');
+  lines.push('');
+  lines.push('CREATE TABLE IF NOT EXISTS `'+tbl+'` (');
+  lines.push('  `id`        INT UNSIGNED NOT NULL AUTO_INCREMENT,');
+  lines.push('  `date`      DATETIME NOT NULL,');
+  lines.push('  `timestamp` BIGINT NOT NULL,');
+  lines.push('  `sender`    VARCHAR(255) NOT NULL,');
+  lines.push('  `text`      TEXT NOT NULL,');
+  lines.push('  `is_media`  TINYINT(1) NOT NULL DEFAULT 0,');
+  lines.push('  `is_dup`    TINYINT(1) NOT NULL DEFAULT 0,');
+  lines.push('  PRIMARY KEY (`id`),');
+  lines.push('  KEY `idx_sender` (`sender`),');
+  lines.push('  KEY `idx_date`   (`date`)');
+  lines.push(') ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;');
+  lines.push('');
+  // Insert in batches of 500
+  const BATCH=500;
+  for(let i=0;i<msgs.length;i+=BATCH){
+    const batch=msgs.slice(i,i+BATCH);
+    lines.push('INSERT INTO `'+tbl+'` (`date`,`timestamp`,`sender`,`text`,`is_media`,`is_dup`) VALUES');
+    const rows=batch.map(m=>{
+      const d=m.date;
+      const dt=d.getFullYear()+'-'
+        +String(d.getMonth()+1).padStart(2,'0')+'-'
+        +String(d.getDate()).padStart(2,'0')+' '
+        +String(d.getHours()).padStart(2,'0')+':'
+        +String(d.getMinutes()).padStart(2,'0')+':'
+        +String(d.getSeconds()).padStart(2,'0');
+      return `('${dt}',${d.getTime()},'${esc_sql(m.sender)}','${esc_sql(m.text)}',${m.isMedia?1:0},${m.isDup?1:0})`;
+    });
+    lines.push(rows.join(',\n')+';');
+    lines.push('');
+  }
+  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  downloadBlob(blob,'waav_'+exportPeriodSuffix()+'_'+Date.now()+'.sql');
+  showToast('🐬 Export MySQL téléchargé ('+msgs.length+' messages)');
+}
+function toggleExportMenu(){
+  const m=document.getElementById('export-menu');
+  m.style.display=m.style.display==='none'?'block':'none';
+}
+document.addEventListener('click',e=>{
+  const wrap=document.getElementById('export-wrap');
+  if(wrap&&!wrap.contains(e.target)){
+    const m=document.getElementById('export-menu');
+    if(m)m.style.display='none';
+  }
+});
+
+function downloadBlob(blob,filename){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=filename;
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+}
+
+function exportPeriodSuffix(){
+  return selectedPeriod==='all'?'complet':selectedPeriod;
+}
+
+// ── JSON ──────────────────────────────────────────────────
+function exportJSON(){
+  const msgs=filteredMsgs;
+  const blob=new Blob([JSON.stringify(msgs,null,2)],{type:'application/json'});
+  downloadBlob(blob,'waav_'+exportPeriodSuffix()+'_'+Date.now()+'.json');
+  showToast('📄 Export JSON téléchargé ('+msgs.length+' messages)');
+}
+
+// ── TXT (WhatsApp format) ─────────────────────────────────
+function exportTXT(){
+  const msgs=filteredMsgs;
+  // Format: DD/MM/YYYY, HH:MM - Sender: text
+  const lines=msgs.map(m=>{
+    const d=m.date;
+    const dd=String(d.getDate()).padStart(2,'0');
+    const mo=String(d.getMonth()+1).padStart(2,'0');
+    const yyyy=d.getFullYear();
+    const hh=String(d.getHours()).padStart(2,'0');
+    const mm=String(d.getMinutes()).padStart(2,'0');
+    return dd+'/'+mo+'/'+yyyy+', '+hh+':'+mm+' - '+m.sender+': '+m.text;
+  });
+  const blob=new Blob([lines.join('\n')],{type:'text/plain;charset=utf-8'});
+  downloadBlob(blob,'waav_'+exportPeriodSuffix()+'_'+Date.now()+'.txt');
+  showToast('💬 Export TXT téléchargé ('+msgs.length+' messages)');
+}
+
+// ── SQLITE ────────────────────────────────────────────────
+// Uses sql.js loaded from CDN on demand
+async function exportSQLite(){
+  showToast('🗄 Préparation SQLite…');
+  try{
+    // Load sql.js from CDN if not already loaded
+    if(!window.SQL){
+      await new Promise((res,rej)=>{
+        const s=document.createElement('script');
+        s.src='https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/sql-wasm.js';
+        s.onload=res;s.onerror=rej;
+        document.head.appendChild(s);
+      });
+      window.SQL=await initSqlJs({
+        locateFile:f=>'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.2/'+f
+      });
+    }
+    const db=new window.SQL.Database();
+    // Create table
+    db.run(`CREATE TABLE messages (
+      id        INTEGER PRIMARY KEY,
+      date      TEXT NOT NULL,
+      timestamp INTEGER NOT NULL,
+      sender    TEXT NOT NULL,
+      text      TEXT NOT NULL,
+      is_media  INTEGER NOT NULL DEFAULT 0,
+      is_dup    INTEGER NOT NULL DEFAULT 0
+    )`);
+    db.run(`CREATE INDEX idx_sender ON messages(sender)`);
+    db.run(`CREATE INDEX idx_date   ON messages(date)`);
+    // Insert messages in batches
+    const msgs=filteredMsgs;
+    const stmt=db.prepare(`INSERT INTO messages (date,timestamp,sender,text,is_media,is_dup)
+      VALUES (?,?,?,?,?,?)`);
+    for(const m of msgs){
+      const d=m.date;
+      const iso=d.toISOString();
+      stmt.run([iso,d.getTime(),m.sender,m.text,m.isMedia?1:0,m.isDup?1:0]);
+    }
+    stmt.free();
+    // Export as binary
+    const data=db.export(); // Uint8Array
+    db.close();
+    const blob=new Blob([data],{type:'application/x-sqlite3'});
+    downloadBlob(blob,'waav_'+exportPeriodSuffix()+'_'+Date.now()+'.db');
+    showToast('🗄 Export SQLite téléchargé ('+msgs.length+' messages)');
+  }catch(e){
+    console.error('SQLite export error',e);
+    showToast('❌ Erreur SQLite : '+e.message);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════
+// ANCIENNES BASES — détection à l'ouverture, suppression uniquement sur demande
+// Jamais concernés : base IndexedDB 'wa_archive' (versions 1.8 → 1.9.x) et clés 'waav_*' (réglages)
+// Une page ne peut voir que le stockage de SON origine : voir « Stockage lié à » dans ⚙ Réglages.
+// ═══════════════════════════════════════════════════════════
+const APP_VERSION='1.9.8';
+const CURRENT_IDB='wa_archive';
+const RECOMMENDED_FILENAME='waav.html';
+let _legacyItems=[];
+let _idbListSupported=true;
+const KNOWN_LEGACY_IDB=['wa_archive_v2','wa_v5','wa_v6'];   // [{type:'ls'|'idb', name, size?, version?}]
+
+function legacyLSKeys(){
+  try{
+    return Object.keys(localStorage).filter(k=>
+      ['wa_archive_v2','wa_v5','wa_v6'].includes(k)||/^wa_(v\d+|archive_v\d+)$/.test(k));
+  }catch(e){return [];}
+}
+function fmtSize(n){return n<1024?n+' o':n<1048576?(n/1024).toFixed(1)+' Ko':(n/1048576).toFixed(1)+' Mo';}
+function legacyItemLabel(it){
+  return it.type==='ls'
+    ?'📦 localStorage « '+it.name+' » ('+fmtSize(it.size)+')'
+    :'🗄 IndexedDB « '+it.name+' »'+(it.version?' (schéma v'+it.version+')':'');
+}
+// Détection seule — indexedDB.databases() n'existe pas sur tous les navigateurs
+async function scanLegacyData(){
+  const items=[];
+  for(const k of legacyLSKeys()){
+    let size=0;try{size=(localStorage.getItem(k)||'').length;}catch(e){}
+    items.push({type:'ls',name:k,size});
+  }
+  try{
+    if(indexedDB.databases){
+      _idbListSupported=true;
+      for(const d of await indexedDB.databases())
+        if(d.name&&/^wa_/i.test(d.name)&&d.name!==CURRENT_IDB)items.push({type:'idb',name:d.name,version:d.version});
+    }else{
+      // Navigateur sans indexedDB.databases() (Firefox avant 126) : on ne peut que sonder des noms connus
+      _idbListSupported=false;
+      for(const name of KNOWN_LEGACY_IDB)if(await idbExists(name))items.push({type:'idb',name});
+    }
+  }catch(e){}
+  _legacyItems=items;
+  syncLegacyUI();
+  return items;
+}
+function syncLegacyUI(){
+  const n=_legacyItems.length;
+  const list=n?'<ul class="legacy-list">'+_legacyItems.map(it=>'<li>'+esc(legacyItemLabel(it))+'</li>').join('')+'</ul>':'';
+  const st=document.getElementById('legacy-status');
+  if(st)st.innerHTML=(n?('<strong>'+n+' ancienne(s) base(s) détectée(s)</strong>'+list):'✅ Aucune ancienne base détectée dans ce stockage.')
+    +(_idbListSupported?'':'<div style="margin-top:6px">ℹ️ Ce navigateur ne permet pas de lister les bases IndexedDB (Firefox avant la version 126) : seules des bases aux noms connus sont recherchées.</div>');
+  const rl=document.getElementById('resume-legacy-list');if(rl)rl.innerHTML=list;
+  const rb=document.getElementById('resume-legacy');if(rb)rb.style.display=n?'block':'none';
+  const db=document.getElementById('btn-legacy-delete');if(db)db.disabled=!n;
+}
+// Teste l'existence d'une base sans la créer (la création est annulée si elle n'existait pas)
+function idbExists(name){
+  return new Promise(res=>{
+    let existed=true,r;
+    try{r=indexedDB.open(name);}catch(e){return res(false);}
+    r.onupgradeneeded=()=>{existed=false;try{r.transaction.abort();}catch(e){}};
+    r.onsuccess=()=>{try{r.result.close();}catch(e){}res(existed);};
+    r.onerror=()=>res(false);
+    r.onblocked=()=>res(false);
+  });
+}
+function deleteIDB(name){
+  return new Promise(res=>{
+    try{
+      const r=indexedDB.deleteDatabase(name);
+      r.onsuccess=()=>res(true);r.onerror=()=>res(false);r.onblocked=()=>res(false);
+    }catch(e){res(false);}
+  });
+}
+// Suppression sur demande, avec confirmation détaillée
+async function deleteLegacyData(){
+  if(!_legacyItems.length){showToast('✅ Rien à nettoyer');return 0;}
+  if(!await askConfirm({
+    title:'🧹 Supprimer les anciennes bases ?',
+    html:'<ul class="legacy-list" style="margin-bottom:8px">'+_legacyItems.map(it=>'<li>'+esc(legacyItemLabel(it))+'</li>').join('')+'</ul>'
+        +'Vos archives actuelles (<code>wa_archive</code>) et vos réglages ne sont pas concernés.<br><span style="color:var(--dup-color)">Cette action est irréversible.</span>',
+    okLabel:'🧹 Supprimer ces bases'}))return 0;
+  let ok=0,fail=0;
+  for(const it of _legacyItems){
+    if(it.type==='ls'){try{localStorage.removeItem(it.name);ok++;}catch(e){fail++;}}
+    else if(it.name!==CURRENT_IDB){(await deleteIDB(it.name))?ok++:fail++;}
+  }
+  await scanLegacyData();
+  showToast(fail?('🧹 '+ok+' supprimée(s), '+fail+' bloquée(s) (base ouverte dans un autre onglet ?)'):('🧹 '+ok+' ancienne(s) base(s) supprimée(s)'));
+  return ok;
+}
+// Avertit si le fichier n'a pas le nom recommandé (sous Firefox le stockage est lié au chemin complet du fichier)
+function updateFileNameWarning(){
+  const el=document.getElementById('storage-name-warn');if(!el)return;
+  let name='';
+  try{name=decodeURIComponent(location.pathname.split('/').pop()||'');}catch(e){}
+  const show=location.protocol==='file:'&&!!name&&name.toLowerCase()!==RECOMMENDED_FILENAME;
+  el.style.display=show?'block':'none';
+  if(show)el.innerHTML='⚠️ Ce fichier s\'appelle « <strong>'+esc(name)+'</strong> ». Pour que toutes les versions de WAAV partagent les mêmes données, nommez-le toujours « <strong>'+RECOMMENDED_FILENAME+'</strong> » et gardez-le dans le même dossier.<br>Attention : si vous le renommez maintenant, les données déjà enregistrées ici ne seront plus visibles sous le nouveau nom (elles restent liées à l\'ancien). Faites d\'abord un Export → JSON si besoin.';
+}
+// Ce que contient réellement le stockage lié à CE fichier
+async function showStorageInfo(){
+  const el=document.getElementById('storage-info');if(!el)return;
+  try{
+    await openDB();
+    const m={};for(const r of await dbGetAll('meta'))m[r.k]=r.v;
+    const n=(m.fileNames||[]).length;
+    el.innerHTML=n
+      ?('📦 Archives dans ce stockage : <strong>'+n+'</strong>'+(m.appVersion?' — enregistrées avec v'+esc(m.appVersion):' — enregistrées avec une version antérieure à 1.9.5')+(m.savedAt?' ('+new Date(m.savedAt).toLocaleString('fr-FR')+')':''))
+      :'📦 Aucune archive dans ce stockage.';
+  }catch(e){el.textContent='📦 Base d\'archives non lisible ('+(e&&e.name||'erreur')+').';}
+}
+async function rescanLegacy(){
+  const items=await scanLegacyData();
+  showToast(items.length?('🗂 '+items.length+' ancienne(s) base(s) détectée(s)'):'✅ Aucune ancienne base détectée');
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  loadThresholds();
+  loadCollapseDefault();
+  ['messages-area','chat-header','sidebar-stats','empty-state'].forEach(id=>document.getElementById(id).style.display='none');
+  document.getElementById('file-input').addEventListener('change',onFileInputChange);
+  loadFromStorage();
+});
+</script>
+</body>
+</html>
