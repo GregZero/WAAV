@@ -40,8 +40,7 @@ Un seul fichier HTML, aucune installation, aucun compte, **aucune donnée envoy�
 ## 🚀 Utilisation
 
 ### En ligne (GitHub Pages)
-Ouvrez l'adresse de la page du projet : `https://VOTRE-UTILISATEUR.github.io/waav/`
-*(remplacez par l'adresse de votre dépôt une fois la publication activée)*
+Ouvrez l'adresse de la page du projet : `https://gregzero.github.io/WAAV/`
 
 ### En local
 1. Téléchargez [`index.html`](index.html) et **renommez-le `waav.html`**
