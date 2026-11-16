@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v1.9.8 (v2.0.0 en cours de validation) |
+| Version stable actuelle | v2.0.0 (v2.0.1 en cours de validation) |
 
 ---
 
@@ -527,9 +527,29 @@
 
 **Vérifications :** `new Function(js)` OK ; `<div>` équilibrés ; test de bout en bout dans Chromium sur une conversation fictive : boutons présents seulement avec une recherche, ouverture, comptage (messages / résultats), navigation ← → et ‹ › avec saut des jours absents, blocage aux extrémités, Échap, recherche et liste conservées ; aucune erreur JavaScript, aucun dialogue natif.
 
-**Statut :** ✅ Terminée — à valider par test manuel sur de vraies archives
+**Statut :** ✅ Terminée — validée par test manuel (16 novembre 2026)
 
 **Réutilisation prévue :** `openDayViewer(clé)` servira au mini-calendrier (v2.2).
+
+---
+
+### v2.0.1 — « Voir toute la conversation » & « Aller à ce jour » ✅ TERMINÉE
+**Base :** v2.0.0 (validée)
+
+**Demandes :**
+- Renommer le bouton des résultats de recherche « Voir tout ce jour » en « Voir toute la conversation »
+- Ajouter dans le visualiseur de jour un bouton « Aller à ce jour », à côté de « Retour aux résultats », qui amène dans la conversation générale (hors recherche) au jour trouvé
+
+**Implémentations :**
+- Libellé du bouton : « 📅 Voir toute la conversation » (changelog de la v2.0.0 mis à jour en conséquence)
+- `goToDay()` : ferme le visualiseur, termine la recherche (champ vidé, `searchQuery=''`), élargit la période à « Tous les messages » si elle ne contient pas le jour (cas possible après navigation ‹ › hors période), puis relance `computeFiltered()` et `renderMessages(false)` en renseignant `_pendingDayKey`
+- `renderMessages()` : si `_pendingDayKey` est défini, déplie tous les groupes parents du jour (Année → Mois → Jour), charge ses bulles, puis, dans le `setTimeout` de fin de rendu, remplace le défilement habituel par `scrollIntoView` sur le jour et applique brièvement la classe `day-flash` (étiquette du jour mise en évidence 2,4 s) — le positionnement passe par le même rendu que le défilement final, d'où aucun conflit de timing
+- Style du bouton « Aller à ce jour » (vert) distinct de « Retour aux résultats »
+- Version 2.0.1 (titre, badge, `APP_VERSION`, en-tête, aide, changelog)
+
+**Vérifications :** `new Function(js)` OK ; `<div>` équilibrés ; test de bout en bout dans Chromium (conversation fictive sur 3 mois) : libellé du bouton ; « Aller à ce jour » avec période « Tous » ; avec période « Mars » après navigation vers février (période élargie à « Tous ») ; recherche vidée, aucun surlignage résiduel, aucun bouton de recherche, jour chargé, groupes parents dépliés, jour visible à l'écran, mise en évidence puis retrait ; aucune erreur JavaScript.
+
+**Statut :** ✅ Terminée — à valider par test manuel
 
 ---
 
@@ -546,7 +566,8 @@
 
 | Version | Contenu | État |
 |---------|---------|------|
-| **2.0.0** | « Voir tout ce jour » depuis la recherche, navigation jour précédent / suivant (visualiseur de jour) | ✅ Livrée, à valider |
+| **2.0.0** | Visualiseur de jour depuis la recherche, navigation jour précédent / suivant | ✅ Validée |
+| **2.0.1** | Bouton renommé « Voir toute la conversation », bouton « Aller à ce jour » | ✅ Livrée, à valider |
 | **2.1** | Autonomie et confort : polices et sql.js hébergés avec l'application, thème clair, confirmation de suppression d'un fichier (✕) | À faire |
 | **2.2** | API d'IA indépendante du fournisseur (adresse, clé et modèle réglables ; Claude, OpenAI ou modèle local) : résumés, questions-réponses, analyse du ton ; activation explicite, seuls les messages sélectionnés sont envoyés | À faire |
 | Ensuite | Mini-calendrier (via `openDayViewer`), marque-pages, affichage des médias, synchronisation MySQL (API PHP) | À planifier |
@@ -578,4 +599,4 @@
 
 ---
 
-*Document mis à jour le 16 novembre 2026 — WAAV v2.0.0*
+*Document mis à jour le 16 novembre 2026 — WAAV v2.0.1*
