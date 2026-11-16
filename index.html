@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  WAAV — WhatsApp Archive Viewer v1.9.8
+  WAAV — WhatsApp Archive Viewer v2.0.0
   Copyright (C) 2026 R&R (Régori & Rabrielle)
 
   Ce programme est un logiciel libre : vous pouvez le redistribuer et/ou le modifier
@@ -14,7 +14,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAAV v1.9.8</title>
+<title>WAAV v2.0.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -195,6 +195,25 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .month-group.collapsed .month-group-toggle{transform:rotate(-90deg);}
 .month-group.collapsed .month-group-body{display:none;}
 
+/* ── VISUALISEUR DE JOUR (v2.0.0) ── */
+.day-view-btn{background:var(--green-glow);border:1px solid var(--green-dim);color:var(--green);border-radius:14px;padding:3px 10px;font-size:.65rem;font-weight:600;font-family:inherit;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.day-view-btn:hover{background:var(--green);color:#04210f;}
+#day-viewer{position:fixed;inset:0;background:rgba(0,0,0,.82);display:none;align-items:center;justify-content:center;z-index:900;backdrop-filter:blur(4px);}
+#day-viewer.show{display:flex;}
+.dv-box{width:min(860px,96vw);height:92vh;background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow);display:flex;flex-direction:column;overflow:hidden;}
+.dv-head{display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);background:var(--bg3);}
+.dv-title{flex:1;text-align:center;min-width:0;}
+.dv-label{display:block;font-size:.85rem;font-weight:700;color:var(--text);}
+.dv-label::first-letter{text-transform:uppercase;}
+.dv-count{display:block;font-size:.66rem;color:var(--text2);margin-top:2px;}
+.dv-nav,.dv-close{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;font-family:inherit;cursor:pointer;transition:all .2s;}
+.dv-nav{width:34px;height:34px;font-size:1.1rem;line-height:1;}
+.dv-close{padding:7px 12px;font-size:.72rem;font-weight:600;white-space:nowrap;}
+.dv-nav:hover:not(:disabled),.dv-close:hover{background:var(--surface2);border-color:var(--green-dim);}
+.dv-nav:disabled{opacity:.3;cursor:default;}
+.dv-body{flex:1;overflow-y:auto;padding:10px 18px 16px;display:flex;flex-direction:column;}
+.dv-empty{margin:auto;color:var(--text2);font-size:.8rem;}
+
 /* Day group — lazy: messages only injected when expanded */
 .day-group{margin-bottom:1px;}
 .day-separator{display:flex;align-items:center;gap:9px;margin:10px 0 4px;cursor:pointer;user-select:none;}
@@ -351,7 +370,15 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     </div>
     <div class="changelog-body">
       <div class="cl-version current">
-        <div class="cl-ver-label">v1.9.8 <span>confirmations HTML &amp; nom de fichier</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-ver-label">v2.0.0 <span>navigation par jour depuis la recherche</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Recherche : chaque jour de résultats a un bouton « 📅 Voir tout ce jour » qui ouvre le <strong>visualiseur de jour</strong>, un panneau affichant tous les messages de la journée (participants masqués exclus), les résultats restant surlignés</div>
+          <div class="cl-item">Boutons ‹ jour précédent / jour suivant › (ou flèches ← → du clavier) pour parcourir l'archive jour par jour ; Échap ou « Retour aux résultats » referme le panneau sans rien reconstruire : la position dans les résultats est conservée</div>
+          <div class="cl-item">Index des jours calculé une seule fois avec l'index des périodes (aucun impact sur les gros volumes)</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v1.9.8 <span>confirmations HTML &amp; nom de fichier</span></div>
         <div class="cl-items">
           <div class="cl-item">Suppressions : toutes les confirmations (bouton « Effacer », « Supprimer les doublons », « Effacer et repartir de zéro » au démarrage, anciennes bases dans ⚙ Réglages) sont maintenant des fenêtres HTML, comme l'avertissement de recherche — « Annuler » est le choix par défaut (Entrée / Échap)</div>
           <div class="cl-item">⚙ Réglages › « Stockage lié à » : avertissement si le fichier ne s'appelle pas <code>waav.html</code> (sous Firefox, le stockage est lié au chemin complet du fichier : même nom + même dossier = données partagées entre versions)</div>
@@ -596,10 +623,23 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         <h3>✨ Crédits</h3>
         <div class="help-item">Concept original : <span class="rr-link" onclick="startEasterEgg()" title="…">R&amp;R</span> (Régori &amp; Rabrielle)</div>
         <div class="help-item">Développement : Claude (Anthropic)</div>
-        <div class="help-item">WAAV v1.9.8 — WhatsApp Archive Viewer</div>
+        <div class="help-item">WAAV v2.0.0 — WhatsApp Archive Viewer</div>
       </div>
 
     </div>
+  </div>
+</div>
+
+<!-- VISUALISEUR DE JOUR -->
+<div id="day-viewer" onclick="if(event.target===this)closeDayViewer()">
+  <div class="dv-box" role="dialog" aria-modal="true" aria-labelledby="dv-label">
+    <div class="dv-head">
+      <button class="dv-nav" id="dv-prev" type="button" title="Jour précédent (←)" onclick="dayNav(-1)">‹</button>
+      <div class="dv-title"><span class="dv-label" id="dv-label"></span><span class="dv-count" id="dv-count"></span></div>
+      <button class="dv-nav" id="dv-next" type="button" title="Jour suivant (→)" onclick="dayNav(1)">›</button>
+      <button class="dv-close" type="button" onclick="closeDayViewer()">↩ Retour aux résultats</button>
+    </div>
+    <div class="dv-body" id="dv-body"></div>
   </div>
 </div>
 
@@ -693,7 +733,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     <h1>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" onclick="openHelp()" style="cursor:pointer;flex-shrink:0;" title="Aide à l'utilisation"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       WAAV
-      <span class="version-badge" onclick="openChangelog()">v1.9.8</span>
+      <span class="version-badge" onclick="openChangelog()">v2.0.0</span>
       <button class="settings-btn" type="button" onclick="openSettings()" title="Réglages" aria-label="Réglages">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
@@ -980,7 +1020,78 @@ function buildPeriodIndex(){
     if(!periodIndex[mk])periodIndex[mk]=[];
     periodIndex[mk].push(i);
   }
+  buildDayIndex();
 }
+
+// ═══════════════════════════════════════════════════════════
+// INDEX DES JOURS + VISUALISEUR DE JOUR (v2.0.0)
+// allMessages est trié : les jours le sont aussi, sans tri supplémentaire.
+// ═══════════════════════════════════════════════════════════
+let dayIndex=new Map();   // 'AAAA-MM-JJ' → [indices dans allMessages]
+let dayKeys=[];           // clés de jours triées
+let _dvKey=null;          // jour affiché dans le visualiseur
+function dayKeyOf(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function buildDayIndex(){
+  dayIndex=new Map();dayKeys=[];
+  for(let i=0;i<allMessages.length;i++){
+    const k=dayKeyOf(allMessages[i].date);
+    let a=dayIndex.get(k);
+    if(!a){a=[];dayIndex.set(k,a);dayKeys.push(k);}
+    a.push(i);
+  }
+}
+function dayVisibleMsgs(k){
+  const idx=dayIndex.get(k)||[];
+  const out=[];
+  for(const i of idx){const m=allMessages[i];if(!mutedSenders.has(m.sender))out.push(m);}
+  return out;
+}
+// Jour voisin ayant au moins un message visible (dir = -1 ou +1) ; null s'il n'y en a pas
+function adjacentDayKey(k,dir){
+  let p=dayKeys.indexOf(k)+dir;
+  while(p>=0&&p<dayKeys.length){
+    if(dayVisibleMsgs(dayKeys[p]).length)return dayKeys[p];
+    p+=dir;
+  }
+  return null;
+}
+function openDayViewer(k){
+  if(!dayIndex.has(k))return;
+  const body=document.getElementById('dv-body');
+  const msgs=dayVisibleMsgs(k);
+  _dvKey=k;
+  const [y,mo,da]=k.split('-').map(Number);
+  const d=new Date(y,mo-1,da);
+  document.getElementById('dv-label').textContent=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+  const q=searchQuery?searchQuery.toLowerCase():'';
+  const hits=q?msgs.filter(m=>m.text.toLowerCase().includes(q)||m.sender.toLowerCase().includes(q)).length:0;
+  document.getElementById('dv-count').textContent=msgs.length+' message'+(msgs.length>1?'s':'')+(q?' · '+hits+' résultat'+(hits>1?'s':''):'');
+  document.getElementById('dv-prev').disabled=adjacentDayKey(k,-1)===null;
+  document.getElementById('dv-next').disabled=adjacentDayKey(k,1)===null;
+  body.innerHTML='';
+  if(!msgs.length){body.innerHTML='<div class="dv-empty">Aucun message visible ce jour</div>';}
+  else{const frag=document.createDocumentFragment();for(const m of msgs)frag.appendChild(buildBubble(m));body.appendChild(frag);}
+  document.getElementById('day-viewer').classList.add('show');
+  const first=body.querySelector('.bubble.highlighted');
+  body.style.scrollBehavior='auto';
+  if(first)first.scrollIntoView({block:'center'});else body.scrollTop=0;
+}
+function dayNav(dir){
+  if(_dvKey===null)return;
+  const k=adjacentDayKey(_dvKey,dir);
+  if(k)openDayViewer(k);
+}
+function closeDayViewer(){
+  document.getElementById('day-viewer').classList.remove('show');
+  _dvKey=null;
+}
+document.addEventListener('keydown',e=>{
+  if(_dvKey===null)return;
+  if(document.getElementById('confirm-modal').classList.contains('show')||document.getElementById('search-warn-modal').classList.contains('show'))return;
+  if(e.key==='Escape'){e.preventDefault();e.stopPropagation();closeDayViewer();}
+  else if(e.key==='ArrowLeft'){e.preventDefault();dayNav(-1);}
+  else if(e.key==='ArrowRight'){e.preventDefault();dayNav(1);}
+},true);
 
 // ═══════════════════════════════════════════════════════════
 // FILTER — uses index, O(k) where k = messages in period
@@ -1634,6 +1745,12 @@ function renderMessages(preserveState){
           dg.classList.toggle('collapsed');
           if(wasCollapsed)loadDayGroup(dg); // fold label read from dataset.foldlabel
         };
+        if(searchQuery){
+          const vb=document.createElement('button');vb.type='button';vb.className='day-view-btn';vb.textContent='📅 Voir tout ce jour';
+          const vk=dayKeyOf(dayMsgs[0].date);
+          vb.onclick=e=>{e.stopPropagation();openDayViewer(vk);};
+          sep.appendChild(vb);
+        }
         const wrap=document.createElement('div');wrap.className='day-messages';
         dg.appendChild(sep);dg.appendChild(wrap);
 
@@ -2047,7 +2164,7 @@ async function exportSQLite(){
 // Jamais concernés : base IndexedDB 'wa_archive' (versions 1.8 → 1.9.x) et clés 'waav_*' (réglages)
 // Une page ne peut voir que le stockage de SON origine : voir « Stockage lié à » dans ⚙ Réglages.
 // ═══════════════════════════════════════════════════════════
-const APP_VERSION='1.9.8';
+const APP_VERSION='2.0.0';
 const CURRENT_IDB='wa_archive';
 const RECOMMENDED_FILENAME='waav.html';
 let _legacyItems=[];

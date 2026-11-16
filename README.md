@@ -26,6 +26,7 @@ Un seul fichier HTML, aucune installation, aucun compte, **aucune donnée envoy�
 
 **Recherche**
 - Recherche par mot-clé avec surlignage, lancée avec Entrée ou en quittant le champ, effacée avec Échap ou le bouton ✕
+- **« Voir tout ce jour »** : depuis un résultat, ouvre le visualiseur de jour (tous les messages de la journée, résultats surlignés), avec navigation jour précédent / suivant (boutons ou flèches ← →), Échap pour revenir aux résultats
 - Avertissement (fenêtre de confirmation) quand le nombre de résultats risque de ralentir l'affichage — **seuils réglables** dans ⚙ Réglages
 
 **Conservation**
@@ -40,7 +41,8 @@ Un seul fichier HTML, aucune installation, aucun compte, **aucune donnée envoy�
 ## 🚀 Utilisation
 
 ### En ligne (GitHub Pages)
-Ouvrez l'adresse de la page du projet : `https://gregzero.github.io/WAAV/`
+Ouvrez l'adresse de la page du projet : `https://VOTRE-UTILISATEUR.github.io/waav/`
+*(remplacez par l'adresse de votre dépôt une fois la publication activée)*
 
 ### En local
 1. Téléchargez [`index.html`](index.html) et **renommez-le `waav.html`**
@@ -81,13 +83,11 @@ L'historique complet du développement (versions, demandes, corrections, choix t
 
 ---
 
-## 🗺️ Feuille de route (v2.0)
+## 🗺️ Feuille de route (v2.x)
 
-- « Voir tout ce jour » depuis un résultat de recherche, navigation jour précédent / suivant
-- Résumés et questions sur une conversation via l'API Claude
-- Synchronisation MySQL (API PHP)
-- Thème clair, mini-calendrier, marque-pages, affichage des médias
-- Polices et bibliothèque SQLite hébergées avec l'application
+- **v2.1** : polices et bibliothèque SQLite hébergées avec l'application, thème clair, confirmation de suppression d'un fichier
+- **v2.2** : API d'IA au choix (Claude, OpenAI, modèle local…) pour résumés et questions sur une conversation, activée explicitement
+- Ensuite : mini-calendrier, marque-pages, affichage des médias, synchronisation MySQL (API PHP)
 
 ---
 

@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v1.9.8 |
+| Version stable actuelle | v1.9.8 (v2.0.0 en cours de validation) |
 
 ---
 
@@ -507,27 +507,49 @@
 
 ---
 
+### v2.0.0 — Navigation par jour depuis la recherche ✅ TERMINÉE
+**Base :** v1.9.8
+
+**Demandes :**
+- Reprendre « Voir tout ce jour » et la navigation jour précédent / suivant, abandonnés en v1.9 → v1.9.2
+
+**Diagnostic des échecs précédents :**
+- En mode recherche, `computeFiltered()` ne garde que les messages trouvés : chaque groupe de jours (`dg._msgs`) est incomplet, le reste du jour n'existe pas dans la page
+- Toute tentative passait par un `renderMessages()` complet, dont le défilement automatique différé (80 ms) écrase le positionnement demandé
+- Aucun index des jours : pas de base pour « jour précédent / suivant »
+
+**Implémentations :**
+- Index des jours `dayIndex` (clé `AAAA-MM-JJ` → indices dans `allMessages`) et liste triée `dayKeys`, construits dans `buildPeriodIndex()` (une seule passe, `allMessages` étant déjà trié)
+- Visualiseur de jour (`#day-viewer`) : panneau superposé, sans reconstruction de la liste de résultats ; affiche tous les messages du jour via `buildBubble()` (participants masqués exclus), résultats surlignés, défilement sur le premier résultat
+- `openDayViewer(clé)`, `dayNav(±1)` (saute les jours sans message visible), `closeDayViewer()` ; boutons ‹ › désactivés aux extrémités ; flèches ← → et Échap au clavier (écoute en capture, inactive si une fenêtre de confirmation est ouverte)
+- Bouton « 📅 Voir tout ce jour » sur le séparateur de chaque jour, uniquement en mode recherche
+- Version 2.0.0 (titre, badge, `APP_VERSION`, en-tête, aide, changelog)
+
+**Vérifications :** `new Function(js)` OK ; `<div>` équilibrés ; test de bout en bout dans Chromium sur une conversation fictive : boutons présents seulement avec une recherche, ouverture, comptage (messages / résultats), navigation ← → et ‹ › avec saut des jours absents, blocage aux extrémités, Échap, recherche et liste conservées ; aucune erreur JavaScript, aucun dialogue natif.
+
+**Statut :** ✅ Terminée — à valider par test manuel sur de vraies archives
+
+**Réutilisation prévue :** `openDayViewer(clé)` servira au mini-calendrier (v2.2).
+
+---
+
 ## Fonctionnalités abandonnées
 
 | Fonctionnalité | Version tentée | Raison |
 |----------------|----------------|--------|
-| "Voir tout ce jour" (recherche) | v1.9, v1.9.1, v1.9.2 | Non fonctionnel malgré 3 tentatives — reporté v2.0 |
-| Navigation jour précédent/suivant | v1.9, v1.9.1, v1.9.2 | Non fonctionnel malgré 3 tentatives — reporté v2.0 |
+| "Voir tout ce jour" (recherche) | v1.9, v1.9.1, v1.9.2 | Non fonctionnel malgré 3 tentatives — repris et livré en v2.0.0 (visualiseur de jour) |
+| Navigation jour précédent/suivant | v1.9, v1.9.1, v1.9.2 | Non fonctionnel malgré 3 tentatives — repris et livré en v2.0.0 |
 
 ---
 
-## Roadmap — Version 2.0
+## Roadmap — Version 2.x
 
-| Fonctionnalité | Description |
-|----------------|-------------|
-| **"Voir tout ce jour"** | Reporté depuis v1.9 — afficher tous les messages d'un jour depuis une recherche |
-| **Navigation jour** | Reporté depuis v1.9 — jour précédent/suivant depuis un jour ouvert |
-| **API IA Claude** | Résumés, Q&A sur la conversation, analyse du ton |
-| **Synchro MySQL** | API PHP sur un hébergement web → MySQL |
-| **Thème clair** | Basculement dark/light |
-| **Timeline calendrier** | Navigation par mini-calendrier |
-| **Marque-pages** | Marquer des messages importants |
-| **Affichage médias** | Si export complet fourni |
+| Version | Contenu | État |
+|---------|---------|------|
+| **2.0.0** | « Voir tout ce jour » depuis la recherche, navigation jour précédent / suivant (visualiseur de jour) | ✅ Livrée, à valider |
+| **2.1** | Autonomie et confort : polices et sql.js hébergés avec l'application, thème clair, confirmation de suppression d'un fichier (✕) | À faire |
+| **2.2** | API d'IA indépendante du fournisseur (adresse, clé et modèle réglables ; Claude, OpenAI ou modèle local) : résumés, questions-réponses, analyse du ton ; activation explicite, seuls les messages sélectionnés sont envoyés | À faire |
+| Ensuite | Mini-calendrier (via `openDayViewer`), marque-pages, affichage des médias, synchronisation MySQL (API PHP) | À planifier |
 
 ---
 
@@ -556,4 +578,4 @@
 
 ---
 
-*Document mis à jour le 9 octobre 2026 — WAAV v1.9.8*
+*Document mis à jour le 16 novembre 2026 — WAAV v2.0.0*
