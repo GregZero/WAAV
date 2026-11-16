@@ -58,7 +58,7 @@ Formats de date reconnus : `JJ/MM/AAAA, HH:MM - Expéditeur: message`, variantes
 ## 🔒 Confidentialité
 
 - Vos conversations **ne quittent jamais votre ordinateur** : elles sont lues et stockées uniquement dans votre navigateur. Il n'y a pas de serveur.
-- Deux ressources externes sont chargées : les **polices Google Fonts** (à l'ouverture de la page) et la bibliothèque **sql.js** depuis cdnjs (uniquement quand vous utilisez l'export SQLite). Aucune donnée de conversation n'y est transmise, mais ces services reçoivent l'adresse IP du visiteur. *(Les héberger soi-même est une évolution prévue.)*
+- **Aucune ressource externe** : depuis la v2.1.0, les polices et la bibliothèque sql.js (export SQLite) sont intégrées au fichier. WAAV ne contacte aucun serveur et fonctionne hors connexion.
 - **Ne publiez jamais de vraies conversations** dans un dépôt public : le fichier `.gitignore` fourni exclut les formats courants (`.txt`, `.json`, `.db`, `.sql`).
 
 ---
@@ -75,9 +75,10 @@ Les archives sont enregistrées **dans le navigateur de l'appareil**, pas dans l
 
 ## 🛠️ Technique
 
-- HTML5, CSS3, JavaScript « vanilla », IndexedDB — un seul fichier, pas de dépendance de build
+- HTML5, CSS3, JavaScript « vanilla », IndexedDB — un seul fichier (environ 650 Ko, polices et sql.js compris), pas de dépendance de build
+- Composants tiers intégrés : voir [THIRD-PARTY-NOTICES.md](THIRD-PARTY-NOTICES.md)
 - Base IndexedDB `wa_archive` (stores `files` et `meta`) ; réglages dans le `localStorage`
-- Navigateurs récents. Testé sur Firefox 115 ESR et sur Chromium ; les autres navigateurs modernes devraient fonctionner mais n'ont pas été vérifiés.
+- Navigateurs récents (l'export SQLite demande Firefox 113+ ou Chrome 80+). Testé sur Firefox 115 ESR et sur Chromium ; les autres navigateurs modernes devraient fonctionner mais n'ont pas été vérifiés.
 
 L'historique complet du développement (versions, demandes, corrections, choix techniques, fonctionnalités abandonnées) est dans **[HISTORIQUE.md](HISTORIQUE.md)**. Le changelog est aussi consultable dans l'application en cliquant sur le numéro de version.
 
@@ -85,7 +86,7 @@ L'historique complet du développement (versions, demandes, corrections, choix t
 
 ## 🗺️ Feuille de route (v2.x)
 
-- **v2.1** : polices et bibliothèque SQLite hébergées avec l'application, thème clair, confirmation de suppression d'un fichier
+- **v2.1** ✅ : polices et sql.js intégrés (plus aucune ressource externe), thème clair, confirmation de suppression d'un fichier
 - **v2.2** : API d'IA au choix (Claude, OpenAI, modèle local…) pour résumés et questions sur une conversation, activée explicitement
 - Ensuite : mini-calendrier, marque-pages, affichage des médias, synchronisation MySQL (API PHP)
 

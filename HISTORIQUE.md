@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v2.0.0 (v2.0.1 en cours de validation) |
+| Version stable actuelle | v2.0.1 (v2.1.0 en cours de validation) |
 
 ---
 
@@ -549,7 +549,31 @@
 
 **Vérifications :** `new Function(js)` OK ; `<div>` équilibrés ; test de bout en bout dans Chromium (conversation fictive sur 3 mois) : libellé du bouton ; « Aller à ce jour » avec période « Tous » ; avec période « Mars » après navigation vers février (période élargie à « Tous ») ; recherche vidée, aucun surlignage résiduel, aucun bouton de recherche, jour chargé, groupes parents dépliés, jour visible à l'écran, mise en évidence puis retrait ; aucune erreur JavaScript.
 
-**Statut :** ✅ Terminée — à valider par test manuel
+**Statut :** ✅ Terminée — validée par test manuel (16 novembre 2026)
+
+---
+
+### v2.1.0 — Autonomie & confort ✅ TERMINÉE
+**Base :** v2.0.1 (validée)
+
+**Demandes :** (feuille de route 2.x, priorité 2)
+- Héberger les polices et sql.js avec l'application (plus aucun chargement externe)
+- Thème clair
+- Confirmation avant suppression d'un fichier (✕)
+
+**Choix techniques :**
+- « Hébergé » = **intégré au fichier**, pour conserver le principe d'un seul fichier HTML (le fichier passe d'environ 138 Ko à environ 650 Ko)
+- Polices : Plus Jakarta Sans en police variable (une seule ressource pour les graisses 300 à 700) et DM Mono 400/500, sous-ensembles latin (Fontsource, woff2) encodés en base64 dans des `@font-face`. Les caractères hors du sous-ensemble latin (par exemple polonais, turc) retombent sur la police sans-serif du système
+- sql.js 1.10.2 (la même version qu'avant) : `sql-wasm.js` et `sql-wasm.wasm` compressés gzip puis base64 dans deux blocs `<script type="text/plain">` inertes, décompressés **à la demande** (`inflateAsset()` avec `DecompressionStream`, puis `loadSqlJs()` qui injecte le script par URL `blob:` et initialise avec `wasmBinary`). Aucun coût au démarrage hors lecture du fichier. Contrainte : Firefox 113+ / Chrome 80+ (Firefox 115 ESR compris)
+- Licences : en-tête du fichier et `THIRD-PARTY-NOTICES.md` (SIL OFL 1.1 pour les polices, MIT pour sql.js) ; le code de WAAV reste en GPL-3.0-or-later
+
+**Implémentations :**
+- Thème : variables CSS surchargées par `:root[data-theme="light"]` (+ `color-scheme`), réglage dans ⚙ Réglages › Apparence (Sombre par défaut / Clair / Selon le système), clé `waav_theme` du `localStorage`, application anticipée par un petit script dans `<head>` (pas de flash au chargement), suivi du changement de thème système. Couleurs des expéditeurs assombries en thème clair, surlignage de recherche adapté
+- ✕ d'un fichier : `confirmRemoveFile()` → `askConfirm()` (nombre de messages indiqué) puis `removeFile()` ; pour le dernier fichier, on garde la confirmation propre à « Effacer » (`clearData()`), pour ne pas demander deux fois
+
+**Vérifications :** `new Function(js)` OK ; `<div>` équilibrés ; test Chromium **avec tout accès réseau bloqué** : 0 requête externe, polices chargées depuis le fichier, export SQLite produit un `.db` valide (relu avec sqlite3 : 2 lignes), thème clair appliqué, conservé après rechargement, confirmation ✕ (annuler laisse 2 fichiers, confirmer en laisse 1) ; aucune erreur JavaScript. Non testé : Firefox (export SQLite à vérifier en réel)
+
+**Statut :** ✅ Terminée — à valider par test manuel (notamment l'export SQLite sous Firefox et l'aspect du thème clair)
 
 ---
 
@@ -567,8 +591,8 @@
 | Version | Contenu | État |
 |---------|---------|------|
 | **2.0.0** | Visualiseur de jour depuis la recherche, navigation jour précédent / suivant | ✅ Validée |
-| **2.0.1** | Bouton renommé « Voir toute la conversation », bouton « Aller à ce jour » | ✅ Livrée, à valider |
-| **2.1** | Autonomie et confort : polices et sql.js hébergés avec l'application, thème clair, confirmation de suppression d'un fichier (✕) | À faire |
+| **2.0.1** | Bouton renommé « Voir toute la conversation », bouton « Aller à ce jour » | ✅ Validée |
+| **2.1.0** | Autonomie et confort : polices et sql.js intégrés au fichier, thème clair, confirmation de suppression d'un fichier (✕) | ✅ Livrée, à valider |
 | **2.2** | API d'IA indépendante du fournisseur (adresse, clé et modèle réglables ; Claude, OpenAI ou modèle local) : résumés, questions-réponses, analyse du ton ; activation explicite, seuls les messages sélectionnés sont envoyés | À faire |
 | Ensuite | Mini-calendrier (via `openDayViewer`), marque-pages, affichage des médias, synchronisation MySQL (API PHP) | À planifier |
 
@@ -599,4 +623,4 @@
 
 ---
 
-*Document mis à jour le 16 novembre 2026 — WAAV v2.0.1*
+*Document mis à jour le 16 novembre 2026 — WAAV v2.1.0*
