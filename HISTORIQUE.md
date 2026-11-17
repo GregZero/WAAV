@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v2.0.1 (v2.1.0 en cours de validation) |
+| Version stable actuelle | v2.1.0 (v2.1.1 en cours de validation) |
 
 ---
 
@@ -577,6 +577,30 @@
 
 ---
 
+### v2.1.1 — Choix de la police & easter egg partout ✅ TERMINÉE
+**Base :** v2.1.0
+
+**Demandes :**
+- Laisser l'utilisateur choisir la police ; garder la police précédente
+- Les emoji paraissaient moins jolis depuis la v2.1.0
+- Voir l'easter egg R&R (oie 🪿) ailleurs que dans Chrome
+
+**Diagnostic :**
+- Une police de texte ne contient pas d'emoji : ceux-ci viennent de la police emoji du système. 🪿 (Unicode 15, 2022) manque à de nombreux systèmes, d'où une oie visible seulement dans certains navigateurs
+- Cause probable de l'aspect des emoji (non reproductible sans la machine de l'utilisateur) : les `@font-face` intégrés de la v2.1.0 n'avaient pas de `unicode-range`, contrairement au CSS de Google Fonts qui limitait chaque fichier au jeu « latin ». Un navigateur peut alors traiter la police comme couvrant tous les caractères et choisir un autre repli pour emoji et symboles
+
+**Implémentations :**
+- `unicode-range` du jeu « latin » restauré sur les trois `@font-face` (mêmes plages que Google Fonts) : les emoji et symboles retournent directement aux polices du système
+- Variable CSS `--font-main` et attribut `data-font` : ⚙ Réglages › Apparence › Police = « Plus Jakarta Sans » (par défaut) ou « Police du système » (`system-ui`, Segoe UI, Roboto…) ; clé `waav_font` du `localStorage`, appliquée dès l'amorçage dans `<head>`
+- Easter egg : l'oie et la tortue sont des images SVG intégrées (dessins Noto Color Emoji extraits en SVG autonomes, environ 8 Ko chacune en base64) au lieu d'emoji texte ; le message de fin ne contient plus d'emoji. Licence OFL ajoutée à `THIRD-PARTY-NOTICES.md`
+- Choix écarté : une police emoji embarquée (Noto Color Emoji complet : plusieurs Mo, format SVG non rendu par Chrome)
+
+**Vérifications :** `new Function(js)` OK ; `<div>` équilibrés ; Chromium : police par défaut, choix « système », persistance après rechargement, liste synchronisée ; easter egg : images chargées, oie et tortue visibles en mouvement, retrait et message final ; 0 requête externe, aucune erreur JavaScript
+
+**Statut :** ✅ Terminée — à valider par l'utilisateur (aspect des emoji dans son navigateur, easter egg sous Firefox)
+
+---
+
 ## Fonctionnalités abandonnées
 
 | Fonctionnalité | Version tentée | Raison |
@@ -592,7 +616,8 @@
 |---------|---------|------|
 | **2.0.0** | Visualiseur de jour depuis la recherche, navigation jour précédent / suivant | ✅ Validée |
 | **2.0.1** | Bouton renommé « Voir toute la conversation », bouton « Aller à ce jour » | ✅ Validée |
-| **2.1.0** | Autonomie et confort : polices et sql.js intégrés au fichier, thème clair, confirmation de suppression d'un fichier (✕) | ✅ Livrée, à valider |
+| **2.1.0** | Autonomie et confort : polices et sql.js intégrés au fichier, thème clair, confirmation de suppression d'un fichier (✕) | ✅ Validée |
+| **2.1.1** | Choix de la police, retour aux emoji du système, easter egg visible dans tous les navigateurs | ✅ Livrée, à valider |
 | **2.2** | API d'IA indépendante du fournisseur (adresse, clé et modèle réglables ; Claude, OpenAI ou modèle local) : résumés, questions-réponses, analyse du ton ; activation explicite, seuls les messages sélectionnés sont envoyés | À faire |
 | Ensuite | Mini-calendrier (via `openDayViewer`), marque-pages, affichage des médias, synchronisation MySQL (API PHP) | À planifier |
 
@@ -623,4 +648,4 @@
 
 ---
 
-*Document mis à jour le 16 novembre 2026 — WAAV v2.1.0*
+*Document mis à jour le 16 novembre 2026 — WAAV v2.1.1*

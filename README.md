@@ -86,7 +86,7 @@ L'historique complet du développement (versions, demandes, corrections, choix t
 
 ## 🗺️ Feuille de route (v2.x)
 
-- **v2.1** ✅ : polices et sql.js intégrés (plus aucune ressource externe), thème clair, confirmation de suppression d'un fichier
+- **v2.1** ✅ : polices et sql.js intégrés (plus aucune ressource externe), thème clair, choix de la police, confirmation de suppression d'un fichier
 - **v2.2** : API d'IA au choix (Claude, OpenAI, modèle local…) pour résumés et questions sur une conversation, activée explicitement
 - Ensuite : mini-calendrier, marque-pages, affichage des médias, synchronisation MySQL (API PHP)
 
