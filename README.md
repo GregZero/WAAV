@@ -26,7 +26,7 @@ Un seul fichier HTML, aucune installation, aucun compte, **aucune donnée envoy�
 
 **Recherche**
 - Recherche par mot-clé avec surlignage, lancée avec Entrée ou en quittant le champ, effacée avec Échap ou le bouton ✕
-- **« Voir toute la conversation »** : depuis un résultat, ouvre le visualiseur de jour (tous les messages de la journée, résultats surlignés), avec navigation jour précédent / suivant (boutons ou flèches ← →) ; Échap ou « Retour aux résultats » pour revenir à la recherche, **« Aller à ce jour »** pour quitter la recherche et se placer sur ce jour dans la conversation générale
+- **« Voir toute la conversation »** : depuis un résultat, ouvre le visualiseur de jour (tous les messages de la journée, résultats surlignés), avec navigation jour précédent / suivant (boutons ou flèches ← →) et boutons « Précédent / Suivant » pour passer de résultat en résultat ; Échap ou « Retour aux résultats » pour revenir à la recherche, **« Aller à ce jour »** pour quitter la recherche et se placer sur ce jour dans la conversation générale
 - Avertissement (fenêtre de confirmation) quand le nombre de résultats risque de ralentir l'affichage — **seuils réglables** dans ⚙ Réglages
 
 **Conservation**

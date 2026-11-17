@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  WAAV — WhatsApp Archive Viewer v2.1.1
+  WAAV — WhatsApp Archive Viewer v2.1.2
   Copyright (C) 2026 R&R (Régori & Rabrielle)
 
   Ce programme est un logiciel libre : vous pouvez le redistribuer et/ou le modifier
@@ -19,7 +19,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAAV v2.1.1</title>
+<title>WAAV v2.1.2</title>
 <script>(function(){try{var p=localStorage.getItem('waav_theme')||'dark';var l=p==='light'||(p==='system'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches);document.documentElement.setAttribute('data-theme',l?'light':'dark');document.documentElement.setAttribute('data-font',localStorage.getItem('waav_font')==='system'?'system':'jakarta');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <style>
 /* ── POLICES INTÉGRÉES (v2.1.0) — aucun chargement externe ── */
@@ -54,7 +54,7 @@
 :root[data-theme="light"] .bubble-text mark{background:rgba(255,190,0,.5);color:#4a3a00;}
 :root[data-theme="light"] .bubble::after{box-shadow:0 2px 10px rgba(0,0,0,.12);}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{font-family:var(--font-main);background:var(--bg);color:var(--text);height:100vh;display:flex;overflow:hidden;}
+body{font-family:var(--font-main);background:var(--bg);color:var(--text);height:100vh;height:100dvh;display:flex;overflow:hidden;}
 
 /* ── SIDEBAR TOGGLE ── */
 #sidebar{
@@ -240,6 +240,24 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .dv-nav:disabled{opacity:.3;cursor:default;}
 .dv-body{flex:1;overflow-y:auto;padding:10px 18px 16px;display:flex;flex-direction:column;}
 .dv-empty{margin:auto;color:var(--text2);font-size:.8rem;}
+.dv-actions{display:flex;gap:8px;}
+.dv-hits{display:none;align-items:center;gap:8px;padding:7px 14px;border-bottom:1px solid var(--border);background:var(--bg2);}
+.dv-hbtn{background:var(--surface);border:1px solid var(--border);color:var(--text);border-radius:10px;padding:6px 11px;font-family:inherit;font-size:.7rem;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;}
+.dv-hbtn:hover:not(:disabled){background:var(--surface2);border-color:var(--green-dim);}
+.dv-hbtn:disabled{opacity:.3;cursor:default;}
+.dv-hcount{flex:1;text-align:center;font-size:.66rem;color:var(--text2);font-family:'DM Mono',monospace;min-width:0;}
+.bubble.dv-current{outline:3px solid var(--green);outline-offset:3px;box-shadow:0 0 0 8px var(--green-glow);}
+@media(max-width:600px){
+  #day-viewer{align-items:stretch;}
+  .dv-box{width:100vw;height:100vh;height:100dvh;border-radius:0;border-left:none;border-right:none;}
+  .dv-head{flex-wrap:wrap;gap:8px;padding:8px 10px;}
+  .dv-title{flex:1 1 0;}
+  .dv-actions{flex:1 1 100%;order:3;}
+  .dv-actions .dv-close{flex:1;padding:9px 6px;font-size:.72rem;}
+  .dv-hits{padding:6px 10px;gap:6px;}
+  .dv-hbtn{padding:8px 10px;}
+  .dv-body{padding:8px 10px 14px;}
+}
 .dv-goto{background:var(--green-glow);border-color:var(--green-dim);color:var(--green);}
 .dv-goto:hover{background:var(--green)!important;color:#04210f;}
 @keyframes dayflash{0%,60%{background:var(--green);color:#04210f;box-shadow:0 0 0 4px var(--green-glow);}100%{}}
@@ -402,7 +420,15 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     </div>
     <div class="changelog-body">
       <div class="cl-version current">
-        <div class="cl-ver-label">v2.1.1 <span>choix de la police &amp; easter egg partout</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-ver-label">v2.1.2 <span>correctifs téléphone &amp; résultats précédent / suivant</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-items">
+          <div class="cl-item fixed">« Aller à ce jour » sur téléphone : l'entête et le bouton du menu ne disparaissent plus (le défilement ne fait plus glisser la page entière ; hauteur de page calée sur l'écran visible)</div>
+          <div class="cl-item">Visualiseur de jour : entête réorganisé pour les petits écrans (titre lisible, boutons sur une seconde ligne, panneau plein écran)</div>
+          <div class="cl-item">Visualiseur de jour : barre « ▲ Précédent / Suivant ▼ » pour passer de résultat en résultat, d'un jour à l'autre, avec compteur « Résultat n / N » et résultat courant mis en évidence ; ‹ › continuent d'aller au jour précédent / suivant</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v2.1.1 <span>choix de la police &amp; easter egg partout</span></div>
         <div class="cl-items">
           <div class="cl-item">⚙ Réglages › Apparence › Police : « Plus Jakarta Sans » (par défaut) ou « Police du système »</div>
           <div class="cl-item">La police intégrée ne s'applique de nouveau qu'aux lettres, chiffres et ponctuation (comme avec Google Fonts) : emoji et symboles reviennent directement aux polices du système, comme avant la v2.1.0</div>
@@ -679,7 +705,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         <h3>✨ Crédits</h3>
         <div class="help-item">Concept original : <span class="rr-link" onclick="startEasterEgg()" title="…">R&amp;R</span> (Régori &amp; Rabrielle)</div>
         <div class="help-item">Développement : Claude (Anthropic)</div>
-        <div class="help-item">WAAV v2.1.1 — WhatsApp Archive Viewer</div>
+        <div class="help-item">WAAV v2.1.2 — WhatsApp Archive Viewer</div>
       </div>
 
     </div>
@@ -693,8 +719,15 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
       <button class="dv-nav" id="dv-prev" type="button" title="Jour précédent (←)" onclick="dayNav(-1)">‹</button>
       <div class="dv-title"><span class="dv-label" id="dv-label"></span><span class="dv-count" id="dv-count"></span></div>
       <button class="dv-nav" id="dv-next" type="button" title="Jour suivant (→)" onclick="dayNav(1)">›</button>
-      <button class="dv-close dv-goto" type="button" title="Quitter la recherche et afficher ce jour dans la conversation" onclick="goToDay()">📍 Aller à ce jour</button>
-      <button class="dv-close" type="button" onclick="closeDayViewer()">↩ Retour aux résultats</button>
+      <div class="dv-actions">
+        <button class="dv-close dv-goto" type="button" title="Quitter la recherche et afficher ce jour dans la conversation" onclick="goToDay()">📍 Aller à ce jour</button>
+        <button class="dv-close" type="button" onclick="closeDayViewer()">↩ Retour aux résultats</button>
+      </div>
+    </div>
+    <div class="dv-hits" id="dv-hits">
+      <button class="dv-hbtn" id="dv-hprev" type="button" title="Résultat précédent" onclick="hitNav(-1)">▲ Précédent</button>
+      <span class="dv-hcount" id="dv-hcount"></span>
+      <button class="dv-hbtn" id="dv-hnext" type="button" title="Résultat suivant" onclick="hitNav(1)">Suivant ▼</button>
     </div>
     <div class="dv-body" id="dv-body"></div>
   </div>
@@ -809,7 +842,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     <h1>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" onclick="openHelp()" style="cursor:pointer;flex-shrink:0;" title="Aide à l'utilisation"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       WAAV
-      <span class="version-badge" onclick="openChangelog()">v2.1.1</span>
+      <span class="version-badge" onclick="openChangelog()">v2.1.2</span>
       <button class="settings-btn" type="button" onclick="openSettings()" title="Réglages" aria-label="Réglages">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
@@ -1131,7 +1164,63 @@ function adjacentDayKey(k,dir){
   }
   return null;
 }
-function openDayViewer(k){
+// ── défilement borné à un conteneur : scrollIntoView fait aussi glisser la page entière
+// (entête hors écran sur téléphone, où la page est plus haute que la zone visible) ──
+function scrollWithin(container,el,center){
+  const c=container.getBoundingClientRect(),r=el.getBoundingClientRect();
+  let delta=r.top-c.top;
+  delta-=center?(container.clientHeight-r.height)/2:8;
+  container.scrollTop+=delta;
+}
+function resetPageScroll(){
+  [document.scrollingElement,document.documentElement,document.body,document.getElementById('main')].forEach(e=>{
+    if(e&&(e.scrollTop||e.scrollLeft)){e.scrollTop=0;e.scrollLeft=0;}
+  });
+}
+window.addEventListener('scroll',resetPageScroll);
+document.getElementById('main').addEventListener('scroll',resetPageScroll);
+
+// ── Occurrences (résultats de recherche) dans le visualiseur ──
+let _hitSet=null,_hitDays=[],_hitBefore=new Map(),_hitTotal=0;  // index des résultats, recalculé à l'ouverture
+let _dvHits=[],_dvHitIdx=-1;                                    // résultats du jour affiché (éléments) et position courante
+function buildHitIndex(){
+  _hitSet=new Set(filteredMsgs);_hitDays=[];_hitBefore=new Map();_hitTotal=0;
+  for(const m of filteredMsgs){
+    const k=dayKeyOf(m.date);
+    if(!_hitBefore.has(k)){_hitBefore.set(k,_hitTotal);_hitDays.push(k);}
+    _hitTotal++;
+  }
+}
+function updateHitBar(){
+  const bar=document.getElementById('dv-hits');
+  const on=!!searchQuery&&_hitTotal>0&&_dvKey!==null;
+  bar.style.display=on?'flex':'none';
+  if(!on)return;
+  const k=_dvKey,i=_dvHitIdx,n=_dvHits.length;
+  document.getElementById('dv-hcount').textContent=i>=0
+    ?'Résultat '+((_hitBefore.get(k)||0)+i+1)+' / '+_hitTotal
+    :_hitTotal+' résultat'+(_hitTotal>1?'s':'')+' · aucun ce jour';
+  document.getElementById('dv-hprev').disabled=!((i>0)||_hitDays.some(d=>d<k));
+  document.getElementById('dv-hnext').disabled=!((i>=0&&i<n-1)||_hitDays.some(d=>d>k));
+}
+function setDvCurrent(i){
+  _dvHits.forEach(e=>e.classList.remove('dv-current'));
+  _dvHitIdx=i;
+  const el=_dvHits[i];
+  if(el){el.classList.add('dv-current');scrollWithin(document.getElementById('dv-body'),el,true);}
+  updateHitBar();
+}
+function hitNav(dir){
+  if(_dvKey===null)return;
+  const k=_dvKey,ni=_dvHitIdx+dir;
+  if(_dvHitIdx>=0&&ni>=0&&ni<_dvHits.length){setDvCurrent(ni);return;}
+  let target=null;
+  if(dir>0){for(const d of _hitDays){if(d>k){target=d;break;}}}
+  else{for(let i=_hitDays.length-1;i>=0;i--){if(_hitDays[i]<k){target=_hitDays[i];break;}}}
+  if(target)openDayViewer(target,dir>0?'first':'last');
+}
+
+function openDayViewer(k,focus){
   if(!dayIndex.has(k))return;
   const body=document.getElementById('dv-body');
   const msgs=dayVisibleMsgs(k);
@@ -1139,18 +1228,23 @@ function openDayViewer(k){
   const [y,mo,da]=k.split('-').map(Number);
   const d=new Date(y,mo-1,da);
   document.getElementById('dv-label').textContent=d.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
-  const q=searchQuery?searchQuery.toLowerCase():'';
-  const hits=q?msgs.filter(m=>m.text.toLowerCase().includes(q)||m.sender.toLowerCase().includes(q)).length:0;
-  document.getElementById('dv-count').textContent=msgs.length+' message'+(msgs.length>1?'s':'')+(q?' · '+hits+' résultat'+(hits>1?'s':''):'');
+  const useHits=!!searchQuery;
+  if(useHits)buildHitIndex();
+  body.innerHTML='';_dvHits=[];_dvHitIdx=-1;
+  if(!msgs.length){body.innerHTML='<div class="dv-empty">Aucun message visible ce jour</div>';}
+  else{
+    const frag=document.createDocumentFragment();
+    for(const m of msgs){const el=buildBubble(m);frag.appendChild(el);if(useHits&&_hitSet.has(m))_dvHits.push(el);}
+    body.appendChild(frag);
+  }
+  document.getElementById('dv-count').textContent=msgs.length+' message'+(msgs.length>1?'s':'')+(useHits?' · '+_dvHits.length+' résultat'+(_dvHits.length>1?'s':''):'');
   document.getElementById('dv-prev').disabled=adjacentDayKey(k,-1)===null;
   document.getElementById('dv-next').disabled=adjacentDayKey(k,1)===null;
-  body.innerHTML='';
-  if(!msgs.length){body.innerHTML='<div class="dv-empty">Aucun message visible ce jour</div>';}
-  else{const frag=document.createDocumentFragment();for(const m of msgs)frag.appendChild(buildBubble(m));body.appendChild(frag);}
   document.getElementById('day-viewer').classList.add('show');
-  const first=body.querySelector('.bubble.highlighted');
   body.style.scrollBehavior='auto';
-  if(first)first.scrollIntoView({block:'center'});else body.scrollTop=0;
+  resetPageScroll();
+  if(_dvHits.length)setDvCurrent(focus==='last'?_dvHits.length-1:0);
+  else{body.scrollTop=0;updateHitBar();}
 }
 function dayNav(dir){
   if(_dvKey===null)return;
@@ -1179,7 +1273,8 @@ function goToDay(){
 }
 function closeDayViewer(){
   document.getElementById('day-viewer').classList.remove('show');
-  _dvKey=null;
+  _dvKey=null;_dvHits=[];_dvHitIdx=-1;
+  resetPageScroll();
 }
 document.addEventListener('keydown',e=>{
   if(_dvKey===null)return;
@@ -1911,12 +2006,12 @@ function renderMessages(preserveState){
 
   setTimeout(()=>{
     if(pendingTarget){
-      pendingTarget.scrollIntoView({block:'start'});
+      scrollWithin(area,pendingTarget,false);resetPageScroll();
       pendingTarget.classList.add('day-flash');
       setTimeout(()=>pendingTarget.classList.remove('day-flash'),2600);
     }else if(searchQuery){
       const first=area.querySelector('.bubble.highlighted');
-      if(first)first.scrollIntoView({behavior:'smooth',block:'center'});
+      if(first)scrollWithin(area,first,true);
       else area.scrollTop=area.scrollHeight;
     }else{
       area.scrollTop=area.scrollHeight;
@@ -2326,7 +2421,7 @@ async function exportSQLite(){
 // Jamais concernés : base IndexedDB 'wa_archive' (versions 1.8 → 1.9.x) et clés 'waav_*' (réglages)
 // Une page ne peut voir que le stockage de SON origine : voir « Stockage lié à » dans ⚙ Réglages.
 // ═══════════════════════════════════════════════════════════
-const APP_VERSION='2.1.1';
+const APP_VERSION='2.1.2';
 const CURRENT_IDB='wa_archive';
 const RECOMMENDED_FILENAME='waav.html';
 let _legacyItems=[];

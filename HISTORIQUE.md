@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v2.1.0 (v2.1.1 en cours de validation) |
+| Version stable actuelle | v2.1.1 (v2.1.2 en cours de validation) |
 
 ---
 
@@ -601,6 +601,30 @@
 
 ---
 
+### v2.1.2 — Correctifs téléphone & résultats précédent / suivant ✅ TERMINÉE
+**Base :** v2.1.1
+
+**Bugs signalés (Chrome téléphone) :**
+- Après « Aller à ce jour », l'entête et le bouton du menu de gauche disparaissent : écran bloqué
+- Visualiseur de jour : entête illisible (titre écrasé, boutons qui se chevauchent), navigation précédente / suivante peu pratique
+
+**Diagnostic :**
+- Cause 1 : `scrollIntoView({block:'start'})` ne fait pas défiler que la liste des messages : il fait aussi glisser les conteneurs parents, document compris, même en `overflow:hidden`. Sur téléphone, `100vh` correspond à l'écran sans barre d'adresse : la page est plus haute que la zone visible et le navigateur la décale d'autant (66 px = la hauteur de l'entête). Reproduit en émulation mobile en forçant la page à 850 px : entête à −66 px, `scrollTop` du document à 66
+- Cause 2 : l'entête du visualiseur n'avait aucune règle pour les petits écrans
+
+**Implémentations :**
+- `scrollWithin(conteneur, élément, centré)` remplace tous les `scrollIntoView` (visualiseur, « Aller à ce jour », résultat de recherche) ; `resetPageScroll()` remet le document, `<body>` et `#main` à zéro (appelé à l'ouverture et à la fermeture du visualiseur et après « Aller à ce jour »), avec des écouteurs `scroll` sur la fenêtre et sur `#main` comme garde-fou
+- `body` : `height:100vh;height:100dvh` (hauteur dynamique, repli sur `vh`)
+- Visualiseur sur petits écrans (≤ 600 px) : panneau plein écran, entête sur deux lignes (‹ titre › puis « Aller à ce jour » / « Retour aux résultats »)
+- **Occurrences** (choix C) : barre « ▲ Précédent · Résultat n / N · Suivant ▼ » sous l'entête, visible quand une recherche est active. Parcourt les résultats un à un (messages de `filteredMsgs`), à l'intérieur du jour puis de jour en jour ; boutons désactivés aux extrémités ; résultat courant entouré (`.dv-current`) ; sur un jour sans résultat, la barre affiche le total et permet de rejoindre le résultat précédent / suivant. Les boutons ‹ › gardent leur rôle : jour précédent / suivant de l'archive
+- Index des résultats (`buildHitIndex`) recalculé à chaque ouverture ou changement de jour : une passe sur les résultats
+
+**Vérifications :** `new Function(js)` OK ; `<div>` équilibrés ; plus aucun `scrollIntoView` ; Chromium émulation mobile (390 px, page forcée à 850 px) : entête à 0 et document non décalé après « Aller à ce jour » ; parcours complet des 7 résultats vers l'avant (compteur 3/7 → 7/7, « Suivant » désactivé à la fin) et retour au début (« Précédent » désactivé) ; ‹ › jour par jour ; capture du panneau lisible ; tests de la v2.0.1 (Aller à ce jour, période élargie) rejoués sans régression ; aucune erreur JavaScript
+
+**Statut :** ✅ Terminée — à valider sur le téléphone
+
+---
+
 ## Fonctionnalités abandonnées
 
 | Fonctionnalité | Version tentée | Raison |
@@ -617,7 +641,8 @@
 | **2.0.0** | Visualiseur de jour depuis la recherche, navigation jour précédent / suivant | ✅ Validée |
 | **2.0.1** | Bouton renommé « Voir toute la conversation », bouton « Aller à ce jour » | ✅ Validée |
 | **2.1.0** | Autonomie et confort : polices et sql.js intégrés au fichier, thème clair, confirmation de suppression d'un fichier (✕) | ✅ Validée |
-| **2.1.1** | Choix de la police, retour aux emoji du système, easter egg visible dans tous les navigateurs | ✅ Livrée, à valider |
+| **2.1.1** | Choix de la police, retour aux emoji du système, easter egg visible dans tous les navigateurs | ✅ Validée |
+| **2.1.2** | Correctifs téléphone (« Aller à ce jour », visualiseur) et boutons résultat précédent / suivant | ✅ Livrée, à valider |
 | **2.2** | API d'IA indépendante du fournisseur (adresse, clé et modèle réglables ; Claude, OpenAI ou modèle local) : résumés, questions-réponses, analyse du ton ; activation explicite, seuls les messages sélectionnés sont envoyés | À faire |
 | Ensuite | Mini-calendrier (via `openDayViewer`), marque-pages, affichage des médias, synchronisation MySQL (API PHP) | À planifier |
 
@@ -648,4 +673,4 @@
 
 ---
 
-*Document mis à jour le 16 novembre 2026 — WAAV v2.1.1*
+*Document mis à jour le 17 novembre 2026 — WAAV v2.1.2*
