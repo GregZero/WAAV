@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  WAAV — WhatsApp Archive Viewer v2.2.0
+  WAAV — WhatsApp Archive Viewer v2.2.1
   Copyright (C) 2026 R&R (Régori & Rabrielle)
 
   Ce programme est un logiciel libre : vous pouvez le redistribuer et/ou le modifier
@@ -19,7 +19,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAAV v2.2.0</title>
+<title>WAAV v2.2.1</title>
 <script>(function(){try{var p=localStorage.getItem('waav_theme')||'dark';var l=p==='light'||(p==='system'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches);document.documentElement.setAttribute('data-theme',l?'light':'dark');document.documentElement.setAttribute('data-font',localStorage.getItem('waav_font')==='system'?'system':'jakarta');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <style>
 /* ── POLICES INTÉGRÉES (v2.1.0) — aucun chargement externe ── */
@@ -400,7 +400,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .rr-link{color:var(--green);cursor:pointer;font-weight:700;border-bottom:1px dotted var(--green-dim);}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 
-/* ── IA (v2.2.0) ── */
+/* ── IA (v2.2.1) ── */
 #ai-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:996;backdrop-filter:blur(4px);}
 #ai-modal.show{display:flex;}
 #ai-section{padding:6px 13px;flex-shrink:0;}
@@ -415,8 +415,15 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .ai-actions button.sec{border-color:var(--border);background:transparent;color:var(--text2);}
 .ai-actions button:disabled{opacity:.4;cursor:not-allowed;}
 #ai-status{font-size:.68rem;color:var(--text3);min-height:1em;}
-#ai-out{white-space:pre-wrap;word-wrap:break-word;font-size:.8rem;line-height:1.5;color:var(--text);background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px;margin-top:6px;display:none;}
-#ai-out.err{color:#ff8a80;}
+#ai-out{word-wrap:break-word;font-size:.82rem;line-height:1.6;color:var(--text);background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px;margin-top:6px;display:none;}
+#ai-out.err{color:#ff8a80;white-space:pre-wrap;}
+#ai-out h4{margin:12px 0 4px;font-size:.88rem;color:var(--green);}#ai-out h4:first-child{margin-top:0;}
+#ai-out p{margin:6px 0;}#ai-out ul,#ai-out ol{margin:4px 0 8px 18px;padding:0;}#ai-out li{margin:3px 0;}
+#ai-out code{background:var(--bg2);padding:1px 4px;border-radius:4px;font-size:.78rem;}#ai-out hr{border:0;border-top:1px solid var(--border);margin:10px 0;}
+.ai-lbl{font-size:.68rem;color:var(--text2);}
+.ai-bar{height:8px;background:var(--bg3);border-radius:4px;overflow:hidden;border:1px solid var(--border);margin:3px 0 8px;}
+.ai-bar i{display:block;height:100%;background:var(--green);}.ai-bar.warn i{background:#e0a030;}.ai-bar.bad i{background:#e5534b;}
+.ai-note{font-size:.66rem;color:var(--text3);line-height:1.4;margin:2px 0 8px;}
 .ai-set input,.ai-set select{max-width:55%;min-width:0;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.72rem;padding:4px 6px;}
 .ai-set.off{opacity:.45;pointer-events:none;}
 @media(max-width:600px){#ai-modal .help-box{width:100vw;max-width:100vw;max-height:100dvh;height:100dvh;border-radius:0;}}
@@ -441,7 +448,15 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     </div>
     <div class="changelog-body">
       <div class="cl-version current">
-        <div class="cl-ver-label">v2.2.0 <span>IA : résumé de période et questions (optionnel)</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-ver-label">v2.2.1 <span>panneau IA : lisibilité, export, jauge de jetons</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Résultat mis en forme (titres, listes, gras) ; export .md avec prompt et résultat (sans clé ni messages)</div>
+          <div class="cl-item">« ✨ Résumer la période » devient la première suggestion ; un seul bouton « Envoyer »</div>
+          <div class="cl-item">Jauge de jetons : fenêtre de contexte, quota mensuel de référence (palier gratuit Mistral), consommation du mois ; taille des parties adaptée à la fenêtre de contexte</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v2.2.0 <span>IA : résumé de période et questions (optionnel)</span></div>
         <div class="cl-items">
           <div class="cl-item">Nouveau bouton « ✨ Résumer » (sous la période et les participants) : ouvre un panneau IA avec questions suggérées et zone de saisie, sur la sélection en cours</div>
           <div class="cl-item">Réglages « IA » : interrupteur général (désactivée par défaut), fournisseur Ollama / Mistral AI / Claude, adresse, modèle, clé (session ou mémorisée)</div>
@@ -734,7 +749,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         <h3>✨ Crédits</h3>
         <div class="help-item">Concept original : <span class="rr-link" onclick="startEasterEgg()" title="…">R&amp;R</span> (Régori &amp; Rabrielle)</div>
         <div class="help-item">Développement : Claude (Anthropic)</div>
-        <div class="help-item">WAAV v2.2.0 — WhatsApp Archive Viewer</div>
+        <div class="help-item">WAAV v2.2.1 — WhatsApp Archive Viewer</div>
       </div>
 
     </div>
@@ -768,12 +783,13 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     <div class="help-header"><h2>✨ IA — résumer / questionner</h2><button class="help-close" onclick="closeAI()">Fermer</button></div>
     <div class="help-body">
       <div class="ai-info" id="ai-info"></div>
+      <div id="ai-gauge"></div>
       <div class="ai-sugg" id="ai-sugg"></div>
-      <textarea id="ai-input" placeholder="Votre question sur la période sélectionnée…"></textarea>
+      <textarea id="ai-input" placeholder="Votre consigne ou question sur la sélection…"></textarea>
       <div class="ai-actions">
-        <button type="button" id="ai-btn-sum" onclick="aiRun('sum')">✨ Résumer la période</button>
-        <button type="button" id="ai-btn-ask" onclick="aiRun('ask')">➤ Poser la question</button>
+        <button type="button" id="ai-btn-ask" onclick="aiRun()">➤ Envoyer</button>
         <button type="button" class="sec" id="ai-btn-stop" onclick="aiStop()" disabled>⏹ Annuler</button>
+        <button type="button" class="sec" id="ai-btn-exp" onclick="aiExport()" disabled>💾 Exporter (.md)</button>
       </div>
       <div id="ai-status"></div>
       <div id="ai-out"></div>
@@ -840,11 +856,15 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         <div id="ai-set-box" class="ai-set off">
           <div class="th-row"><label for="ai-provider">Fournisseur<small>Ollama = local, rien ne quitte votre machine</small></label>
             <select id="ai-provider" onchange="aiProviderChanged()"><option value="ollama">Ollama (local)</option><option value="mistral">Mistral AI</option><option value="claude">Claude (Anthropic)</option></select></div>
+          <div id="ai-prov-note" class="ai-note"></div>
           <div class="th-row"><label for="ai-url">Adresse de l'API</label><input id="ai-url" type="text" onchange="aiSettingChanged()" autocomplete="off"></div>
           <div class="th-row"><label for="ai-model">Modèle</label><input id="ai-model" type="text" onchange="aiSettingChanged()" autocomplete="off"></div>
           <div class="th-row"><label for="ai-key">Clé d'API<small>inutile pour Ollama ; jamais incluse dans les exports</small></label><input id="ai-key" type="password" onchange="aiSettingChanged()" autocomplete="off"></div>
           <div class="th-row"><label for="ai-keymode">Conservation de la clé<small>« session » : oubliée à la fermeture de l'onglet</small></label>
             <select id="ai-keymode" onchange="aiSettingChanged()"><option value="session">Session seulement</option><option value="local">Mémorisée dans ce navigateur</option></select></div>
+          <div class="th-row"><label for="ai-ctx">Fenêtre de contexte<small>jetons ; règle la taille des parties envoyées</small></label><input id="ai-ctx" type="number" min="1000" step="1000" onchange="aiSettingChanged()"></div>
+          <div class="th-row"><label for="ai-quota">Quota mensuel de référence<small>jetons ; 0 = aucun (repère de la jauge, modifiable)</small></label><input id="ai-quota" type="number" min="0" step="1000" onchange="aiSettingChanged()"></div>
+          <div class="th-row"><label id="ai-usage-line" style="font-size:.72rem">Consommé ce mois-ci via WAAV : 0 jetons</label><button type="button" class="dedup-btn" onclick="aiUsageReset()">Remise à zéro</button></div>
         </div>
       </div>
 
@@ -904,7 +924,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     <h1>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" onclick="openHelp()" style="cursor:pointer;flex-shrink:0;" title="Aide à l'utilisation"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       WAAV
-      <span class="version-badge" onclick="openChangelog()">v2.2.0</span>
+      <span class="version-badge" onclick="openChangelog()">v2.2.1</span>
       <button class="settings-btn" type="button" onclick="openSettings()" title="Réglages" aria-label="Réglages">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
@@ -2487,18 +2507,21 @@ async function exportSQLite(){
 // Jamais concernés : base IndexedDB 'wa_archive' (versions 1.8 → 1.9.x) et clés 'waav_*' (réglages)
 // Une page ne peut voir que le stockage de SON origine : voir « Stockage lié à » dans ⚙ Réglages.
 // ═══════════════════════════════════════════════════════════
-const APP_VERSION='2.2.0';
+const APP_VERSION='2.2.1';
 // ═══════════════════════════════════════════════════════════
-// IA (v2.2.0) — optionnelle, désactivée par défaut
+// IA (v2.2.1) — optionnelle, désactivée par défaut
 // ═══════════════════════════════════════════════════════════
 const AI_DEFAULTS={
-  ollama:{url:'http://localhost:11434/v1',model:'llama3.1'},
-  mistral:{url:'https://api.mistral.ai/v1',model:'mistral-small-latest'},
-  claude:{url:'https://api.anthropic.com',model:'claude-sonnet-5-5'}
+  ollama:{url:'http://localhost:11434/v1',model:'llama3.1',ctx:8192,quota:0,
+    note:'Local : rien ne quitte votre machine et aucun quota ne s\'applique. Ollama peut tronquer sans prévenir un texte plus long que son réglage num_ctx : adaptez la fenêtre de contexte ci-dessous.'},
+  mistral:{url:'https://api.mistral.ai/v1',model:'mistral-small-latest',ctx:32000,quota:1000000000,
+    note:'Palier gratuit « Experiment » (repère : 1 requête/s, 500 000 jetons/min et 1 milliard de jetons/mois par modèle). Selon des sources tierces, il exige d\'accepter l\'utilisation des données pour l\'entraînement : à vérifier chez Mistral avant d\'y envoyer des conversations privées.'},
+  claude:{url:'https://api.anthropic.com',model:'claude-sonnet-5-5',ctx:200000,quota:0,
+    note:'L\'API Claude n\'a pas de palier gratuit permanent (seulement de petits crédits à l\'inscription) : la consommation est facturée au jeton.'}
 };
-const AI_CHUNK_CHARS=24000, AI_MAX_PARTS_WARN=12;
-let aiCfg={on:false,provider:'ollama',url:AI_DEFAULTS.ollama.url,model:AI_DEFAULTS.ollama.model,keyMode:'session'};
-let _aiKeyMem='', _aiAbort=null;
+const AI_MAX_PARTS_WARN=12;
+let aiCfg={on:false,provider:'ollama',url:AI_DEFAULTS.ollama.url,model:AI_DEFAULTS.ollama.model,keyMode:'session',ctx:AI_DEFAULTS.ollama.ctx,quota:0};
+let _aiKeyMem='',_aiAbort=null,_aiLast=null;
 function aiLoadCfg(){
   try{const s=JSON.parse(localStorage.getItem('waav_ai')||'null');if(s&&typeof s==='object')aiCfg=Object.assign(aiCfg,s);}catch(e){}
   if(aiCfg.keyMode==='local'){try{_aiKeyMem=localStorage.getItem('waav_ai_key')||'';}catch(e){}}
@@ -2507,55 +2530,98 @@ function aiSaveCfg(){
   try{localStorage.setItem('waav_ai',JSON.stringify(aiCfg));
     if(aiCfg.keyMode==='local')localStorage.setItem('waav_ai_key',_aiKeyMem);else localStorage.removeItem('waav_ai_key');}catch(e){}
 }
+function aiMonth(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');}
+function aiUsageGet(){try{const u=JSON.parse(localStorage.getItem('waav_ai_usage')||'null');if(u&&u.m===aiMonth())return u.t||0;}catch(e){}return 0;}
+function aiUsageAdd(n){try{localStorage.setItem('waav_ai_usage',JSON.stringify({m:aiMonth(),t:aiUsageGet()+Math.max(0,Math.round(n))}));}catch(e){}}
+function aiUsageReset(){try{localStorage.removeItem('waav_ai_usage');}catch(e){}aiLoadUI();}
+const aiFmt=n=>Math.round(n).toLocaleString('fr-FR');
 function aiLoadUI(){
   const g=id=>document.getElementById(id);if(!g('ai-on'))return;
   g('ai-on').value=aiCfg.on?'1':'0';g('ai-provider').value=aiCfg.provider;g('ai-url').value=aiCfg.url;
   g('ai-model').value=aiCfg.model;g('ai-key').value=_aiKeyMem;g('ai-keymode').value=aiCfg.keyMode;
+  g('ai-ctx').value=aiCfg.ctx;g('ai-quota').value=aiCfg.quota;
+  g('ai-prov-note').textContent=(AI_DEFAULTS[aiCfg.provider]||{}).note||'';
+  g('ai-usage-line').textContent='Consommé ce mois-ci via WAAV : '+aiFmt(aiUsageGet())+' jetons';
   g('ai-set-box').classList.toggle('off',!aiCfg.on);
 }
 function aiSettingChanged(){
-  const g=id=>document.getElementById(id);
-  const wasOn=aiCfg.on;
+  const g=id=>document.getElementById(id);const wasOn=aiCfg.on;
   aiCfg.on=g('ai-on').value==='1';aiCfg.url=g('ai-url').value.trim().replace(/\/+$/,'');aiCfg.model=g('ai-model').value.trim();
   aiCfg.keyMode=g('ai-keymode').value;_aiKeyMem=g('ai-key').value.trim();
+  aiCfg.ctx=Math.max(1000,parseInt(g('ai-ctx').value,10)||AI_DEFAULTS[aiCfg.provider].ctx);
+  aiCfg.quota=Math.max(0,parseInt(g('ai-quota').value,10)||0);
   aiSaveCfg();aiLoadUI();aiRefreshBtn();
   if(aiCfg.on&&!wasOn)showToast('IA activée : seuls les messages sélectionnés sont envoyés, après confirmation');
 }
 function aiProviderChanged(){
-  const p=document.getElementById('ai-provider').value;aiCfg.provider=p;
-  aiCfg.url=AI_DEFAULTS[p].url;aiCfg.model=AI_DEFAULTS[p].model;aiSaveCfg();aiLoadUI();
+  const p=document.getElementById('ai-provider').value,d=AI_DEFAULTS[p];aiCfg.provider=p;
+  aiCfg.url=d.url;aiCfg.model=d.model;aiCfg.ctx=d.ctx;aiCfg.quota=d.quota;aiSaveCfg();aiLoadUI();
 }
 function aiRefreshBtn(){
   const b=document.getElementById('btn-ai-sum');if(!b)return;
-  b.disabled=!aiCfg.on;b.title=aiCfg.on?'Résumer la sélection avec une IA':'IA désactivée — à activer dans les réglages';
+  b.disabled=!aiCfg.on;b.title=aiCfg.on?'Résumer ou interroger la sélection avec une IA':'IA désactivée — à activer dans les réglages';
 }
-const AI_SUGG=['Quels sont les sujets principaux ?','Quelles décisions ont été prises ?','Qui a parlé de quoi ?','Quels événements ou dates sont mentionnés ?'];
+const AI_SUMMARY_PROMPT='Résume cette conversation : sujets principaux, décisions, événements et dates importantes.';
+const AI_SUGG=[['✨ Résumer la période',AI_SUMMARY_PROMPT],['Quels sont les sujets principaux ?','Quels sont les sujets principaux ?'],['Quelles décisions ont été prises ?','Quelles décisions ont été prises ?'],['Qui a parlé de quoi ?','Qui a parlé de quoi ?'],['Quels événements ou dates sont mentionnés ?','Quels événements ou dates sont mentionnés ?']];
 function aiTranscript(){
   const pad=n=>String(n).padStart(2,'0');
   return filteredMsgs.filter(m=>!m.isDup).map(m=>{const d=m.date;
     return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes())+' '+m.sender+': '+m.text;});
 }
+function aiChunkChars(){return Math.max(4000,Math.min(48000,Math.floor(aiCfg.ctx*3.5*0.5)));}
 function aiChunks(lines){
-  const out=[];let cur=[],len=0;
+  const max=aiChunkChars(),out=[];let cur=[],len=0;
   for(const l of lines){
-    if(len+l.length>AI_CHUNK_CHARS&&cur.length){out.push(cur.join('\n'));cur=[];len=0;}
+    if(len+l.length>max&&cur.length){out.push(cur.join('\n'));cur=[];len=0;}
     cur.push(l);len+=l.length+1;
   }
   if(cur.length)out.push(cur.join('\n'));
   return out;
 }
+function aiBar(pct,label){
+  const c=pct>=85?'bad':pct>=60?'warn':'';
+  return '<div class="ai-lbl">'+label+'</div><div class="ai-bar '+c+'"><i style="width:'+Math.max(0.6,Math.min(100,pct)).toFixed(1)+'%"></i></div>';
+}
+function aiPlan(lines){
+  const chars=lines.reduce((a,l)=>a+l.length+1,0),parts=aiChunks(lines),reqs=parts.length>1?parts.length+1:1;
+  const inTok=chars/3.5,est=inTok+reqs*700,maxPart=Math.max.apply(null,parts.map(p=>p.length))/3.5+400;
+  return {chars,parts,reqs,inTok,est,maxPart};
+}
+function aiGauge(pl){
+  let h=aiBar(pl.maxPart/aiCfg.ctx*100,'Plus grosse requête : ≈ '+aiFmt(pl.maxPart)+' / '+aiFmt(aiCfg.ctx)+' jetons (fenêtre de contexte)');
+  const used=aiUsageGet();
+  if(aiCfg.quota>0)h+=aiBar((used+pl.est)/aiCfg.quota*100,'Quota mensuel de référence : '+aiFmt(used)+' déjà consommés + ≈ '+aiFmt(pl.est)+' = '+((used+pl.est)/aiCfg.quota*100).toFixed(4).replace('.',',')+' % de '+aiFmt(aiCfg.quota)+' jetons');
+  else h+='<div class="ai-lbl" style="margin-bottom:8px">'+(aiCfg.provider==='ollama'?'Local : aucun quota. ':'Aucun quota de référence réglé (consommation facturée au jeton). ')+'Consommé ce mois-ci via WAAV : '+aiFmt(used)+' jetons.</div>';
+  return h;
+}
 function openAI(){
   if(!aiCfg.on){showToast('IA désactivée — à activer dans les réglages');return;}
-  const lines=aiTranscript(),chars=lines.reduce((a,l)=>a+l.length+1,0);
-  document.getElementById('ai-info').textContent=lines.length.toLocaleString('fr-FR')+' messages sélectionnés (période et participants en cours) — environ '+Math.round(chars/1000).toLocaleString('fr-FR')+' 000 caractères ≈ '+Math.round(chars/3.5/1000).toLocaleString('fr-FR')+' k jetons. Rien n\'est envoyé sans confirmation.';
+  const lines=aiTranscript(),pl=aiPlan(lines);
+  document.getElementById('ai-info').textContent=lines.length.toLocaleString('fr-FR')+' messages sélectionnés (période et participants en cours) — ≈ '+aiFmt(pl.inTok)+' jetons en entrée, '+pl.reqs+' requête'+(pl.reqs>1?'s':'')+'. Rien n\'est envoyé sans confirmation.';
+  document.getElementById('ai-gauge').innerHTML=aiGauge(pl);
   const sg=document.getElementById('ai-sugg');sg.innerHTML='';
-  AI_SUGG.forEach(q=>{const b=document.createElement('button');b.type='button';b.textContent=q;b.onclick=()=>{document.getElementById('ai-input').value=q;};sg.appendChild(b);});
+  AI_SUGG.forEach(q=>{const b=document.createElement('button');b.type='button';b.textContent=q[0];b.onclick=()=>{document.getElementById('ai-input').value=q[1];};sg.appendChild(b);});
   document.getElementById('ai-modal').classList.add('show');
 }
 function closeAI(){aiStop();document.getElementById('ai-modal').classList.remove('show');}
 function aiStop(){if(_aiAbort){_aiAbort.abort();}}
-function aiSetBusy(b){['ai-btn-sum','ai-btn-ask'].forEach(i=>document.getElementById(i).disabled=b);document.getElementById('ai-btn-stop').disabled=!b;}
-function aiShow(txt,err){const o=document.getElementById('ai-out');o.style.display='block';o.classList.toggle('err',!!err);o.textContent=txt;}
+function aiSetBusy(b){document.getElementById('ai-btn-ask').disabled=b;document.getElementById('ai-btn-stop').disabled=!b;}
+function aiMd(src){
+  const esc=s=>s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const inl=s=>esc(s).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\s][^*]*)\*/g,'$1<i>$2</i>');
+  const out=[];let list=null;const close=()=>{if(list){out.push('</'+list+'>');list=null;}};
+  for(const raw of src.split('\n')){
+    const l=raw.trimEnd();let m;
+    if(!l.trim()){close();continue;}
+    if((m=l.match(/^\s*#{1,6}\s+(.*)$/))){close();out.push('<h4>'+inl(m[1])+'</h4>');}
+    else if((m=l.match(/^\s*[-*•]\s+(.*)$/))){if(list!=='ul'){close();out.push('<ul>');list='ul';}out.push('<li>'+inl(m[1])+'</li>');}
+    else if((m=l.match(/^\s*\d+[.)]\s+(.*)$/))){if(list!=='ol'){close();out.push('<ol>');list='ol';}out.push('<li>'+inl(m[1])+'</li>');}
+    else if(/^\s*(---+|___+)\s*$/.test(l)){close();out.push('<hr>');}
+    else{close();out.push('<p>'+inl(l)+'</p>');}
+  }
+  close();return out.join('');
+}
+function aiShow(txt,err){const o=document.getElementById('ai-out');o.style.display='block';o.classList.toggle('err',!!err);if(err)o.textContent=txt;else o.innerHTML=aiMd(txt);}
 async function aiCall(system,user,signal){
   const c=aiCfg;let url,headers={'Content-Type':'application/json'},body;
   if(c.provider==='claude'){
@@ -2583,39 +2649,54 @@ async function aiCall(system,user,signal){
   const j=await r.json();
   const txt=c.provider==='claude'?(j.content||[]).filter(x=>x.type==='text').map(x=>x.text).join(''):(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||'';
   if(!txt)throw new Error('Réponse vide du serveur.');
-  return txt;
+  const u=j.usage||{};
+  const tok=u.total_tokens||((u.prompt_tokens||u.input_tokens||0)+(u.completion_tokens||u.output_tokens||0))||Math.round((system.length+user.length+txt.length)/3.5);
+  return {text:txt,tokens:tok};
 }
-async function aiRun(mode){
+async function aiRun(){
   const q=document.getElementById('ai-input').value.trim();
-  if(mode==='ask'&&!q){showToast('Saisissez une question');return;}
+  if(!q){showToast('Saisissez une consigne ou choisissez une suggestion');return;}
   const lines=aiTranscript();if(!lines.length){showToast('Aucun message dans la sélection');return;}
   if(aiCfg.provider!=='ollama'&&!_aiKeyMem){showToast('Clé d\'API manquante — voir les réglages');return;}
-  const parts=aiChunks(lines),reqs=parts.length>1?parts.length+1:1,chars=lines.reduce((a,l)=>a+l.length+1,0);
+  const pl=aiPlan(lines),parts=pl.parts;
   const dest=aiCfg.provider==='ollama'?'votre serveur local ('+aiCfg.url+')':'un service externe ('+aiCfg.url+')';
   const ok=await askConfirm({title:'✨ Envoyer à l\'IA ?',okLabel:'✨ Envoyer',
-    html:'<b>'+lines.length.toLocaleString('fr-FR')+'</b> messages (≈ '+Math.round(chars/3.5/1000)+' k jetons) seront envoyés à <b>'+dest+'</b>, modèle <b>'+aiCfg.model.replace(/[<>&]/g,'')+'</b>.<br>Requêtes prévues : <b>'+reqs+'</b>'+(parts.length>AI_MAX_PARTS_WARN?' — <b>beaucoup</b> : réduisez la période pour limiter le coût.':'.')});
+    html:'<b>'+lines.length.toLocaleString('fr-FR')+'</b> messages (≈ '+aiFmt(pl.inTok)+' jetons) seront envoyés à <b>'+dest+'</b>, modèle <b>'+aiCfg.model.replace(/[<>&]/g,'')+'</b>.<br>Requêtes prévues : <b>'+pl.reqs+'</b>'+(parts.length>AI_MAX_PARTS_WARN?' — <b>beaucoup</b> : réduisez la période pour limiter le coût.':'.')});
   if(!ok)return;
-  const sys='Tu analyses un extrait de conversation WhatsApp (format « JJ/MM/AAAA HH:MM Nom: message »). Réponds en français, de façon factuelle, en t\'appuyant uniquement sur les messages fournis, sans rien inventer.';
-  const task=mode==='sum'?'Résume cette conversation : sujets principaux, décisions, événements et dates importantes.':'Question : '+q+'\nRéponds uniquement d\'après ces messages ; si l\'extrait ne contient pas la réponse, dis-le.';
-  _aiAbort=new AbortController();const sig=_aiAbort.signal;aiSetBusy(true);
+  const sys='Tu analyses un extrait de conversation WhatsApp (format « JJ/MM/AAAA HH:MM Nom: message »). Réponds en français, de façon factuelle, en t\'appuyant uniquement sur les messages fournis, sans rien inventer. Mets en forme en Markdown simple : titres avec ##, listes à puces, **gras** pour les points clés.';
+  const task='Consigne : '+q+'\nRéponds uniquement d\'après ces messages ; si l\'extrait ne contient pas la réponse, dis-le.';
+  _aiAbort=new AbortController();const sig=_aiAbort.signal;aiSetBusy(true);document.getElementById('ai-btn-exp').disabled=true;_aiLast=null;
   const st=document.getElementById('ai-status');document.getElementById('ai-out').style.display='none';
+  let used=0;
+  const call=async(s,u)=>{const r=await aiCall(s,u,sig);used+=r.tokens;aiUsageAdd(r.tokens);return r.text;};
   try{
     let res;
-    if(parts.length===1){st.textContent='Requête en cours…';res=await aiCall(sys,task+'\n\n'+parts[0],sig);}
+    if(parts.length===1){st.textContent='Requête en cours…';res=await call(sys,task+'\n\n'+parts[0]);}
     else{
       const partial=[];
       for(let i=0;i<parts.length;i++){
         st.textContent='Partie '+(i+1)+' / '+parts.length+'…';
-        partial.push('— Partie '+(i+1)+' —\n'+await aiCall(sys,task+'\n(Partie '+(i+1)+' sur '+parts.length+' de la conversation)\n\n'+parts[i],sig));
+        partial.push('— Partie '+(i+1)+' —\n'+await call(sys,task+'\n(Partie '+(i+1)+' sur '+parts.length+' de la conversation)\n\n'+parts[i]));
       }
       st.textContent='Synthèse finale…';
-      res=await aiCall(sys,(mode==='sum'?'Voici des résumés partiels, dans l\'ordre chronologique. Fusionne-les en un résumé unique et cohérent.':'Voici des réponses partielles à la question « '+q+' », dans l\'ordre chronologique. Fusionne-les en une réponse unique ; ignore les parties sans information.')+'\n\n'+partial.join('\n\n'),sig);
+      res=await call(sys,'Voici des réponses partielles à la consigne « '+q+' », dans l\'ordre chronologique. Fusionne-les en une réponse unique et cohérente ; ignore les parties sans information.\n\n'+partial.join('\n\n'));
     }
-    aiShow(res,false);st.textContent='Terminé.';
+    const f=filteredMsgs.length?filteredMsgs[0].date:null,l=filteredMsgs.length?filteredMsgs[filteredMsgs.length-1].date:null,fd=d=>d?d.toLocaleDateString('fr-FR'):'?';
+    _aiLast={date:new Date().toLocaleString('fr-FR'),provider:aiCfg.provider,model:aiCfg.model,sel:lines.length+' messages, du '+fd(f)+' au '+fd(l)+' ('+parts.length+' partie'+(parts.length>1?'s':'')+')',sys:sys,prompt:q,result:res,tokens:used};
+    aiShow(res,false);st.textContent='Terminé — '+aiFmt(used)+' jetons consommés.';document.getElementById('ai-btn-exp').disabled=false;
+    document.getElementById('ai-gauge').innerHTML=aiGauge(aiPlan(lines));
   }catch(e){
     if(e.name==='AbortError'){st.textContent='Annulé.';}
     else{aiShow(e.message,true);st.textContent='Échec.';}
   }finally{_aiAbort=null;aiSetBusy(false);}
+}
+function aiExport(){
+  const r=_aiLast;if(!r)return;
+  const md='# WAAV — export IA\n\n- Date : '+r.date+'\n- Fournisseur : '+r.provider+' (modèle '+r.model+')\n- Sélection : '+r.sel+'\n- Jetons consommés : '+aiFmt(r.tokens)+'\n\n## Consigne système\n\n'+r.sys+'\n\n## Prompt\n\n'+r.prompt+'\n\n## Résultat\n\n'+r.result+'\n';
+  const d=new Date(),p=n=>String(n).padStart(2,'0');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([md],{type:'text/markdown;charset=utf-8'}));
+  a.download='waav-ia-'+d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes())+'.md';
+  document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);
 }
 aiLoadCfg();aiRefreshBtn();
 

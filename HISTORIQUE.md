@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v2.2.0 en cours de validation (dernière version validée : v2.1.2) |
+| Version stable actuelle | v2.2.1 en cours de validation (dernière version validée : v2.1.2) |
 
 ---
 
@@ -624,6 +624,15 @@
 **Statut :** ✅ Terminée — à valider sur le téléphone
 
 ---
+
+### v2.2.1 — Panneau IA : lisibilité, export, jauge de jetons 🟡 À VALIDER
+
+- **Base** : v2.2.0 (section IA déplacée dans les Réglages).
+- **Demandes** : résultat plus lisible ; export avec prompt et résultat ; « ✨ Résumer la période » en simple suggestion, en premier ; échelle / comparatif de consommation de jetons avec un plan gratuit.
+- **Implémentation** : mini-rendu Markdown sûr (échappement avant mise en forme : titres, listes, gras, italique, code) ; consigne système demandant du Markdown simple ; un seul bouton « Envoyer » ; export `.md` (date, fournisseur, modèle, sélection, jetons, consigne système, prompt, résultat — jamais la clé ni les messages) ; jauge : plus grosse requête vs fenêtre de contexte, consommation du mois (compteur local `waav_ai_usage`, d'après les `usage` renvoyés par l'API) vs quota de référence réglable ; réglages « fenêtre de contexte » et « quota mensuel de référence » ; taille des parties dérivée de la fenêtre de contexte (au lieu de 24 000 caractères fixes) ; notes par fournisseur.
+- **Repères trouvés sur le web (18/11/2026, modifiables)** : Mistral, palier gratuit « Experiment » : 1 requête/s, 500 000 jetons/min, 1 milliard de jetons/mois par modèle (aide Mistral) ; des sources tierces indiquent qu'il exige d'accepter l'utilisation des données pour l'entraînement (à vérifier chez Mistral). API Claude : pas de palier gratuit permanent, petits crédits à l'inscription (montant non publié). Ollama : local, sans quota.
+- **Vérifications** : syntaxe JS, `<div>` équilibrés, tests Playwright avec faux serveur (bureau + mobile 390 px) : suggestion en premier, rendu sans injection de script, 4 requêtes pour 1 500 messages, compteur de jetons, export sans clé ni messages bruts.
+- **Non testé** : appels réels (Ollama, Mistral, Claude), Annuler en cours de requête, Firefox ; fenêtres de contexte par défaut (Ollama 8 192, Mistral 32 000, Claude 200 000) à ajuster selon le modèle.
 
 ### v2.2.0 — IA : résumé de période et questions (optionnel) 🟡 À VALIDER
 
