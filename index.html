@@ -665,21 +665,6 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
       </div>
 
       <div class="help-section">
-        <h3>🤖 IA — résumés et questions</h3>
-        <div class="th-row"><label for="ai-on">Activer l'IA<small>désactivée par défaut : l'IA reçoit le texte des messages sélectionnés, uniquement après confirmation</small></label>
-          <select id="ai-on" onchange="aiSettingChanged()"><option value="0">Désactivée</option><option value="1">Activée</option></select></div>
-        <div id="ai-set-box" class="ai-set off">
-          <div class="th-row"><label for="ai-provider">Fournisseur<small>Ollama = local, rien ne quitte votre machine</small></label>
-            <select id="ai-provider" onchange="aiProviderChanged()"><option value="ollama">Ollama (local)</option><option value="mistral">Mistral AI</option><option value="claude">Claude (Anthropic)</option></select></div>
-          <div class="th-row"><label for="ai-url">Adresse de l'API</label><input id="ai-url" type="text" onchange="aiSettingChanged()" autocomplete="off"></div>
-          <div class="th-row"><label for="ai-model">Modèle</label><input id="ai-model" type="text" onchange="aiSettingChanged()" autocomplete="off"></div>
-          <div class="th-row"><label for="ai-key">Clé d'API<small>inutile pour Ollama ; jamais incluse dans les exports</small></label><input id="ai-key" type="password" onchange="aiSettingChanged()" autocomplete="off"></div>
-          <div class="th-row"><label for="ai-keymode">Conservation de la clé<small>« session » : oubliée à la fermeture de l'onglet</small></label>
-            <select id="ai-keymode" onchange="aiSettingChanged()"><option value="session">Session seulement</option><option value="local">Mémorisée dans ce navigateur</option></select></div>
-        </div>
-      </div>
-
-      <div class="help-section">
         <h3>🔍 Recherche</h3>
         <div class="help-item">Tapez un mot-clé puis appuyez sur <span class="hi-key">Entrée</span> ou cliquez ailleurs pour lancer.</div>
         <div class="help-item">Les résultats sont surlignés en jaune — seuls les jours contenant des résultats sont dépliés.</div>
@@ -845,6 +830,21 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
             <option value="jakarta">Plus Jakarta Sans (par défaut)</option>
             <option value="system">Police du système</option>
           </select>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <h3>🤖 IA — résumés et questions</h3>
+        <div class="th-row"><label for="ai-on">Activer l'IA<small>désactivée par défaut : l'IA reçoit le texte des messages sélectionnés, uniquement après confirmation</small></label>
+          <select id="ai-on" onchange="aiSettingChanged()"><option value="0">Désactivée</option><option value="1">Activée</option></select></div>
+        <div id="ai-set-box" class="ai-set off">
+          <div class="th-row"><label for="ai-provider">Fournisseur<small>Ollama = local, rien ne quitte votre machine</small></label>
+            <select id="ai-provider" onchange="aiProviderChanged()"><option value="ollama">Ollama (local)</option><option value="mistral">Mistral AI</option><option value="claude">Claude (Anthropic)</option></select></div>
+          <div class="th-row"><label for="ai-url">Adresse de l'API</label><input id="ai-url" type="text" onchange="aiSettingChanged()" autocomplete="off"></div>
+          <div class="th-row"><label for="ai-model">Modèle</label><input id="ai-model" type="text" onchange="aiSettingChanged()" autocomplete="off"></div>
+          <div class="th-row"><label for="ai-key">Clé d'API<small>inutile pour Ollama ; jamais incluse dans les exports</small></label><input id="ai-key" type="password" onchange="aiSettingChanged()" autocomplete="off"></div>
+          <div class="th-row"><label for="ai-keymode">Conservation de la clé<small>« session » : oubliée à la fermeture de l'onglet</small></label>
+            <select id="ai-keymode" onchange="aiSettingChanged()"><option value="session">Session seulement</option><option value="local">Mémorisée dans ce navigateur</option></select></div>
         </div>
       </div>
 

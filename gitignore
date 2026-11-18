@@ -1,0 +1,26 @@
+# Exports WhatsApp et archives personnelles : ne jamais publier de vraies conversations
+_chat.txt
+WhatsApp Chat*
+*.zip
+conversation*.txt
+conversation*.json
+
+# Fichiers de test locaux
+test-data/
+tests-local/
+*.log
+
+# Fichiers du système
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Éditeurs
+.vscode/
+.idea/
+*.swp
+*~
+
+# Outils de développement
+node_modules/
+__pycache__/

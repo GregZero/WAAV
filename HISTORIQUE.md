@@ -632,6 +632,7 @@
 - **Décisions** : 2.2.0 = réglages + panneau + résumé/questions sur la **sélection en cours** ; 2.2.1 = questions sur toute l'archive (recherche d'abord, envoi d'une sélection seulement) ; recherche sémantique locale (embeddings) et statistiques : versions ultérieures.
 - **Implémentation** : réglages `waav_ai` et `waav_ai_key` (localStorage, jamais exportés) ; deux formats d'appel (compatible OpenAI pour Ollama et Mistral, Anthropic avec en-tête d'accès direct navigateur) ; découpage en parties de ≈ 24 000 caractères, résumé par partie puis synthèse finale ; confirmation avant envoi (nombre de messages, jetons estimés, destination, nombre de requêtes) ; annulation (`AbortController`) ; erreurs lisibles (clé refusée, quota, modèle, connexion/CORS) ; réponse affichée en texte brut.
 - **Vérifications** : syntaxe JS, `<div>` équilibrés, tests Playwright avec faux serveur d'IA (bureau + mobile 390 px) : bouton grisé par défaut, 6 requêtes pour 1 500 messages, question transmise, format Claude et en-têtes, erreur 401, désactivation.
+- **Correction avant validation** : la section « 🤖 IA » avait été insérée par erreur dans la fenêtre d'aide au lieu des Réglages (repérée par l'utilisateur sur la version en ligne) ; déplacée dans les Réglages et vérifiée par test Playwright (bureau + mobile).
 - **Non testé** : appels réels vers Ollama, Mistral et Claude (CORS à vérifier chez l'utilisateur), bouton Annuler en cours de requête, Firefox.
 
 ## Fonctionnalités abandonnées
