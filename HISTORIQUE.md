@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v2.1.1 (v2.1.2 en cours de validation) |
+| Version stable actuelle | v2.2.0 en cours de validation (dernière version validée : v2.1.2) |
 
 ---
 
@@ -624,6 +624,15 @@
 **Statut :** ✅ Terminée — à valider sur le téléphone
 
 ---
+
+### v2.2.0 — IA : résumé de période et questions (optionnel) 🟡 À VALIDER
+
+- **Base** : v2.1.2 validée.
+- **Demandes** : fournisseurs Ollama (local), Mistral AI et Claude ; résumer une période, puis questionner la sélection ; interrupteur général dans les réglages ; bouton « Résumer » sous la période et les participants ; clé au choix (session par défaut, ou mémorisée).
+- **Décisions** : 2.2.0 = réglages + panneau + résumé/questions sur la **sélection en cours** ; 2.2.1 = questions sur toute l'archive (recherche d'abord, envoi d'une sélection seulement) ; recherche sémantique locale (embeddings) et statistiques : versions ultérieures.
+- **Implémentation** : réglages `waav_ai` et `waav_ai_key` (localStorage, jamais exportés) ; deux formats d'appel (compatible OpenAI pour Ollama et Mistral, Anthropic avec en-tête d'accès direct navigateur) ; découpage en parties de ≈ 24 000 caractères, résumé par partie puis synthèse finale ; confirmation avant envoi (nombre de messages, jetons estimés, destination, nombre de requêtes) ; annulation (`AbortController`) ; erreurs lisibles (clé refusée, quota, modèle, connexion/CORS) ; réponse affichée en texte brut.
+- **Vérifications** : syntaxe JS, `<div>` équilibrés, tests Playwright avec faux serveur d'IA (bureau + mobile 390 px) : bouton grisé par défaut, 6 requêtes pour 1 500 messages, question transmise, format Claude et en-têtes, erreur 401, désactivation.
+- **Non testé** : appels réels vers Ollama, Mistral et Claude (CORS à vérifier chez l'utilisateur), bouton Annuler en cours de requête, Firefox.
 
 ## Fonctionnalités abandonnées
 

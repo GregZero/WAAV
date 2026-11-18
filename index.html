@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  WAAV — WhatsApp Archive Viewer v2.1.2
+  WAAV — WhatsApp Archive Viewer v2.2.0
   Copyright (C) 2026 R&R (Régori & Rabrielle)
 
   Ce programme est un logiciel libre : vous pouvez le redistribuer et/ou le modifier
@@ -19,7 +19,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAAV v2.1.2</title>
+<title>WAAV v2.2.0</title>
 <script>(function(){try{var p=localStorage.getItem('waav_theme')||'dark';var l=p==='light'||(p==='system'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches);document.documentElement.setAttribute('data-theme',l?'light':'dark');document.documentElement.setAttribute('data-font',localStorage.getItem('waav_font')==='system'?'system':'jakarta');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <style>
 /* ── POLICES INTÉGRÉES (v2.1.0) — aucun chargement externe ── */
@@ -399,6 +399,27 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 @keyframes rr-hop{0%,100%{transform:scaleX(-1) translateY(0)}50%{transform:scaleX(-1) translateY(-7px)}}
 .rr-link{color:var(--green);cursor:pointer;font-weight:700;border-bottom:1px dotted var(--green-dim);}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* ── IA (v2.2.0) ── */
+#ai-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:996;backdrop-filter:blur(4px);}
+#ai-modal.show{display:flex;}
+#ai-section{padding:6px 13px;flex-shrink:0;}
+#btn-ai-sum{width:100%;background:var(--green-glow);border:1px solid var(--green-dim);border-radius:12px;padding:7px 10px;color:var(--green);font-family:inherit;font-size:.74rem;font-weight:600;cursor:pointer;}
+#btn-ai-sum:disabled{opacity:.4;cursor:not-allowed;border-color:var(--border);color:var(--text3);background:transparent;}
+.ai-info{font-size:.7rem;color:var(--text2);margin-bottom:8px;line-height:1.4;}
+.ai-sugg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
+.ai-sugg button{background:var(--bg3);border:1px solid var(--border);border-radius:14px;padding:4px 10px;color:var(--text2);font-family:inherit;font-size:.68rem;cursor:pointer;}
+#ai-input{width:100%;box-sizing:border-box;min-height:64px;resize:vertical;background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:.78rem;padding:8px;}
+.ai-actions{display:flex;gap:8px;margin:8px 0;flex-wrap:wrap;}
+.ai-actions button{border-radius:12px;padding:6px 12px;font-family:inherit;font-size:.72rem;font-weight:600;cursor:pointer;border:1px solid var(--green-dim);background:var(--green-glow);color:var(--green);}
+.ai-actions button.sec{border-color:var(--border);background:transparent;color:var(--text2);}
+.ai-actions button:disabled{opacity:.4;cursor:not-allowed;}
+#ai-status{font-size:.68rem;color:var(--text3);min-height:1em;}
+#ai-out{white-space:pre-wrap;word-wrap:break-word;font-size:.8rem;line-height:1.5;color:var(--text);background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:10px;margin-top:6px;display:none;}
+#ai-out.err{color:#ff8a80;}
+.ai-set input,.ai-set select{max-width:55%;min-width:0;background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.72rem;padding:4px 6px;}
+.ai-set.off{opacity:.45;pointer-events:none;}
+@media(max-width:600px){#ai-modal .help-box{width:100vw;max-width:100vw;max-height:100dvh;height:100dvh;border-radius:0;}}
 </style>
 </head>
 <body>
@@ -420,7 +441,15 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     </div>
     <div class="changelog-body">
       <div class="cl-version current">
-        <div class="cl-ver-label">v2.1.2 <span>correctifs téléphone &amp; résultats précédent / suivant</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-ver-label">v2.2.0 <span>IA : résumé de période et questions (optionnel)</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Nouveau bouton « ✨ Résumer » (sous la période et les participants) : ouvre un panneau IA avec questions suggérées et zone de saisie, sur la sélection en cours</div>
+          <div class="cl-item">Réglages « IA » : interrupteur général (désactivée par défaut), fournisseur Ollama / Mistral AI / Claude, adresse, modèle, clé (session ou mémorisée)</div>
+          <div class="cl-item">Confirmation avant tout envoi (nombre de messages, taille estimée, destination) ; longues périodes découpées en parties ; annulation possible</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v2.1.2 <span>correctifs téléphone &amp; résultats précédent / suivant</span></div>
         <div class="cl-items">
           <div class="cl-item fixed">« Aller à ce jour » sur téléphone : l'entête et le bouton du menu ne disparaissent plus (le défilement ne fait plus glisser la page entière ; hauteur de page calée sur l'écran visible)</div>
           <div class="cl-item">Visualiseur de jour : entête réorganisé pour les petits écrans (titre lisible, boutons sur une seconde ligne, panneau plein écran)</div>
@@ -636,6 +665,21 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
       </div>
 
       <div class="help-section">
+        <h3>🤖 IA — résumés et questions</h3>
+        <div class="th-row"><label for="ai-on">Activer l'IA<small>désactivée par défaut : l'IA reçoit le texte des messages sélectionnés, uniquement après confirmation</small></label>
+          <select id="ai-on" onchange="aiSettingChanged()"><option value="0">Désactivée</option><option value="1">Activée</option></select></div>
+        <div id="ai-set-box" class="ai-set off">
+          <div class="th-row"><label for="ai-provider">Fournisseur<small>Ollama = local, rien ne quitte votre machine</small></label>
+            <select id="ai-provider" onchange="aiProviderChanged()"><option value="ollama">Ollama (local)</option><option value="mistral">Mistral AI</option><option value="claude">Claude (Anthropic)</option></select></div>
+          <div class="th-row"><label for="ai-url">Adresse de l'API</label><input id="ai-url" type="text" onchange="aiSettingChanged()" autocomplete="off"></div>
+          <div class="th-row"><label for="ai-model">Modèle</label><input id="ai-model" type="text" onchange="aiSettingChanged()" autocomplete="off"></div>
+          <div class="th-row"><label for="ai-key">Clé d'API<small>inutile pour Ollama ; jamais incluse dans les exports</small></label><input id="ai-key" type="password" onchange="aiSettingChanged()" autocomplete="off"></div>
+          <div class="th-row"><label for="ai-keymode">Conservation de la clé<small>« session » : oubliée à la fermeture de l'onglet</small></label>
+            <select id="ai-keymode" onchange="aiSettingChanged()"><option value="session">Session seulement</option><option value="local">Mémorisée dans ce navigateur</option></select></div>
+        </div>
+      </div>
+
+      <div class="help-section">
         <h3>🔍 Recherche</h3>
         <div class="help-item">Tapez un mot-clé puis appuyez sur <span class="hi-key">Entrée</span> ou cliquez ailleurs pour lancer.</div>
         <div class="help-item">Les résultats sont surlignés en jaune — seuls les jours contenant des résultats sont dépliés.</div>
@@ -705,7 +749,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         <h3>✨ Crédits</h3>
         <div class="help-item">Concept original : <span class="rr-link" onclick="startEasterEgg()" title="…">R&amp;R</span> (Régori &amp; Rabrielle)</div>
         <div class="help-item">Développement : Claude (Anthropic)</div>
-        <div class="help-item">WAAV v2.1.2 — WhatsApp Archive Viewer</div>
+        <div class="help-item">WAAV v2.2.0 — WhatsApp Archive Viewer</div>
       </div>
 
     </div>
@@ -734,6 +778,24 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 </div>
 
 <!-- CONFIRM MODAL (suppressions) -->
+<div id="ai-modal" onclick="if(event.target===this)closeAI()">
+  <div class="help-box">
+    <div class="help-header"><h2>✨ IA — résumer / questionner</h2><button class="help-close" onclick="closeAI()">Fermer</button></div>
+    <div class="help-body">
+      <div class="ai-info" id="ai-info"></div>
+      <div class="ai-sugg" id="ai-sugg"></div>
+      <textarea id="ai-input" placeholder="Votre question sur la période sélectionnée…"></textarea>
+      <div class="ai-actions">
+        <button type="button" id="ai-btn-sum" onclick="aiRun('sum')">✨ Résumer la période</button>
+        <button type="button" id="ai-btn-ask" onclick="aiRun('ask')">➤ Poser la question</button>
+        <button type="button" class="sec" id="ai-btn-stop" onclick="aiStop()" disabled>⏹ Annuler</button>
+      </div>
+      <div id="ai-status"></div>
+      <div id="ai-out"></div>
+    </div>
+  </div>
+</div>
+
 <div id="confirm-modal">
   <div class="resume-box">
     <h2 id="cf-title">Confirmer</h2>
@@ -842,7 +904,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     <h1>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" onclick="openHelp()" style="cursor:pointer;flex-shrink:0;" title="Aide à l'utilisation"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       WAAV
-      <span class="version-badge" onclick="openChangelog()">v2.1.2</span>
+      <span class="version-badge" onclick="openChangelog()">v2.2.0</span>
       <button class="settings-btn" type="button" onclick="openSettings()" title="Réglages" aria-label="Réglages">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
@@ -905,6 +967,10 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
   </div>
 
   <div id="participants-legend"></div>
+
+  <div id="ai-section">
+    <button id="btn-ai-sum" type="button" onclick="openAI()" title="Résumer la sélection avec une IA">✨ Résumer</button>
+  </div>
 
   <!-- Spacer — pousse stats et dedup vers le bas -->
   <div style="flex:1;min-height:0;"></div>
@@ -1038,7 +1104,7 @@ function toggleSidebar(){
 // ═══════════════════════════════════════════════════════════
 function openChangelog(){document.getElementById('changelog-modal').classList.add('show');}
 function closeChangelog(){document.getElementById('changelog-modal').classList.remove('show');}
-function openSettings(){syncThresholdInputs();
+function openSettings(){syncThresholdInputs();aiLoadUI();
   const sc=document.getElementById('set-collapse');if(sc)sc.value=collapseDefault;
   try{document.getElementById('storage-origin').textContent=decodeURIComponent(location.href.split('#')[0]);}catch(e){}
   scanLegacyData();showStorageInfo();updateFileNameWarning();document.getElementById('settings-modal').classList.add('show');}
@@ -2421,7 +2487,138 @@ async function exportSQLite(){
 // Jamais concernés : base IndexedDB 'wa_archive' (versions 1.8 → 1.9.x) et clés 'waav_*' (réglages)
 // Une page ne peut voir que le stockage de SON origine : voir « Stockage lié à » dans ⚙ Réglages.
 // ═══════════════════════════════════════════════════════════
-const APP_VERSION='2.1.2';
+const APP_VERSION='2.2.0';
+// ═══════════════════════════════════════════════════════════
+// IA (v2.2.0) — optionnelle, désactivée par défaut
+// ═══════════════════════════════════════════════════════════
+const AI_DEFAULTS={
+  ollama:{url:'http://localhost:11434/v1',model:'llama3.1'},
+  mistral:{url:'https://api.mistral.ai/v1',model:'mistral-small-latest'},
+  claude:{url:'https://api.anthropic.com',model:'claude-sonnet-5-5'}
+};
+const AI_CHUNK_CHARS=24000, AI_MAX_PARTS_WARN=12;
+let aiCfg={on:false,provider:'ollama',url:AI_DEFAULTS.ollama.url,model:AI_DEFAULTS.ollama.model,keyMode:'session'};
+let _aiKeyMem='', _aiAbort=null;
+function aiLoadCfg(){
+  try{const s=JSON.parse(localStorage.getItem('waav_ai')||'null');if(s&&typeof s==='object')aiCfg=Object.assign(aiCfg,s);}catch(e){}
+  if(aiCfg.keyMode==='local'){try{_aiKeyMem=localStorage.getItem('waav_ai_key')||'';}catch(e){}}
+}
+function aiSaveCfg(){
+  try{localStorage.setItem('waav_ai',JSON.stringify(aiCfg));
+    if(aiCfg.keyMode==='local')localStorage.setItem('waav_ai_key',_aiKeyMem);else localStorage.removeItem('waav_ai_key');}catch(e){}
+}
+function aiLoadUI(){
+  const g=id=>document.getElementById(id);if(!g('ai-on'))return;
+  g('ai-on').value=aiCfg.on?'1':'0';g('ai-provider').value=aiCfg.provider;g('ai-url').value=aiCfg.url;
+  g('ai-model').value=aiCfg.model;g('ai-key').value=_aiKeyMem;g('ai-keymode').value=aiCfg.keyMode;
+  g('ai-set-box').classList.toggle('off',!aiCfg.on);
+}
+function aiSettingChanged(){
+  const g=id=>document.getElementById(id);
+  const wasOn=aiCfg.on;
+  aiCfg.on=g('ai-on').value==='1';aiCfg.url=g('ai-url').value.trim().replace(/\/+$/,'');aiCfg.model=g('ai-model').value.trim();
+  aiCfg.keyMode=g('ai-keymode').value;_aiKeyMem=g('ai-key').value.trim();
+  aiSaveCfg();aiLoadUI();aiRefreshBtn();
+  if(aiCfg.on&&!wasOn)showToast('IA activée : seuls les messages sélectionnés sont envoyés, après confirmation');
+}
+function aiProviderChanged(){
+  const p=document.getElementById('ai-provider').value;aiCfg.provider=p;
+  aiCfg.url=AI_DEFAULTS[p].url;aiCfg.model=AI_DEFAULTS[p].model;aiSaveCfg();aiLoadUI();
+}
+function aiRefreshBtn(){
+  const b=document.getElementById('btn-ai-sum');if(!b)return;
+  b.disabled=!aiCfg.on;b.title=aiCfg.on?'Résumer la sélection avec une IA':'IA désactivée — à activer dans les réglages';
+}
+const AI_SUGG=['Quels sont les sujets principaux ?','Quelles décisions ont été prises ?','Qui a parlé de quoi ?','Quels événements ou dates sont mentionnés ?'];
+function aiTranscript(){
+  const pad=n=>String(n).padStart(2,'0');
+  return filteredMsgs.filter(m=>!m.isDup).map(m=>{const d=m.date;
+    return pad(d.getDate())+'/'+pad(d.getMonth()+1)+'/'+d.getFullYear()+' '+pad(d.getHours())+':'+pad(d.getMinutes())+' '+m.sender+': '+m.text;});
+}
+function aiChunks(lines){
+  const out=[];let cur=[],len=0;
+  for(const l of lines){
+    if(len+l.length>AI_CHUNK_CHARS&&cur.length){out.push(cur.join('\n'));cur=[];len=0;}
+    cur.push(l);len+=l.length+1;
+  }
+  if(cur.length)out.push(cur.join('\n'));
+  return out;
+}
+function openAI(){
+  if(!aiCfg.on){showToast('IA désactivée — à activer dans les réglages');return;}
+  const lines=aiTranscript(),chars=lines.reduce((a,l)=>a+l.length+1,0);
+  document.getElementById('ai-info').textContent=lines.length.toLocaleString('fr-FR')+' messages sélectionnés (période et participants en cours) — environ '+Math.round(chars/1000).toLocaleString('fr-FR')+' 000 caractères ≈ '+Math.round(chars/3.5/1000).toLocaleString('fr-FR')+' k jetons. Rien n\'est envoyé sans confirmation.';
+  const sg=document.getElementById('ai-sugg');sg.innerHTML='';
+  AI_SUGG.forEach(q=>{const b=document.createElement('button');b.type='button';b.textContent=q;b.onclick=()=>{document.getElementById('ai-input').value=q;};sg.appendChild(b);});
+  document.getElementById('ai-modal').classList.add('show');
+}
+function closeAI(){aiStop();document.getElementById('ai-modal').classList.remove('show');}
+function aiStop(){if(_aiAbort){_aiAbort.abort();}}
+function aiSetBusy(b){['ai-btn-sum','ai-btn-ask'].forEach(i=>document.getElementById(i).disabled=b);document.getElementById('ai-btn-stop').disabled=!b;}
+function aiShow(txt,err){const o=document.getElementById('ai-out');o.style.display='block';o.classList.toggle('err',!!err);o.textContent=txt;}
+async function aiCall(system,user,signal){
+  const c=aiCfg;let url,headers={'Content-Type':'application/json'},body;
+  if(c.provider==='claude'){
+    url=c.url+'/v1/messages';
+    headers['x-api-key']=_aiKeyMem;headers['anthropic-version']='2023-06-01';headers['anthropic-dangerous-direct-browser-access']='true';
+    body={model:c.model,max_tokens:2048,system:system,messages:[{role:'user',content:user}]};
+  }else{
+    url=c.url+'/chat/completions';
+    if(_aiKeyMem)headers['Authorization']='Bearer '+_aiKeyMem;
+    body={model:c.model,messages:[{role:'system',content:system},{role:'user',content:user}]};
+  }
+  let r;
+  try{r=await fetch(url,{method:'POST',headers,body:JSON.stringify(body),signal});}
+  catch(e){
+    if(e.name==='AbortError')throw e;
+    throw new Error('Connexion impossible à '+url+'. Vérifiez l\'adresse, le réseau et l\'autorisation CORS du serveur (Ollama : variable OLLAMA_ORIGINS).');
+  }
+  if(!r.ok){
+    let d='';try{d=(await r.text()).slice(0,300);}catch(e){}
+    if(r.status===401||r.status===403)throw new Error('Clé d\'API refusée ('+r.status+'). Vérifiez la clé dans les réglages.');
+    if(r.status===429)throw new Error('Quota ou limite de débit atteint (429). Réessayez plus tard.');
+    if(r.status===404)throw new Error('Modèle ou adresse introuvable (404). '+d);
+    throw new Error('Erreur '+r.status+' : '+d);
+  }
+  const j=await r.json();
+  const txt=c.provider==='claude'?(j.content||[]).filter(x=>x.type==='text').map(x=>x.text).join(''):(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||'';
+  if(!txt)throw new Error('Réponse vide du serveur.');
+  return txt;
+}
+async function aiRun(mode){
+  const q=document.getElementById('ai-input').value.trim();
+  if(mode==='ask'&&!q){showToast('Saisissez une question');return;}
+  const lines=aiTranscript();if(!lines.length){showToast('Aucun message dans la sélection');return;}
+  if(aiCfg.provider!=='ollama'&&!_aiKeyMem){showToast('Clé d\'API manquante — voir les réglages');return;}
+  const parts=aiChunks(lines),reqs=parts.length>1?parts.length+1:1,chars=lines.reduce((a,l)=>a+l.length+1,0);
+  const dest=aiCfg.provider==='ollama'?'votre serveur local ('+aiCfg.url+')':'un service externe ('+aiCfg.url+')';
+  const ok=await askConfirm({title:'✨ Envoyer à l\'IA ?',okLabel:'✨ Envoyer',
+    html:'<b>'+lines.length.toLocaleString('fr-FR')+'</b> messages (≈ '+Math.round(chars/3.5/1000)+' k jetons) seront envoyés à <b>'+dest+'</b>, modèle <b>'+aiCfg.model.replace(/[<>&]/g,'')+'</b>.<br>Requêtes prévues : <b>'+reqs+'</b>'+(parts.length>AI_MAX_PARTS_WARN?' — <b>beaucoup</b> : réduisez la période pour limiter le coût.':'.')});
+  if(!ok)return;
+  const sys='Tu analyses un extrait de conversation WhatsApp (format « JJ/MM/AAAA HH:MM Nom: message »). Réponds en français, de façon factuelle, en t\'appuyant uniquement sur les messages fournis, sans rien inventer.';
+  const task=mode==='sum'?'Résume cette conversation : sujets principaux, décisions, événements et dates importantes.':'Question : '+q+'\nRéponds uniquement d\'après ces messages ; si l\'extrait ne contient pas la réponse, dis-le.';
+  _aiAbort=new AbortController();const sig=_aiAbort.signal;aiSetBusy(true);
+  const st=document.getElementById('ai-status');document.getElementById('ai-out').style.display='none';
+  try{
+    let res;
+    if(parts.length===1){st.textContent='Requête en cours…';res=await aiCall(sys,task+'\n\n'+parts[0],sig);}
+    else{
+      const partial=[];
+      for(let i=0;i<parts.length;i++){
+        st.textContent='Partie '+(i+1)+' / '+parts.length+'…';
+        partial.push('— Partie '+(i+1)+' —\n'+await aiCall(sys,task+'\n(Partie '+(i+1)+' sur '+parts.length+' de la conversation)\n\n'+parts[i],sig));
+      }
+      st.textContent='Synthèse finale…';
+      res=await aiCall(sys,(mode==='sum'?'Voici des résumés partiels, dans l\'ordre chronologique. Fusionne-les en un résumé unique et cohérent.':'Voici des réponses partielles à la question « '+q+' », dans l\'ordre chronologique. Fusionne-les en une réponse unique ; ignore les parties sans information.')+'\n\n'+partial.join('\n\n'),sig);
+    }
+    aiShow(res,false);st.textContent='Terminé.';
+  }catch(e){
+    if(e.name==='AbortError'){st.textContent='Annulé.';}
+    else{aiShow(e.message,true);st.textContent='Échec.';}
+  }finally{_aiAbort=null;aiSetBusy(false);}
+}
+aiLoadCfg();aiRefreshBtn();
+
 const CURRENT_IDB='wa_archive';
 const RECOMMENDED_FILENAME='waav.html';
 let _legacyItems=[];
