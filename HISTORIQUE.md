@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v2.2.2 en cours de validation (dernière version validée : v2.2.1) |
+| Version stable actuelle | v2.2.3 en cours de validation (dernière version validée : v2.2.1 ; v2.2.2 en cours d'essai par l'utilisateur) |
 
 ---
 
@@ -624,6 +624,15 @@
 **Statut :** ✅ Terminée — à valider sur le téléphone
 
 ---
+
+### v2.2.3 — Mode IA : Conversations / IA, historique conservé 🟡 À VALIDER
+
+- **Base** : v2.2.2 (essais en cours, « semble bien fonctionner »).
+- **Demandes** : remplacer la fenêtre modale IA par un mode d'affichage (bouton « Conversations / IA ») ; volet gauche inchangé avec un bloc IA en dessous (infos, jauges, réglages) ; zone de recherche sous période et participants ; historique des échanges conservé après rechargement, commun à toutes les archives ; maquette validée avant de coder (artefact Design).
+- **Implémentation** : `setViewMode('conv'|'ai')` (classe `ai-mode` sur `#main` ; `#messages-area` et `#empty-state` masqués par CSS, position de défilement de la conversation sauvegardée et restaurée) ; `#ai-view` (en-tête, fil `#ai-thread`, suggestions dont « Résumer la période » en premier, saisie, Envoyer / Annuler / Reprendre) ; bloc `#ai-side` dans le volet gauche (infos, jauges, fournisseur, lien vers les réglages) rafraîchi à chaque changement de sélection (`computeFiltered` enveloppée, délai 120 ms) ; recherche déplacée dans le DOM sous les participants ; fenêtre modale supprimée ; historique `waav_ai_hist` (localStorage, 100 échanges max : date, fournisseur, modèle, sélection, fichiers d'origine, consigne, réponse, jetons — ni clé ni messages bruts), réglage « Historique des échanges » (conserver / ne pas conserver), suppression par échange et « Effacer l'historique » (confirmation), export par échange et « Exporter tout (.md) ». La base `wa_archive` n'est pas touchée.
+- **Vérifications** : syntaxe JS, `<div>` équilibrés, tests Playwright (bureau + mobile 390 px) avec faux serveur : ordre des blocs du volet gauche, bouton IA grisé par défaut puis actif, bascule et retour (défilement restauré à 300 px), infos qui suivent la sélection (calendrier), 4 requêtes pour 1 500 messages, rendu Markdown sans injection, 2 échanges stockés sans clé, rechargement (échanges retrouvés), suppression, effacement, historique désactivé (clé de stockage supprimée), exports, erreur 429 puis reprise ; non-régression du calendrier, de la recherche, du mode classique et du test de connexion.
+- **Non testé** : appels réels (Ollama, Mistral, Claude), Firefox, téléphone réel (tiroir de gauche et clavier virtuel), très gros historiques.
+- **À savoir** : après un rechargement, la zone d'import recouvre l'écran tant qu'aucune archive n'est rechargée : l'historique est donc consultable une fois l'archive restaurée.
 
 ### v2.2.2 — Calendrier de période et aide à la connexion API 🟡 À VALIDER
 
