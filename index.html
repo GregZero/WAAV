@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  WAAV — WhatsApp Archive Viewer v2.2.1
+  WAAV — WhatsApp Archive Viewer v2.2.2
   Copyright (C) 2026 R&R (Régori & Rabrielle)
 
   Ce programme est un logiciel libre : vous pouvez le redistribuer et/ou le modifier
@@ -19,7 +19,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAAV v2.2.1</title>
+<title>WAAV v2.2.2</title>
 <script>(function(){try{var p=localStorage.getItem('waav_theme')||'dark';var l=p==='light'||(p==='system'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches);document.documentElement.setAttribute('data-theme',l?'light':'dark');document.documentElement.setAttribute('data-font',localStorage.getItem('waav_font')==='system'?'system':'jakarta');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <style>
 /* ── POLICES INTÉGRÉES (v2.1.0) — aucun chargement externe ── */
@@ -400,7 +400,20 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .rr-link{color:var(--green);cursor:pointer;font-weight:700;border-bottom:1px dotted var(--green-dim);}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 
-/* ── IA (v2.2.1) ── */
+/* ── Calendrier (v2.2.2) ── */
+#cal-btn{width:100%;display:flex;justify-content:space-between;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 12px;color:var(--text);font-family:inherit;font-size:.74rem;cursor:pointer;text-align:left;}
+#cal-panel{margin-top:6px;border:1px solid var(--border);border-radius:12px;background:var(--bg2);max-height:46vh;overflow:auto;padding:0 0 4px;}
+.cal-actions{display:flex;gap:6px;padding:5px 8px;position:sticky;top:0;background:var(--bg2);z-index:1;border-bottom:1px solid var(--border);}
+.cal-actions button{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:2px 10px;color:var(--text2);font-family:inherit;font-size:.68rem;cursor:pointer;}
+.cal-row{display:flex;align-items:center;gap:5px;padding:3px 8px 3px 6px;font-size:.72rem;color:var(--text2);}
+.cal-row:hover{background:var(--bg3);}
+.cal-tog{width:16px;flex-shrink:0;border:0;background:none;color:var(--text3);cursor:pointer;padding:0;font-size:.7rem;}
+.cal-row input{accent-color:var(--green);margin:0;cursor:pointer;flex-shrink:0;}
+.cal-lbl{cursor:pointer;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.cal-cnt{color:var(--text3);font-size:.66rem;flex-shrink:0;}
+.ai-set .mdl{display:flex;flex-direction:column;gap:4px;align-items:flex-end;max-width:55%;min-width:0;}
+.ai-set .mdl select,.ai-set .mdl input{max-width:100%;width:100%;}
+/* ── IA (v2.2.2) ── */
 #ai-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:996;backdrop-filter:blur(4px);}
 #ai-modal.show{display:flex;}
 #ai-section{padding:6px 13px;flex-shrink:0;}
@@ -448,7 +461,14 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     </div>
     <div class="changelog-body">
       <div class="cl-version current">
-        <div class="cl-ver-label">v2.2.1 <span>panneau IA : lisibilité, export, jauge de jetons</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-ver-label">v2.2.2 <span>calendrier de période, test de connexion API</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Filtre de période en calendrier dépliable (Année › Mois › Semaine › Jour) à cases à cocher, sélections non contiguës, compteurs de messages ; valable pour l'affichage, la recherche, « ✨ Résumer » et les exports ; ancien menu disponible dans les réglages</div>
+          <div class="cl-item">IA : bouton « 🔌 Tester la connexion » (sans envoyer de messages), liste des modèles à choisir, message d'erreur CORS précis (valeur exacte d'OLLAMA_ORIGINS) ; blocs de réflexion &lt;think&gt; retirés des réponses</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v2.2.1 <span>panneau IA : lisibilité, export, jauge de jetons</span></div>
         <div class="cl-items">
           <div class="cl-item">Résultat mis en forme (titres, listes, gras) ; export .md avec prompt et résultat (sans clé ni messages)</div>
           <div class="cl-item">« ✨ Résumer la période » devient la première suggestion ; un seul bouton « Envoyer »</div>
@@ -681,6 +701,13 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
       </div>
 
       <div class="help-section">
+        <h3>📅 Choisir une période (calendrier)</h3>
+        <div class="help-item">Dans le panneau de gauche, le bouton « Période » déplie un calendrier : <b>Année › Mois › Semaine › Jour</b>. Cliquez sur ▸ pour détailler une ligne, et cochez ce que vous voulez voir. Cocher une année coche tous ses mois, et ainsi de suite ; une case à moitié remplie signifie « une partie seulement ». Le nombre à droite est le nombre de messages.</div>
+        <div class="help-item">Vous pouvez cocher plusieurs périodes qui ne se suivent pas (par exemple janvier et mars). « Tout » et « Aucun » cochent ou décochent tout. Une semaine à cheval sur deux mois apparaît dans les deux, avec uniquement ses jours du mois concerné.</div>
+        <div class="help-item">La sélection s'applique à l'affichage, à la recherche, au bouton « ✨ Résumer » et aux exports. Elle n'est pas conservée à la réouverture : WAAV démarre sur « Tout ». Si vous préférez l'ancien menu déroulant : ⚙ Réglages → « Période — filtre ».</div>
+      </div>
+
+      <div class="help-section">
         <h3>✨ Assistance IA — comment ça marche</h3>
         <div class="help-item"><b>À quoi ça sert.</b> Vous choisissez des messages (une période, des participants), puis vous posez une consigne (« Résume cette période ») ou une question (« Quand a-t-on parlé du budget ? »). Un programme d'intelligence artificielle lit ces messages et vous répond. Cette fonction est <b>facultative</b> et <b>désactivée par défaut</b>.</div>
         <div class="help-item"><b>Où l'activer.</b> ⚙ Réglages → « 🤖 IA », puis « Activer l'IA ». Le bouton « ✨ Résumer » (sous la période et les participants) ouvre alors le panneau de l'assistant.</div>
@@ -689,6 +716,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         <div class="help-item"><b>Pourquoi WAAV découpe.</b> Une IA ne peut lire qu'une quantité limitée de texte à la fois (sa « fenêtre de contexte », comme la taille d'une table de travail). Si la sélection est trop longue, WAAV procède comme pour relire un livre : <b>1.</b> il découpe les messages en parties ; <b>2.</b> il fait résumer chaque partie séparément ; <b>3.</b> il rassemble ces petits résumés et les fait fusionner, par étapes s'il y en a beaucoup, jusqu'à obtenir une seule réponse. Plus la période est longue, plus le résultat final est général : pour du détail, choisissez une période plus courte.</div>
         <div class="help-item"><b>Limites de vitesse.</b> Certains services, surtout leurs offres gratuites, limitent le nombre de requêtes ou de jetons par minute. WAAV espace donc ses envois et patiente automatiquement (un compte à rebours s'affiche) : une très longue période peut prendre plusieurs minutes. En cas d'échec, les résumés déjà obtenus sont conservés : le bouton « ↻ Reprendre » continue là où ça s'est arrêté, sans tout refaire. « ⏹ Annuler » interrompt la demande.</div>
         <div class="help-item"><b>Réglages avancés.</b> « Fenêtre de contexte » : taille maximale lisible par le modèle (elle détermine la taille des parties). « Quota mensuel de référence » : simple repère pour la jauge (par exemple l'offre gratuite d'un service). « Limite de jetons par minute » et « Délai minimal entre requêtes » : pour respecter les limites du service. Ces valeurs sont des repères modifiables, à ajuster selon votre modèle.</div>
+        <div class="help-item"><b>Tester la connexion.</b> Dans les réglages, « 🔌 Tester la connexion » vérifie l'adresse et la clé et affiche la liste des modèles disponibles, dans laquelle vous choisissez. Aucun message de vos conversations n'est envoyé pendant ce test. Si la connexion échoue, le message indique la cause probable et la solution (pour Ollama : la variable OLLAMA_ORIGINS).</div>
         <div class="help-item"><b>À savoir.</b> L'IA peut se tromper ou inventer : vérifiez dans les messages ce qui est important. Elle compte mal : pour savoir « combien de fois », préférez la recherche de WAAV. Le bouton « 💾 Exporter (.md) » enregistre la consigne et la réponse (sans clé ni messages).</div>
       </div>
 
@@ -762,7 +790,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         <h3>✨ Crédits</h3>
         <div class="help-item">Concept original : <span class="rr-link" onclick="startEasterEgg()" title="…">R&amp;R</span> (Régori &amp; Rabrielle)</div>
         <div class="help-item">Développement : Claude (Anthropic)</div>
-        <div class="help-item">WAAV v2.2.1 — WhatsApp Archive Viewer</div>
+        <div class="help-item">WAAV v2.2.2 — WhatsApp Archive Viewer</div>
       </div>
 
     </div>
@@ -872,7 +900,9 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
             <select id="ai-provider" onchange="aiProviderChanged()"><option value="ollama">Ollama (local)</option><option value="mistral">Mistral AI</option><option value="claude">Claude (Anthropic)</option></select></div>
           <div id="ai-prov-note" class="ai-note"></div>
           <div class="th-row"><label for="ai-url">Adresse de l'API</label><input id="ai-url" type="text" onchange="aiSettingChanged()" autocomplete="off"></div>
-          <div class="th-row"><label for="ai-model">Modèle</label><input id="ai-model" type="text" onchange="aiSettingChanged()" autocomplete="off"></div>
+          <div class="th-row"><label for="ai-model">Modèle<small>« Tester la connexion » affiche la liste</small></label><div class="mdl"><select id="ai-model-sel" style="display:none" onchange="aiModelSelChanged()"></select><input id="ai-model" type="text" onchange="aiSettingChanged()" autocomplete="off"></div></div>
+          <div class="th-row"><label>Connexion<small>vérifie l'adresse et la clé, liste les modèles ; aucun message n'est envoyé</small></label><button type="button" class="dedup-btn" onclick="aiTest()">🔌 Tester la connexion</button></div>
+          <div id="ai-test-out" class="ai-note"></div>
           <div class="th-row"><label for="ai-key">Clé d'API<small>inutile pour Ollama ; jamais incluse dans les exports</small></label><input id="ai-key" type="password" onchange="aiSettingChanged()" autocomplete="off"></div>
           <div class="th-row"><label for="ai-keymode">Conservation de la clé<small>« session » : oubliée à la fermeture de l'onglet</small></label>
             <select id="ai-keymode" onchange="aiSettingChanged()"><option value="session">Session seulement</option><option value="local">Mémorisée dans ce navigateur</option></select></div>
@@ -896,6 +926,12 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         </div>
         <div class="th-hint">Nombre de messages trouvés au-delà duquel une confirmation est demandée avant l'affichage. <strong>0</strong> = désactivé. Les réglages sont enregistrés automatiquement.</div>
         <button class="th-reset" type="button" onclick="resetThresholds()">Valeurs par défaut</button>
+      </div>
+
+      <div class="help-section">
+        <h3>📅 PÉRIODE — FILTRE</h3>
+        <div class="th-row"><label for="period-mode">Filtre de période<small>Calendrier : arbre à cases à cocher ; Classique : ancien menu déroulant</small></label>
+          <select id="period-mode" onchange="periodModeChanged()"><option value="cal">Calendrier</option><option value="classic">Classique (menu)</option></select></div>
       </div>
 
       <div class="help-section">
@@ -940,7 +976,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     <h1>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" onclick="openHelp()" style="cursor:pointer;flex-shrink:0;" title="Aide à l'utilisation"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       WAAV
-      <span class="version-badge" onclick="openChangelog()">v2.2.1</span>
+      <span class="version-badge" onclick="openChangelog()">v2.2.2</span>
       <button class="settings-btn" type="button" onclick="openSettings()" title="Réglages" aria-label="Réglages">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
@@ -1000,6 +1036,13 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     <select id="period-select" onchange="handlePeriodChange()">
       <option value="all">Tous les messages</option>
     </select>
+    <div id="cal-wrap">
+      <button id="cal-btn" type="button" onclick="calTogglePanel()"><span id="cal-btn-txt">Tous les messages</span><span>▾</span></button>
+      <div id="cal-panel" style="display:none">
+        <div class="cal-actions"><button type="button" onclick="calAll()">Tout</button><button type="button" onclick="calNone()">Aucun</button></div>
+        <div id="cal-tree"></div>
+      </div>
+    </div>
   </div>
 
   <div id="participants-legend"></div>
@@ -1089,6 +1132,9 @@ let participants   = [];
 let mutedSenders   = new Set();  // kept for filter compat — driven by senderState
 let senderState    = new Map();  // name -> 'left' | 'right' | 'hidden'  (default: 'left' for p[0], 'right' for others)
 let selectedPeriod = 'all';
+let selectedDays=null;            // null = tous les jours ; sinon Set de clés 'AAAA-MM-JJ' (calendrier, v2.2.2)
+let calSel=new Set(),calNodes=new Map(),calTree=[],calTimer=null,periodMode='cal';
+try{periodMode=localStorage.getItem('waav_periodmode')==='classic'?'classic':'cal';}catch(e){}
 let searchQuery    = '';
 let rendered       = false;
 let allCollapsed   = false;
@@ -1140,7 +1186,7 @@ function toggleSidebar(){
 // ═══════════════════════════════════════════════════════════
 function openChangelog(){document.getElementById('changelog-modal').classList.add('show');}
 function closeChangelog(){document.getElementById('changelog-modal').classList.remove('show');}
-function openSettings(){syncThresholdInputs();aiLoadUI();
+function openSettings(){syncThresholdInputs();aiLoadUI();document.getElementById('period-mode').value=periodMode;
   const sc=document.getElementById('set-collapse');if(sc)sc.value=collapseDefault;
   try{document.getElementById('storage-origin').textContent=decodeURIComponent(location.href.split('#')[0]);}catch(e){}
   scanLegacyData();showStorageInfo();updateFileNameWarning();document.getElementById('settings-modal').classList.add('show');}
@@ -1243,7 +1289,7 @@ let dayKeys=[];           // clés de jours triées
 let _dvKey=null;          // jour affiché dans le visualiseur
 function dayKeyOf(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function buildDayIndex(){
-  dayIndex=new Map();dayKeys=[];
+  dayIndex=new Map();dayKeys=[];selectedDays=null;
   for(let i=0;i<allMessages.length;i++){
     const k=dayKeyOf(allMessages[i].date);
     let a=dayIndex.get(k);
@@ -1363,6 +1409,7 @@ function goToDay(){
   input.value='';updateSearchClear();
   searchQuery='';
   // 2) élargit la période si elle ne contient pas ce jour
+  if(selectedDays&&!selectedDays.has(k))calSelectAll();
   const [y,mo]=k.split('-');
   if(selectedPeriod!=='all'&&selectedPeriod!=='year-'+y&&selectedPeriod!==y+'-'+mo){
     selectedPeriod='all';
@@ -1390,7 +1437,7 @@ document.addEventListener('keydown',e=>{
 // FILTER — uses index, O(k) where k = messages in period
 // ═══════════════════════════════════════════════════════════
 function computeFiltered(){
-  const base=periodIndex[selectedPeriod]||periodIndex.all||[];
+  const base=selectedDays?calBase():(periodIndex[selectedPeriod]||periodIndex.all||[]);
   if(!searchQuery&&!mutedSenders.size){
     filteredMsgs=base.map(i=>allMessages[i]);
     return;
@@ -1807,7 +1854,92 @@ function buildPeriodSelector(){
   }
   sel.value=([...sel.options].some(o=>o.value===prev)?prev:'all');
   selectedPeriod=sel.value;
+  buildCalendar();applyPeriodMode();
 }
+// ═══════════════════════════════════════════════════════════
+// Calendrier de période (v2.2.2) : Année › Mois › Semaine › Jour, cases à cocher
+// ═══════════════════════════════════════════════════════════
+const CAL_DOW=['dim.','lun.','mar.','mer.','jeu.','ven.','sam.'];
+function calIsoWeek(y,m,d){const dt=new Date(Date.UTC(y,m-1,d));const dn=dt.getUTCDay()||7;dt.setUTCDate(dt.getUTCDate()+4-dn);const y0=new Date(Date.UTC(dt.getUTCFullYear(),0,1));return Math.ceil(((dt-y0)/864e5+1)/7);}
+function calBase(){const out=[];for(const k of dayKeys){if(selectedDays.has(k)){const a=dayIndex.get(k);for(let j=0;j<a.length;j++)out.push(a[j]);}}return out;}
+function buildCalendar(){
+  calNodes=new Map();calTree=[];calSel=new Set(dayKeys);selectedDays=null;
+  const yrs=new Map(),reg=n=>{calNodes.set(n.id,n);return n;};
+  for(const k of dayKeys){
+    const y=k.slice(0,4),mk=k.slice(0,7),dd=+k.slice(8,10);
+    let Y=yrs.get(y);if(!Y){Y=reg({id:'y:'+y,label:y,days:[],children:[],_m:new Map()});yrs.set(y,Y);}
+    Y.days.push(k);
+    let M=Y._m.get(mk);if(!M){M=reg({id:'m:'+mk,label:MN[+mk.slice(5)-1]+' '+y,days:[],children:[],_w:new Map()});Y._m.set(mk,M);Y.children.push(M);}
+    M.days.push(k);
+    const w=calIsoWeek(+y,+mk.slice(5),dd);
+    let W=M._w.get(w);if(!W){W=reg({id:'w:'+mk+':'+w,label:'',days:[],children:[],_w:w});M._w.set(w,W);M.children.push(W);}
+    W.days.push(k);
+    W.children.push(reg({id:'d:'+k,label:CAL_DOW[new Date(+y,+mk.slice(5)-1,dd).getDay()]+' '+dd,days:[k],children:null}));
+  }
+  for(const Y of yrs.values()){for(const M of Y.children)for(const W of M.children){const a=+W.days[0].slice(8),b=+W.days[W.days.length-1].slice(8);W.label='Sem. '+W._w+' ('+(a===b?a:a+'–'+b)+')';}}
+  calTree=[...yrs.values()].sort((a,b)=>b.label.localeCompare(a.label));
+  calRenderPanel();calUpdateBtn();
+}
+function calRow(n,lvl){
+  const wrap=document.createElement('div'),row=document.createElement('div');row.className='cal-row';row.style.paddingLeft=(lvl*14+6)+'px';
+  const tog=document.createElement('button');tog.type='button';tog.className='cal-tog';tog.textContent=n.children?'▸':'';
+  const cb=document.createElement('input');cb.type='checkbox';cb.dataset.id=n.id;
+  const lb=document.createElement('span');lb.className='cal-lbl';lb.textContent=n.label;
+  const ct=document.createElement('span');ct.className='cal-cnt';ct.textContent=n.days.reduce((a,k)=>a+(dayIndex.get(k)||[]).length,0).toLocaleString('fr-FR');
+  row.append(tog,cb,lb,ct);wrap.appendChild(row);
+  let kids=null;
+  const toggle=()=>{
+    if(!n.children)return;
+    if(!kids){kids=document.createElement('div');n.children.forEach(c=>kids.appendChild(calRow(c,lvl+1)));wrap.appendChild(kids);kids.style.display='none';calRefresh();}
+    const open=kids.style.display==='none';kids.style.display=open?'':'none';tog.textContent=open?'▾':'▸';
+  };
+  tog.onclick=toggle;lb.onclick=()=>{if(n.children)toggle();else cb.click();};
+  cb.onchange=()=>calToggle(n.id,cb.checked);
+  return wrap;
+}
+function calRenderPanel(){
+  const el=document.getElementById('cal-tree');if(!el)return;el.innerHTML='';
+  calTree.forEach(Y=>el.appendChild(calRow(Y,0)));calRefresh();
+}
+function calRefresh(){
+  document.querySelectorAll('#cal-tree input[type=checkbox]').forEach(cb=>{
+    const n=calNodes.get(cb.dataset.id);if(!n)return;
+    let s=0;for(const k of n.days)if(calSel.has(k))s++;
+    cb.checked=s===n.days.length&&s>0;cb.indeterminate=s>0&&s<n.days.length;
+  });
+}
+function calToggle(id,on){
+  const n=calNodes.get(id);if(!n)return;
+  for(const k of n.days){if(on)calSel.add(k);else calSel.delete(k);}
+  calRefresh();calApply();
+}
+function calUpdateBtn(){
+  const el=document.getElementById('cal-btn-txt');if(!el)return;
+  if(!dayKeys.length||calSel.size===dayKeys.length){el.textContent='Tous les messages';return;}
+  if(!calSel.size){el.textContent='Aucun jour sélectionné';return;}
+  let n=0;for(const k of calSel)n+=(dayIndex.get(k)||[]).length;
+  el.textContent=calSel.size.toLocaleString('fr-FR')+' jour'+(calSel.size>1?'s':'')+' · '+n.toLocaleString('fr-FR')+' messages';
+}
+function calApply(){
+  selectedDays=(calSel.size===dayKeys.length)?null:new Set(calSel);calUpdateBtn();
+  clearTimeout(calTimer);calTimer=setTimeout(()=>{computeFiltered();if(rendered)renderMessages();},200);
+}
+function calAll(){calSel=new Set(dayKeys);calRefresh();calApply();}
+function calNone(){calSel=new Set();calRefresh();calApply();}
+function calSelectAll(){calSel=new Set(dayKeys);selectedDays=null;calRefresh();calUpdateBtn();}
+function calTogglePanel(){const p=document.getElementById('cal-panel');p.style.display=p.style.display==='none'?'':'none';}
+function applyPeriodMode(){
+  const cal=periodMode==='cal',sel=document.getElementById('period-select');
+  document.getElementById('cal-wrap').style.display=cal?'':'none';sel.style.display=cal?'none':'';
+  if(cal){selectedPeriod='all';sel.value='all';}else{selectedDays=null;calSel=new Set(dayKeys);calUpdateBtn();}
+}
+function periodModeChanged(){
+  periodMode=document.getElementById('period-mode').value==='classic'?'classic':'cal';
+  try{localStorage.setItem('waav_periodmode',periodMode);}catch(e){}
+  selectedPeriod='all';selectedDays=null;calSel=new Set(dayKeys);document.getElementById('period-select').value='all';
+  applyPeriodMode();calRefresh();calUpdateBtn();computeFiltered();if(rendered)renderMessages();
+}
+applyPeriodMode();
 function handlePeriodChange(){
   selectedPeriod=document.getElementById('period-select').value;
   computeFiltered();if(rendered)renderMessages();
@@ -1946,7 +2078,7 @@ function renderMessages(preserveState){
   document.getElementById('header-title').textContent=convTitle||'Conversation';
 
   const days=new Set(filteredMsgs.map(m=>m.date.toDateString())).size;
-  const pLabel=selectedPeriod==='all'?'toute la période'
+  const pLabel=selectedDays?'sélection du calendrier':selectedPeriod==='all'?'toute la période'
     :selectedPeriod.startsWith('year-')?selectedPeriod.slice(5)
     :(()=>{const[yr,mo]=selectedPeriod.split('-');return new Date(+yr,+mo-1,1).toLocaleDateString('fr-FR',{month:'long',year:'numeric'});})();
   document.getElementById('header-meta').textContent=filteredMsgs.length+' messages · '+days+' jour'+(days>1?'s':'')+' · '+pLabel;
@@ -2335,6 +2467,7 @@ async function clearData(){
   document.getElementById('btn-dup-highlight').style.display='none';
   document.getElementById('btn-collapse-all').style.display='none';
   document.getElementById('period-select').innerHTML='<option value="all">Tous les messages</option>';
+  selectedDays=null;calSel=new Set();calNodes=new Map();calTree=[];calRenderPanel();calUpdateBtn();
 
   ['messages-area','chat-header','sidebar-stats'].forEach(id=>document.getElementById(id).style.display='none');
   document.getElementById('empty-state').style.display='none';
@@ -2355,7 +2488,7 @@ function exportMySQL(){
   lines.push('-- WAAV MySQL Export');
   lines.push('-- Généré le '+new Date().toLocaleString('fr-FR'));
   lines.push('-- '+msgs.length+' messages');
-  lines.push('-- Période : '+(selectedPeriod==='all'?'Tous les messages':selectedPeriod));
+  lines.push('-- Période : '+(selectedDays?'Sélection du calendrier ('+selectedDays.size+' jours)':selectedPeriod==='all'?'Tous les messages':selectedPeriod));
   lines.push('');
   lines.push('SET NAMES utf8mb4;');
   lines.push('SET CHARACTER SET utf8mb4;');
@@ -2422,7 +2555,7 @@ function downloadBlob(blob,filename){
 }
 
 function exportPeriodSuffix(){
-  return selectedPeriod==='all'?'complet':selectedPeriod;
+  return selectedDays?'selection':selectedPeriod==='all'?'complet':selectedPeriod;
 }
 
 // ── JSON ──────────────────────────────────────────────────
@@ -2523,9 +2656,9 @@ async function exportSQLite(){
 // Jamais concernés : base IndexedDB 'wa_archive' (versions 1.8 → 1.9.x) et clés 'waav_*' (réglages)
 // Une page ne peut voir que le stockage de SON origine : voir « Stockage lié à » dans ⚙ Réglages.
 // ═══════════════════════════════════════════════════════════
-const APP_VERSION='2.2.1';
+const APP_VERSION='2.2.2';
 // ═══════════════════════════════════════════════════════════
-// IA (v2.2.1) — optionnelle, désactivée par défaut
+// IA (v2.2.2) — optionnelle, désactivée par défaut
 // ═══════════════════════════════════════════════════════════
 const AI_DEFAULTS={
   ollama:{url:'http://localhost:11434/v1',model:'llama3.1',ctx:8192,quota:0,tpm:0,gap:0,
@@ -2537,7 +2670,7 @@ const AI_DEFAULTS={
 };
 const AI_MAX_PARTS_WARN=12;
 let aiCfg={on:false,provider:'ollama',url:AI_DEFAULTS.ollama.url,model:AI_DEFAULTS.ollama.model,keyMode:'session',ctx:AI_DEFAULTS.ollama.ctx,quota:0,tpm:0,gap:0,v:2};
-let _aiKeyMem='',_aiAbort=null,_aiLast=null;
+let _aiKeyMem='',_aiAbort=null,_aiLast=null,aiModels=[];
 function aiLoadCfg(){
   try{const s=JSON.parse(localStorage.getItem('waav_ai')||'null');if(s&&typeof s==='object'){aiCfg=Object.assign(aiCfg,s);
     if(!s.v||s.v<2){const d=AI_DEFAULTS[aiCfg.provider]||AI_DEFAULTS.ollama;aiCfg.ctx=d.ctx;aiCfg.quota=d.quota;aiCfg.tpm=d.tpm;aiCfg.gap=d.gap;aiCfg.v=2;aiSaveCfg();}}}catch(e){}
@@ -2555,7 +2688,7 @@ const aiFmt=n=>Math.round(n).toLocaleString('fr-FR');
 function aiLoadUI(){
   const g=id=>document.getElementById(id);if(!g('ai-on'))return;
   g('ai-on').value=aiCfg.on?'1':'0';g('ai-provider').value=aiCfg.provider;g('ai-url').value=aiCfg.url;
-  g('ai-model').value=aiCfg.model;g('ai-key').value=_aiKeyMem;g('ai-keymode').value=aiCfg.keyMode;
+  g('ai-model').value=aiCfg.model;aiFillModelSel();g('ai-key').value=_aiKeyMem;g('ai-keymode').value=aiCfg.keyMode;
   g('ai-ctx').value=aiCfg.ctx;g('ai-quota').value=aiCfg.quota;g('ai-tpm').value=aiCfg.tpm;g('ai-gap').value=aiCfg.gap;
   g('ai-prov-note').textContent=(AI_DEFAULTS[aiCfg.provider]||{}).note||'';
   g('ai-usage-line').textContent='Consommé ce mois-ci via WAAV : '+aiFmt(aiUsageGet())+' jetons';
@@ -2573,7 +2706,7 @@ function aiSettingChanged(){
 }
 function aiProviderChanged(){
   const p=document.getElementById('ai-provider').value,d=AI_DEFAULTS[p];aiCfg.provider=p;
-  aiCfg.url=d.url;aiCfg.model=d.model;aiCfg.ctx=d.ctx;aiCfg.quota=d.quota;aiCfg.tpm=d.tpm;aiCfg.gap=d.gap;aiSaveCfg();aiLoadUI();
+  aiCfg.url=d.url;aiCfg.model=d.model;aiCfg.ctx=d.ctx;aiCfg.quota=d.quota;aiCfg.tpm=d.tpm;aiCfg.gap=d.gap;aiModels=[];aiSaveCfg();aiLoadUI();
 }
 function aiRefreshBtn(){
   const b=document.getElementById('btn-ai-sum');if(!b)return;
@@ -2644,6 +2777,49 @@ function aiMd(src){
   close();return out.join('');
 }
 function aiShow(txt,err){const o=document.getElementById('ai-out');o.style.display='block';o.classList.toggle('err',!!err);if(err)o.textContent=txt;else o.innerHTML=aiMd(txt);}
+function aiNetErrMsg(url){
+  const local=/^https?:\/\/(localhost|127\.0\.0\.1|\[::1\])/i.test(url);
+  const o=(location.protocol==='file:'||location.origin==='null')?'*':location.origin;
+  let m='Connexion impossible à '+url+'.';
+  if(aiCfg.provider==='ollama'||local){
+    m+=' Cause la plus fréquente : Ollama refuse l\'origine de cette page (CORS). Définissez la variable d\'environnement OLLAMA_ORIGINS avec la valeur « '+o+' »'+(o==='*'?' (la page est ouverte depuis un fichier local, son origine est « null »)':'')+', puis quittez complètement Ollama et relancez-le. Vérifiez aussi qu\'Ollama est démarré : http://localhost:11434 doit afficher « Ollama is running ».';
+  }else m+=' Vérifiez l\'adresse, la connexion Internet et que le service autorise les appels depuis un navigateur (CORS).';
+  if(location.protocol==='https:'&&/^http:\/\//i.test(url)&&!local)m+=' Une page https ne peut pas appeler une adresse http distante.';
+  return m;
+}
+async function aiListModels(){
+  const c=aiCfg,headers={};let url;
+  if(c.provider==='claude'){url=c.url+'/v1/models?limit=100';headers['x-api-key']=_aiKeyMem;headers['anthropic-version']='2023-06-01';headers['anthropic-dangerous-direct-browser-access']='true';}
+  else{url=c.url+'/models';if(_aiKeyMem)headers['Authorization']='Bearer '+_aiKeyMem;}
+  let r;try{r=await fetch(url,{headers});}catch(e){throw new Error(aiNetErrMsg(url));}
+  if(!r.ok){
+    if(r.status===401||r.status===403)throw new Error('Clé d\'API refusée ('+r.status+'). Vérifiez la clé.');
+    if(r.status===404)throw new Error('Adresse introuvable (404) : '+url+'. L\'adresse doit se terminer par /v1 (Ollama, Mistral) ou être https://api.anthropic.com (Claude).');
+    throw new Error('Erreur '+r.status+' sur '+url);
+  }
+  const j=await r.json();
+  return [...new Set((j.data||j.models||[]).map(x=>x.id||x.name).filter(Boolean))].sort();
+}
+async function aiTest(){
+  const out=document.getElementById('ai-test-out');
+  if(aiCfg.provider!=='ollama'&&!_aiKeyMem){out.textContent='❌ Clé d\'API manquante.';return;}
+  out.textContent='Test en cours…';
+  try{
+    aiModels=await aiListModels();aiFillModelSel();
+    const n=aiModels.length;
+    out.textContent='✅ Connexion OK — '+n+' modèle'+(n>1?'s':'')+' trouvé'+(n>1?'s':'')+'.'+(aiModels.includes(aiCfg.model)?'':' Le modèle « '+aiCfg.model+' » n\'est pas dans la liste : choisissez-en un.');
+  }catch(e){out.textContent='❌ '+e.message;}
+}
+function aiFillModelSel(){
+  const s=document.getElementById('ai-model-sel'),i=document.getElementById('ai-model');if(!s||!i)return;
+  if(!aiModels.length){s.style.display='none';i.style.display='';return;}
+  s.innerHTML='';aiModels.concat(['__other']).forEach(m=>{const o=document.createElement('option');o.value=m;o.textContent=m==='__other'?'Autre…':m;s.appendChild(o);});
+  const known=aiModels.includes(aiCfg.model);s.value=known?aiCfg.model:'__other';s.style.display='';i.style.display=known?'none':'';
+}
+function aiModelSelChanged(){
+  const s=document.getElementById('ai-model-sel'),i=document.getElementById('ai-model');
+  if(s.value==='__other'){i.style.display='';i.focus();}else{i.value=s.value;i.style.display='none';aiSettingChanged();}
+}
 async function aiCall(system,user,signal){
   const c=aiCfg;let url,headers={'Content-Type':'application/json'},body;
   if(c.provider==='claude'){
@@ -2659,7 +2835,7 @@ async function aiCall(system,user,signal){
   try{r=await fetch(url,{method:'POST',headers,body:JSON.stringify(body),signal});}
   catch(e){
     if(e.name==='AbortError')throw e;
-    throw new Error('Connexion impossible à '+url+'. Vérifiez l\'adresse, le réseau et l\'autorisation CORS du serveur (Ollama : variable OLLAMA_ORIGINS).');
+    throw new Error(aiNetErrMsg(url));
   }
   if(!r.ok){
     let d='';try{d=(await r.text()).slice(0,300);}catch(e){}
@@ -2669,7 +2845,8 @@ async function aiCall(system,user,signal){
     throw new Error('Erreur '+r.status+' : '+d);
   }
   const j=await r.json();
-  const txt=c.provider==='claude'?(j.content||[]).filter(x=>x.type==='text').map(x=>x.text).join(''):(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||'';
+  let txt=c.provider==='claude'?(j.content||[]).filter(x=>x.type==='text').map(x=>x.text).join(''):(j.choices&&j.choices[0]&&j.choices[0].message&&j.choices[0].message.content)||'';
+  txt=txt.replace(/<think>[\s\S]*?<\/think>/gi,'').trim();
   if(!txt)throw new Error('Réponse vide du serveur.');
   const u=j.usage||{};
   const tok=u.total_tokens||((u.prompt_tokens||u.input_tokens||0)+(u.completion_tokens||u.output_tokens||0))||Math.round((system.length+user.length+txt.length)/3.5);

@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v2.2.1 en cours de validation (dernière version validée : v2.1.2) |
+| Version stable actuelle | v2.2.2 en cours de validation (dernière version validée : v2.2.1) |
 
 ---
 
@@ -625,7 +625,18 @@
 
 ---
 
-### v2.2.1 — Panneau IA : lisibilité, export, jauge de jetons 🟡 À VALIDER
+### v2.2.2 — Calendrier de période et aide à la connexion API 🟡 À VALIDER
+
+- **Base** : v2.2.1 validée.
+- **Demandes** : choix de période plus fin (calendrier dépliable à cases à cocher : années / mois / semaines / jours), valable pour tout WAAV ; message d'erreur CORS précis, bouton « Tester la connexion », liste et choix du modèle.
+- **Décisions** : semaines placées sous chaque mois (une semaine à cheval sur deux mois apparaît dans les deux, avec ses jours du mois) ; arbre dépliable ; ancien menu conservé en repli (réglage « Période — filtre » : Calendrier / Classique) ; sélection non conservée entre sessions (démarrage sur « Tout »).
+- **Implémentation calendrier** : état `selectedDays` (Set de clés `AAAA-MM-JJ`, `null` = tous) ; `computeFiltered()` s'appuie sur `calBase()` quand il est défini, sinon sur l'index de période existant ; arbre `calTree` / `calNodes` construit une fois (`buildCalendar()`), lignes enfants créées à l'ouverture ; cases à trois états (`indeterminate`) ; application différée de 200 ms ; `goToDay()` élargit la sélection si le jour est hors sélection ; en-tête, export MySQL et suffixe d'export tiennent compte de la sélection ; `buildDayIndex()` remet `selectedDays` à `null` (sélection réinitialisée quand les archives changent).
+- **Implémentation connexion** : `aiNetErrMsg()` (cause probable et valeur exacte d'`OLLAMA_ORIGINS` : « * » pour un fichier local, sinon l'origine de la page) ; `aiListModels()` / `aiTest()` (GET `/models`, aucun message envoyé) ; liste déroulante des modèles avec « Autre… » ; blocs `<think>…</think>` retirés des réponses.
+- **Vérifications** : syntaxe JS, `<div>` équilibrés, tests Playwright (bureau + mobile 390 px) avec faux serveur : décocher un mois (1 286 / 1 500 messages attendus et obtenus), case indéterminée, semaine à cheval présente dans les deux mois, recherche et transcript IA limités à la sélection, « Aucun » / « Tout », `goToDay` hors sélection, mode classique et retour, test de connexion (liste, choix, échec CORS avec message). Performance sur 100 000 messages fictifs : construction du calendrier 7 ms, application d'une sélection 6 ms.
+- **Cas rencontré chez l'utilisateur** : Firefox + Ollama local : 403 sans en-tête CORS tant que `OLLAMA_ORIGINS` n'autorise pas l'origine (« null » pour un fichier local ouvert directement).
+- **Non testé** : appels réels (Ollama, Mistral, Claude) et listes de modèles réelles, Firefox, affichage du panneau sur téléphone réel.
+
+### v2.2.1 — Panneau IA : lisibilité, export, jauge de jetons ✅ VALIDÉE
 
 - **Base** : v2.2.0 (section IA déplacée dans les Réglages).
 - **Demandes** : résultat plus lisible ; export avec prompt et résultat ; « ✨ Résumer la période » en simple suggestion, en premier ; échelle / comparatif de consommation de jetons avec un plan gratuit.
