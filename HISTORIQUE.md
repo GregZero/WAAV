@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v2.2.3 en cours de validation (dernière version validée : v2.2.1 ; v2.2.2 en cours d'essai par l'utilisateur) |
+| Version stable actuelle | v2.2.4 en cours de validation (dernière version validée : v2.2.1 ; v2.2.2 et v2.2.3 en cours d'essai par l'utilisateur : « fonctionne très bien sur PC ») |
 
 ---
 
@@ -624,6 +624,15 @@
 **Statut :** ✅ Terminée — à valider sur le téléphone
 
 ---
+
+### v2.2.4 — IA : progression, réponses pliables, bloc condensé 🟡 À VALIDER
+
+- **Base** : v2.2.3 (essais utilisateur positifs sur PC).
+- **Demandes** : (1) avancée des requêtes (partie X/X) et temps de livraison estimé dans la bulle « Réponse en cours… » ; (2) réponses pliables / dépliables au niveau du titre, icônes discrètes poubelle et disquette, bas de réponse conservant date, modèle, etc. ; (3) bloc « IA — informations » condensé avec engrenage vers les réglages, notions de requêtes et jetons limitées au strict nécessaire.
+- **Implémentation** : bulle de progression (`aiPendUpdate`, rafraîchie chaque seconde) : étape (« Partie 4 / 18 », fusion, synthèse), barre, temps écoulé, temps restant estimé = moyenne des étapes faites × étapes restantes ; avant la 1re étape : estimation de la limite de débit ou de la latence apprise (`waav_ai_lat`, moyenne glissante par fournisseur et modèle) ; cartes `aiCard` (titre = consigne, date courte, chevron, icônes disquette / poubelle en SVG, « Tout plier / Tout déplier », état de pliage en mémoire) ; bloc de gauche : engrenage, « N messages · envoi en P parties · ≈ durée », quota en une ligne (« Ce mois-ci » + barre, « 472 k / 1 Md jetons (+ ≈ 37 k) »), « Local · sans quota » pour Ollama, avertissement seulement si la fenêtre de contexte est trop petite (la jauge de contexte, toujours < 50 % puisque WAAV découpe, a été retirée) ; titre de la zone de droite : « Sélection : N messages » ; confirmation d'envoi : parties et durée estimée ; sur mobile, changer de mode referme le tiroir de gauche.
+- **Vérifications** : syntaxe JS, `<div>` équilibrés, tests Playwright (bureau + mobile 390 px, requêtes ralenties à 350 ms) : bulle avec « Partie 4 / 18 », « écoulé / ≈ restantes » et barre, disparition à la fin, cartes, pliage d'une carte puis de toutes (aria-expanded, bouton qui change de libellé), export par disquette (sans clé), suppression par poubelle (stockage mis à jour), historique retrouvé après rechargement, latence mémorisée, erreur 429 affichée dans la carte puis reprise.
+- **Non testé** : appels réels (Ollama, Mistral, Claude), précision de l'estimation du temps sur de vrais serveurs, Firefox, téléphone réel.
+- **À savoir** : l'estimation du nombre d'étapes de fusion est approximative (elle suppose des résumés de partie d'environ 1 500 caractères) ; la barre peut donc sauter en fin de traitement.
 
 ### v2.2.3 — Mode IA : Conversations / IA, historique conservé 🟡 À VALIDER
 
