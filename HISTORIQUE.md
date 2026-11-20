@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v2.2.5 en cours de validation (dernière version validée : v2.2.1 ; v2.2.2 et v2.2.3 en cours d'essai par l'utilisateur : « fonctionne très bien sur PC ») |
+| Version stable actuelle | v2.2.6 en cours de validation (dernière version validée : v2.2.1 ; v2.2.2 et v2.2.3 en cours d'essai par l'utilisateur : « fonctionne très bien sur PC ») |
 
 ---
 
@@ -624,6 +624,16 @@
 **Statut :** ✅ Terminée — à valider sur le téléphone
 
 ---
+
+### v2.2.6 — Zip : import, export et nom du fichier d'export 🟡 À VALIDER
+
+- **Base** : v2.2.5.
+- **Demandes** : importer le fichier texte WhatsApp depuis une archive zip ; exporter aussi en zip ; choisir le nom de l'export (les exports IA `.md` ne sont pas concernés pour le moment).
+- **Implémentation import** : `.zip` accepté par le sélecteur et le glisser-déposer ; lecteur zip intégré sans bibliothèque (`zipEntries`, `zipRead`, `expandZips`) : lecture de la fin d'archive (EOCD) et du répertoire central par `slice`, décompression du seul fichier voulu par `DecompressionStream('deflate-raw')` (ou stockage direct) ; seuls les `.txt` et `.json` sont extraits (médias, `__MACOSX`, `._*` ignorés) ; nom dans la liste : « archive.zip › fichier.txt » (évite les collisions entre plusieurs `_chat.txt` d'iPhone) ; messages d'erreur pour zip invalide, protégé par mot de passe, zip64 (> 4 Go), méthode non prise en charge, navigateur sans décompression.
+- **Implémentation export** : `downloadBlob` centralise nom et zip : champ « Nom du fichier » (pré-rempli `waav_<période>_<AAAAMMJJ-HHMM>`, modifiable ; caractères interdits `\ / : * ? " < > |` remplacés ; extension ajoutée automatiquement sans doublon ; champ vide = ancien nom par défaut) et case « Compresser en .zip » (mémorisée, `waav_exportzip`) valable pour TXT, JSON, MySQL et SQLite ; écriture du zip maison (`zipBlob`, CRC-32, noms UTF-8, deflate par `CompressionStream('deflate-raw')`, stockage non compressé si indisponible) ; menu d'export élargi à 240 px.
+- **Vérifications** : syntaxe JS, `<div>` équilibrés, tests Playwright avec des zips fabriqués avec Python (deflate avec médias de 3 Mo + `__MACOSX` + dossier, stocké, faux zip, zip sans texte) : import correct (1 500 messages) et messages d'erreur clairs ; exports TXT / JSON / MySQL / SQLite en zip contrôlés par `unzip -t` (aucune erreur), contenu TXT identique (1 500 lignes, accents conservés, nom interne = nom choisi), zip de 12 Ko pour 131 Ko de texte ; noms : personnalisé, extension déjà saisie, caractères interdits (`a/b:c*?` → `a_b_c__`), champ vide ; aller-retour TXT et JSON zip → 1 500 messages.
+- **Non testé** : vrai export WhatsApp (iPhone / Android) avec médias volumineux, zips très gros (> 1 Go), zip protégé (non créé en test), Firefox, mémoire sur de très gros exports.
+- **À savoir** : l'emplacement d'enregistrement reste décidé par le navigateur (pas de fenêtre « Enregistrer sous » commandée par WAAV dans Firefox).
 
 ### v2.2.5 — Correctif : réponses IA longues 🟡 À VALIDER
 

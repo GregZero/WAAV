@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  WAAV — WhatsApp Archive Viewer v2.2.5
+  WAAV — WhatsApp Archive Viewer v2.2.6
   Copyright (C) 2026 R&R (Régori & Rabrielle)
 
   Ce programme est un logiciel libre : vous pouvez le redistribuer et/ou le modifier
@@ -19,7 +19,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAAV v2.2.5</title>
+<title>WAAV v2.2.6</title>
 <script>(function(){try{var p=localStorage.getItem('waav_theme')||'dark';var l=p==='light'||(p==='system'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches);document.documentElement.setAttribute('data-theme',l?'light':'dark');document.documentElement.setAttribute('data-font',localStorage.getItem('waav_font')==='system'?'system':'jakarta');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <style>
 /* ── POLICES INTÉGRÉES (v2.1.0) — aucun chargement externe ── */
@@ -400,7 +400,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .rr-link{color:var(--green);cursor:pointer;font-weight:700;border-bottom:1px dotted var(--green-dim);}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 
-/* ── Mode IA (v2.2.5) ── */
+/* ── Mode IA (v2.2.6) ── */
 .sr{position:absolute;left:-9999px;}
 .mode-seg{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:3px;gap:3px;}
 .mode-seg button{flex:1;border:0;background:transparent;color:var(--text2);border-radius:9px;padding:6px 4px;font-family:inherit;font-size:.74rem;font-weight:600;cursor:pointer;}
@@ -426,7 +426,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .aiv-input{display:flex;gap:8px;align-items:flex-end;}
 .aiv-input textarea{flex:1;min-width:0;width:auto;}
 .aiv-input .ai-actions{flex-direction:column;margin:0;}
-/* ── Cartes IA et bloc condensé (v2.2.5) ── */
+/* ── Cartes IA et bloc condensé (v2.2.6) ── */
 .ai-side-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
 .ai-side-head .ai-side-title{margin:0;}
 .ai-gear{background:none;border:0;color:var(--green);cursor:pointer;padding:2px;display:flex;border-radius:6px;}
@@ -448,7 +448,10 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .ai-pend-lab{font-size:.8rem;color:var(--text);margin-top:8px;}
 .ai-pend-time{font-size:.68rem;color:var(--text3);}
 #ai-thread>*{flex-shrink:0;}
-/* ── Calendrier (v2.2.5) ── */
+.export-opts{padding:8px 14px 10px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:5px;font-size:.7rem;color:var(--text2);}
+.export-opts input[type=text]{background:var(--bg3);border:1px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.72rem;padding:4px 7px;width:100%;box-sizing:border-box;}
+.export-zip{display:flex;align-items:center;gap:6px;cursor:pointer;}
+/* ── Calendrier (v2.2.6) ── */
 #cal-btn{width:100%;display:flex;justify-content:space-between;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 12px;color:var(--text);font-family:inherit;font-size:.74rem;cursor:pointer;text-align:left;}
 #cal-panel{margin-top:6px;border:1px solid var(--border);border-radius:12px;background:var(--bg2);max-height:46vh;overflow:auto;padding:0 0 4px;}
 .cal-actions{display:flex;gap:6px;padding:5px 8px;position:sticky;top:0;background:var(--bg2);z-index:1;border-bottom:1px solid var(--border);}
@@ -461,7 +464,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .cal-cnt{color:var(--text3);font-size:.66rem;flex-shrink:0;}
 .ai-set .mdl{display:flex;flex-direction:column;gap:4px;align-items:flex-end;max-width:55%;min-width:0;}
 .ai-set .mdl select,.ai-set .mdl input{max-width:100%;width:100%;}
-/* ── IA (v2.2.5) ── */
+/* ── IA (v2.2.6) ── */
 #ai-section{padding:6px 13px;flex-shrink:0;}
 .ai-info{font-size:.7rem;color:var(--text2);margin-bottom:8px;line-height:1.4;}
 .ai-sugg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
@@ -503,7 +506,14 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     </div>
     <div class="changelog-body">
       <div class="cl-version current">
-        <div class="cl-ver-label">v2.2.5 <span>correctif : réponses IA longues</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-ver-label">v2.2.6 <span>zip : import et export, nom du fichier d'export</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Import direct d'une archive .zip WhatsApp : seul le texte de la conversation est lu (médias ignorés, sans charger le zip en mémoire)</div>
+          <div class="cl-item">Export : case « Compresser en .zip » (TXT, JSON, MySQL, SQLite) et champ « Nom du fichier » pré-rempli et modifiable</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v2.2.5 <span>correctif : réponses IA longues</span></div>
         <div class="cl-items">
           <div class="cl-item">Les réponses longues ne sont plus coupées : la zone des échanges défile, et chaque carte garde sa hauteur complète</div>
         </div>
@@ -765,6 +775,13 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
       </div>
 
       <div class="help-section">
+        <h3>📦 Import et export : zip et nom du fichier</h3>
+        <div class="help-item"><b>Importer un zip.</b> Vous pouvez choisir ou déposer directement l'archive .zip produite par WhatsApp (« Exporter la discussion », avec ou sans médias). WAAV en lit uniquement le fichier texte de la conversation (et les fichiers .txt ou .json de ses propres exports) : les photos et vidéos sont ignorées et ne sont pas chargées en mémoire. Les zip protégés par mot de passe ou de plus de 4 Go ne sont pas pris en charge. Dans la liste des fichiers, le nom indique le zip d'origine.</div>
+        <div class="help-item"><b>Exporter en zip.</b> Dans le menu « Export », cochez « Compresser en .zip » : le fichier exporté (TXT, JSON, MySQL ou SQLite) est compressé, ce qui le réduit nettement sur les grosses conversations. Un zip exporté par WAAV peut être réimporté tel quel (formats TXT et JSON).</div>
+        <div class="help-item"><b>Choisir le nom.</b> Le champ « Nom du fichier » du menu « Export » est pré-rempli avec un nom proposé (type, période, date et heure) : modifiez-le à votre guise. L'extension (.txt, .json, .sql, .db ou .zip) s'ajoute toute seule, et les caractères interdits dans un nom de fichier sont remplacés. L'emplacement d'enregistrement dépend de votre navigateur (dossier de téléchargements ou fenêtre « Enregistrer sous » selon ses réglages).</div>
+      </div>
+
+      <div class="help-section">
         <h3>📅 Choisir une période (calendrier)</h3>
         <div class="help-item">Dans le panneau de gauche, le bouton « Période » déplie un calendrier : <b>Année › Mois › Semaine › Jour</b>. Cliquez sur ▸ pour détailler une ligne, et cochez ce que vous voulez voir. Cocher une année coche tous ses mois, et ainsi de suite ; une case à moitié remplie signifie « une partie seulement ». Le nombre à droite est le nombre de messages.</div>
         <div class="help-item">Vous pouvez cocher plusieurs périodes qui ne se suivent pas (par exemple janvier et mars). « Tout » et « Aucun » cochent ou décochent tout. Une semaine à cheval sur deux mois apparaît dans les deux, avec uniquement ses jours du mois concerné.</div>
@@ -856,7 +873,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         <h3>✨ Crédits</h3>
         <div class="help-item">Concept original : <span class="rr-link" onclick="startEasterEgg()" title="…">R&amp;R</span> (Régori &amp; Rabrielle)</div>
         <div class="help-item">Développement : Claude (Anthropic)</div>
-        <div class="help-item">WAAV v2.2.5 — WhatsApp Archive Viewer</div>
+        <div class="help-item">WAAV v2.2.6 — WhatsApp Archive Viewer</div>
       </div>
 
     </div>
@@ -1023,7 +1040,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     <h1>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" onclick="openHelp()" style="cursor:pointer;flex-shrink:0;" title="Aide à l'utilisation"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       WAAV
-      <span class="version-badge" onclick="openChangelog()">v2.2.5</span>
+      <span class="version-badge" onclick="openChangelog()">v2.2.6</span>
       <button class="settings-btn" type="button" onclick="openSettings()" title="Réglages" aria-label="Réglages">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
@@ -1053,11 +1070,16 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Export
         </button>
-        <div id="export-menu" style="display:none;position:absolute;left:0;top:calc(100% + 4px);background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow);z-index:50;min-width:180px;">
+        <div id="export-menu" style="display:none;position:absolute;left:0;top:calc(100% + 4px);background:var(--bg2);border:1px solid var(--border);border-radius:10px;overflow:hidden;box-shadow:var(--shadow);z-index:50;min-width:240px;">
           <button class="export-menu-item" onclick="exportJSON();toggleExportMenu()">📄 JSON</button>
           <button class="export-menu-item" onclick="exportTXT();toggleExportMenu()">💬 TXT (format WhatsApp)</button>
           <button class="export-menu-item" onclick="exportSQLite();toggleExportMenu()">🗄 SQLite (.db)</button>
           <button class="export-menu-item" onclick="exportMySQL();toggleExportMenu()">🐬 MySQL (.sql)</button>
+          <div class="export-opts">
+            <label for="export-name">Nom du fichier</label>
+            <input id="export-name" type="text" autocomplete="off" oninput="_exportNameEdited=true" placeholder="nom par défaut">
+            <label class="export-zip"><input type="checkbox" id="export-zip" onchange="exportZipChanged()"> Compresser en .zip</label>
+          </div>
         </div>
       </div>
       <button class="import-btn" id="btn-clear" onclick="clearData()" style="display:none">
@@ -1065,7 +1087,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         Effacer
       </button>
     </div>
-    <input type="file" id="file-input" accept=".txt,.json" multiple style="display:none">
+    <input type="file" id="file-input" accept=".txt,.json,.zip" multiple style="display:none">
   </div>
 
   <div id="period-section">
@@ -1210,8 +1232,8 @@ let participants   = [];
 let mutedSenders   = new Set();  // kept for filter compat — driven by senderState
 let senderState    = new Map();  // name -> 'left' | 'right' | 'hidden'  (default: 'left' for p[0], 'right' for others)
 let selectedPeriod = 'all';
-let viewMode='conv';              // 'conv' | 'ai' (v2.2.5)
-let selectedDays=null;            // null = tous les jours ; sinon Set de clés 'AAAA-MM-JJ' (calendrier, v2.2.5)
+let viewMode='conv';              // 'conv' | 'ai' (v2.2.6)
+let selectedDays=null;            // null = tous les jours ; sinon Set de clés 'AAAA-MM-JJ' (calendrier, v2.2.6)
 let calSel=new Set(),calNodes=new Map(),calTree=[],calTimer=null,periodMode='cal';
 try{periodMode=localStorage.getItem('waav_periodmode')==='classic'?'classic':'cal';}catch(e){}
 let searchQuery    = '';
@@ -1743,9 +1765,54 @@ function parseJSON(text, filename){
   }
 }
 
+async function zipEntries(file){
+  const n=file.size;if(n<22)throw new Error('Zip invalide ou vide');
+  const tl=Math.min(n,22+65535),tail=new DataView(await file.slice(n-tl,n).arrayBuffer());
+  let p=-1;for(let i=tl-22;i>=0;i--){if(tail.getUint32(i,true)===0x06054b50){p=i;break;}}
+  if(p<0)throw new Error('Zip invalide : fin de l\'archive introuvable ('+file.name+')');
+  const total=tail.getUint16(p+10,true),cdSize=tail.getUint32(p+12,true),cdOff=tail.getUint32(p+16,true);
+  if(total===0xFFFF||cdSize===0xFFFFFFFF||cdOff===0xFFFFFFFF)throw new Error('Zip64 (plus de 4 Go) non pris en charge');
+  const cd=new DataView(await file.slice(cdOff,cdOff+cdSize).arrayBuffer()),dec=new TextDecoder('utf-8'),out=[];let o=0;
+  for(let i=0;i<total;i++){
+    if(cd.getUint32(o,true)!==0x02014b50)throw new Error('Zip invalide : répertoire central corrompu');
+    const nl=cd.getUint16(o+28,true),el=cd.getUint16(o+30,true),cl=cd.getUint16(o+32,true);
+    out.push({name:dec.decode(new Uint8Array(cd.buffer,o+46,nl)),flags:cd.getUint16(o+8,true),method:cd.getUint16(o+10,true),cs:cd.getUint32(o+20,true),off:cd.getUint32(o+42,true)});
+    o+=46+nl+el+cl;
+  }
+  return out;
+}
+async function zipRead(file,e){
+  if(e.flags&1)throw new Error('Zip protégé par mot de passe : non pris en charge');
+  const lh=new DataView(await file.slice(e.off,e.off+30).arrayBuffer());
+  if(lh.getUint32(0,true)!==0x04034b50)throw new Error('Zip invalide : entrée corrompue');
+  const st=e.off+30+lh.getUint16(26,true)+lh.getUint16(28,true);let blob=file.slice(st,st+e.cs);
+  if(e.method===8){
+    if(typeof DecompressionStream==='undefined')throw new Error('Ce navigateur ne sait pas décompresser les zip (Firefox 113+ ou Chrome récent requis)');
+    blob=await new Response(blob.stream().pipeThrough(new DecompressionStream('deflate-raw'))).blob();
+  }else if(e.method!==0)throw new Error('Méthode de compression zip non prise en charge ('+e.method+')');
+  return blob;
+}
+async function expandZips(files){
+  const out=[];
+  for(const f of files){
+    if(!/\.zip$/i.test(f.name)){out.push(f);continue;}
+    const ents=(await zipEntries(f)).filter(e=>!/\/$/.test(e.name)&&!/(^|\/)(__MACOSX\/|\._)/.test(e.name)&&/\.(txt|json)$/i.test(e.name));
+    for(const e of ents)out.push(new File([await zipRead(f,e)],f.name+' › '+e.name.split('/').pop(),{type:'text/plain'}));
+  }
+  return out;
+}
 function processFiles(files,mode){
+  if(!files.some(f=>/\.zip$/i.test(f.name))){processFilesRaw(files,mode);return;}
+  showProgress(true,'Ouverture du zip…',3);
+  expandZips(files).then(list=>{
+    showProgress(false);
+    if(!list.length){showToast('⚠️ Aucun fichier .txt ou .json trouvé dans le zip');return;}
+    processFilesRaw(list,mode);
+  }).catch(e=>{showProgress(false);showToast('⚠️ '+e.message);});
+}
+function processFilesRaw(files,mode){
   const valid=files.filter(f=>f.name.endsWith('.txt')||f.name.endsWith('.json'));
-  if(!valid.length){showToast('⚠️ Fichiers .txt ou .json uniquement');return;}
+  if(!valid.length){showToast('⚠️ Fichiers .txt, .json ou .zip uniquement');return;}
   if(mode==='replace'){importedFiles=[];mutedSenders.clear();senderState.clear();}
   showProgress(true,'Lecture des fichiers…',5);
   const results=[];let remaining=valid.length;
@@ -1936,7 +2003,7 @@ function buildPeriodSelector(){
   buildCalendar();applyPeriodMode();
 }
 // ═══════════════════════════════════════════════════════════
-// Calendrier de période (v2.2.5) : Année › Mois › Semaine › Jour, cases à cocher
+// Calendrier de période (v2.2.6) : Année › Mois › Semaine › Jour, cases à cocher
 // ═══════════════════════════════════════════════════════════
 const CAL_DOW=['dim.','lun.','mar.','mer.','jeu.','ven.','sam.'];
 function calIsoWeek(y,m,d){const dt=new Date(Date.UTC(y,m-1,d));const dn=dt.getUTCDay()||7;dt.setUTCDate(dt.getUTCDate()+4-dn);const y0=new Date(Date.UTC(dt.getUTCFullYear(),0,1));return Math.ceil(((dt-y0)/864e5+1)/7);}
@@ -2614,8 +2681,12 @@ function exportMySQL(){
   showToast('🐬 Export MySQL téléchargé ('+msgs.length+' messages)');
 }
 function toggleExportMenu(){
-  const m=document.getElementById('export-menu');
-  m.style.display=m.style.display==='none'?'block':'none';
+  const m=document.getElementById('export-menu'),open=m.style.display==='none';
+  m.style.display=open?'block':'none';
+  if(open){
+    const i=document.getElementById('export-name');if(i&&!_exportNameEdited)i.value=exportDefaultBase();
+    const z=document.getElementById('export-zip');if(z){try{z.checked=localStorage.getItem('waav_exportzip')==='1';}catch(e){}}
+  }
 }
 document.addEventListener('click',e=>{
   const wrap=document.getElementById('export-wrap');
@@ -2625,12 +2696,43 @@ document.addEventListener('click',e=>{
   }
 });
 
-function downloadBlob(blob,filename){
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download=filename;
-  a.click();
-  setTimeout(()=>URL.revokeObjectURL(a.href),2000);
+let _exportNameEdited=false;
+function exportSafeName(s){return (s||'').replace(/[\\/:*?"<>|\u0000-\u001f]/g,'_').replace(/^[\s.]+|[\s.]+$/g,'').slice(0,120);}
+function exportDefaultBase(){const d=new Date(),p=n=>String(n).padStart(2,'0');return 'waav_'+exportPeriodSuffix()+'_'+d.getFullYear()+p(d.getMonth()+1)+p(d.getDate())+'-'+p(d.getHours())+p(d.getMinutes());}
+function exportZipChanged(){try{localStorage.setItem('waav_exportzip',document.getElementById('export-zip').checked?'1':'0');}catch(e){}}
+const _crcTable=(()=>{const t=new Uint32Array(256);for(let n=0;n<256;n++){let c=n;for(let k=0;k<8;k++)c=c&1?0xEDB88320^(c>>>1):c>>>1;t[n]=c>>>0;}return t;})();
+function crc32(u8){let c=0xFFFFFFFF;for(let i=0;i<u8.length;i++)c=_crcTable[(c^u8[i])&255]^(c>>>8);return (c^0xFFFFFFFF)>>>0;}
+async function zipBlob(name,blob){
+  if(blob.size>=0xFFFFFFFF)throw new Error('Fichier trop volumineux pour un zip (limite de 4 Go)');
+  const raw=new Uint8Array(await blob.arrayBuffer());
+  let data=raw,method=0;
+  if(typeof CompressionStream!=='undefined'){
+    try{data=new Uint8Array(await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate-raw'))).arrayBuffer());method=8;}
+    catch(e){data=raw;method=0;}
+  }
+  const nb=new TextEncoder().encode(name),crc=crc32(raw),d=new Date();
+  const tm=(d.getHours()<<11)|(d.getMinutes()<<5)|(d.getSeconds()>>1),dt=((Math.max(d.getFullYear(),1980)-1980)<<9)|((d.getMonth()+1)<<5)|d.getDate();
+  const lh=new DataView(new ArrayBuffer(30));
+  lh.setUint32(0,0x04034b50,true);lh.setUint16(4,20,true);lh.setUint16(6,0x0800,true);lh.setUint16(8,method,true);lh.setUint16(10,tm,true);lh.setUint16(12,dt,true);
+  lh.setUint32(14,crc,true);lh.setUint32(18,data.length,true);lh.setUint32(22,raw.length,true);lh.setUint16(26,nb.length,true);lh.setUint16(28,0,true);
+  const ch=new DataView(new ArrayBuffer(46));
+  ch.setUint32(0,0x02014b50,true);ch.setUint16(4,20,true);ch.setUint16(6,20,true);ch.setUint16(8,0x0800,true);ch.setUint16(10,method,true);ch.setUint16(12,tm,true);ch.setUint16(14,dt,true);
+  ch.setUint32(16,crc,true);ch.setUint32(20,data.length,true);ch.setUint32(24,raw.length,true);ch.setUint16(28,nb.length,true);ch.setUint32(42,0,true);
+  const eo=new DataView(new ArrayBuffer(22));
+  eo.setUint32(0,0x06054b50,true);eo.setUint16(8,1,true);eo.setUint16(10,1,true);eo.setUint32(12,46+nb.length,true);eo.setUint32(16,30+nb.length+data.length,true);
+  return new Blob([lh,nb,data,ch,nb,eo],{type:'application/zip'});
+}
+async function downloadBlob(blob,filename){
+  const dot=filename.lastIndexOf('.'),ext=filename.slice(dot);
+  const zipEl=document.getElementById('export-zip'),zip=!!(zipEl&&zipEl.checked);
+  let base=exportSafeName((document.getElementById('export-name')||{}).value||'');
+  if(base.toLowerCase().endsWith(ext.toLowerCase()))base=base.slice(0,-ext.length);
+  if(zip&&base.toLowerCase().endsWith('.zip'))base=base.slice(0,-4);
+  if(!base)base=filename.slice(0,dot);
+  _exportNameEdited=false;
+  if(zip){showToast('📦 Compression en cours…');try{blob=await zipBlob(base+ext,blob);}catch(e){showToast('⚠️ '+e.message);return;}}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=base+(zip?'.zip':ext);
+  document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);
 }
 
 function exportPeriodSuffix(){
@@ -2735,9 +2837,9 @@ async function exportSQLite(){
 // Jamais concernés : base IndexedDB 'wa_archive' (versions 1.8 → 1.9.x) et clés 'waav_*' (réglages)
 // Une page ne peut voir que le stockage de SON origine : voir « Stockage lié à » dans ⚙ Réglages.
 // ═══════════════════════════════════════════════════════════
-const APP_VERSION='2.2.5';
+const APP_VERSION='2.2.6';
 // ═══════════════════════════════════════════════════════════
-// IA (v2.2.5) — optionnelle, désactivée par défaut
+// IA (v2.2.6) — optionnelle, désactivée par défaut
 // ═══════════════════════════════════════════════════════════
 const AI_DEFAULTS={
   ollama:{url:'http://localhost:11434/v1',model:'llama3.1',ctx:8192,quota:0,tpm:0,gap:0,
