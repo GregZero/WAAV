@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v2.2.4 en cours de validation (dernière version validée : v2.2.1 ; v2.2.2 et v2.2.3 en cours d'essai par l'utilisateur : « fonctionne très bien sur PC ») |
+| Version stable actuelle | v2.2.5 en cours de validation (dernière version validée : v2.2.1 ; v2.2.2 et v2.2.3 en cours d'essai par l'utilisateur : « fonctionne très bien sur PC ») |
 
 ---
 
@@ -624,6 +624,16 @@
 **Statut :** ✅ Terminée — à valider sur le téléphone
 
 ---
+
+### v2.2.5 — Correctif : réponses IA longues 🟡 À VALIDER
+
+- **Base** : v2.2.4.
+- **Problème signalé par l'utilisateur** (réponse d'un résumé sur 39 625 messages) : la carte de réponse était coupée et la zone des échanges ne défilait pas.
+- **Diagnostic** : `#ai-thread` est une colonne flex avec défilement ; les cartes `.ai-card` (`overflow:hidden`) avaient `flex-shrink:1` et se réduisaient à la hauteur disponible au lieu de laisser le conteneur défiler. Reproduit en test (carte de 362 px pour un contenu de 3 442 px) avec une réponse de 80 lignes.
+- **Correctif** : `flex-shrink:0` sur les cartes et sur tous les enfants directs de `#ai-thread`.
+- **Vérifications** : mêmes tests Playwright (bureau 1280×640 et mobile 390 px) : carte à sa hauteur complète, zone défilable à la molette jusqu'au bas ; pas d'erreur de page.
+- **Non testé** : Firefox, téléphone réel.
+- **Leçon** : mes tests précédents n'utilisaient que de courtes réponses ; un test avec une longue réponse est désormais systématique pour tout élément à défilement.
 
 ### v2.2.4 — IA : progression, réponses pliables, bloc condensé 🟡 À VALIDER
 

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  WAAV — WhatsApp Archive Viewer v2.2.4
+  WAAV — WhatsApp Archive Viewer v2.2.5
   Copyright (C) 2026 R&R (Régori & Rabrielle)
 
   Ce programme est un logiciel libre : vous pouvez le redistribuer et/ou le modifier
@@ -19,7 +19,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAAV v2.2.4</title>
+<title>WAAV v2.2.5</title>
 <script>(function(){try{var p=localStorage.getItem('waav_theme')||'dark';var l=p==='light'||(p==='system'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches);document.documentElement.setAttribute('data-theme',l?'light':'dark');document.documentElement.setAttribute('data-font',localStorage.getItem('waav_font')==='system'?'system':'jakarta');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <style>
 /* ── POLICES INTÉGRÉES (v2.1.0) — aucun chargement externe ── */
@@ -400,7 +400,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .rr-link{color:var(--green);cursor:pointer;font-weight:700;border-bottom:1px dotted var(--green-dim);}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 
-/* ── Mode IA (v2.2.4) ── */
+/* ── Mode IA (v2.2.5) ── */
 .sr{position:absolute;left:-9999px;}
 .mode-seg{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:3px;gap:3px;}
 .mode-seg button{flex:1;border:0;background:transparent;color:var(--text2);border-radius:9px;padding:6px 4px;font-family:inherit;font-size:.74rem;font-weight:600;cursor:pointer;}
@@ -426,14 +426,14 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .aiv-input{display:flex;gap:8px;align-items:flex-end;}
 .aiv-input textarea{flex:1;min-width:0;width:auto;}
 .aiv-input .ai-actions{flex-direction:column;margin:0;}
-/* ── Cartes IA et bloc condensé (v2.2.4) ── */
+/* ── Cartes IA et bloc condensé (v2.2.5) ── */
 .ai-side-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
 .ai-side-head .ai-side-title{margin:0;}
 .ai-gear{background:none;border:0;color:var(--green);cursor:pointer;padding:2px;display:flex;border-radius:6px;}
 .ai-gear:hover{background:var(--bg3);}
 .ai-l1{font-size:.76rem;color:var(--text);margin-bottom:8px;line-height:1.4;}
 #ai-prov-line{margin-top:2px;}
-.ai-card{align-self:stretch;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.ai-card{flex-shrink:0;align-self:stretch;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
 .ai-card-h{display:flex;align-items:center;gap:4px;padding:6px 8px;}
 .ai-card-t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.8rem;font-weight:600;color:var(--green);cursor:pointer;}
 .ai-card-d{font-size:.64rem;color:var(--text3);flex-shrink:0;padding:0 4px;}
@@ -447,7 +447,8 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .ai-card .ai-a{background:none;border:0;padding:6px 0 0;max-width:none;border-radius:0;align-self:auto;}
 .ai-pend-lab{font-size:.8rem;color:var(--text);margin-top:8px;}
 .ai-pend-time{font-size:.68rem;color:var(--text3);}
-/* ── Calendrier (v2.2.4) ── */
+#ai-thread>*{flex-shrink:0;}
+/* ── Calendrier (v2.2.5) ── */
 #cal-btn{width:100%;display:flex;justify-content:space-between;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 12px;color:var(--text);font-family:inherit;font-size:.74rem;cursor:pointer;text-align:left;}
 #cal-panel{margin-top:6px;border:1px solid var(--border);border-radius:12px;background:var(--bg2);max-height:46vh;overflow:auto;padding:0 0 4px;}
 .cal-actions{display:flex;gap:6px;padding:5px 8px;position:sticky;top:0;background:var(--bg2);z-index:1;border-bottom:1px solid var(--border);}
@@ -460,7 +461,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .cal-cnt{color:var(--text3);font-size:.66rem;flex-shrink:0;}
 .ai-set .mdl{display:flex;flex-direction:column;gap:4px;align-items:flex-end;max-width:55%;min-width:0;}
 .ai-set .mdl select,.ai-set .mdl input{max-width:100%;width:100%;}
-/* ── IA (v2.2.4) ── */
+/* ── IA (v2.2.5) ── */
 #ai-section{padding:6px 13px;flex-shrink:0;}
 .ai-info{font-size:.7rem;color:var(--text2);margin-bottom:8px;line-height:1.4;}
 .ai-sugg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
@@ -502,7 +503,13 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     </div>
     <div class="changelog-body">
       <div class="cl-version current">
-        <div class="cl-ver-label">v2.2.4 <span>IA : progression, réponses pliables, bloc condensé</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-ver-label">v2.2.5 <span>correctif : réponses IA longues</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Les réponses longues ne sont plus coupées : la zone des échanges défile, et chaque carte garde sa hauteur complète</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v2.2.4 <span>IA : progression, réponses pliables, bloc condensé</span></div>
         <div class="cl-items">
           <div class="cl-item">Bulle « Réponse en cours » : étape, barre de progression, temps écoulé et temps restant estimé (appris au fil des requêtes)</div>
           <div class="cl-item">Réponses en cartes pliables (clic sur le titre), icônes discrètes disquette / poubelle, « Tout plier / Tout déplier » ; le bas de la carte garde date, modèle, jetons et fichiers</div>
@@ -849,7 +856,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         <h3>✨ Crédits</h3>
         <div class="help-item">Concept original : <span class="rr-link" onclick="startEasterEgg()" title="…">R&amp;R</span> (Régori &amp; Rabrielle)</div>
         <div class="help-item">Développement : Claude (Anthropic)</div>
-        <div class="help-item">WAAV v2.2.4 — WhatsApp Archive Viewer</div>
+        <div class="help-item">WAAV v2.2.5 — WhatsApp Archive Viewer</div>
       </div>
 
     </div>
@@ -1016,7 +1023,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     <h1>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" onclick="openHelp()" style="cursor:pointer;flex-shrink:0;" title="Aide à l'utilisation"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       WAAV
-      <span class="version-badge" onclick="openChangelog()">v2.2.4</span>
+      <span class="version-badge" onclick="openChangelog()">v2.2.5</span>
       <button class="settings-btn" type="button" onclick="openSettings()" title="Réglages" aria-label="Réglages">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
@@ -1203,8 +1210,8 @@ let participants   = [];
 let mutedSenders   = new Set();  // kept for filter compat — driven by senderState
 let senderState    = new Map();  // name -> 'left' | 'right' | 'hidden'  (default: 'left' for p[0], 'right' for others)
 let selectedPeriod = 'all';
-let viewMode='conv';              // 'conv' | 'ai' (v2.2.4)
-let selectedDays=null;            // null = tous les jours ; sinon Set de clés 'AAAA-MM-JJ' (calendrier, v2.2.4)
+let viewMode='conv';              // 'conv' | 'ai' (v2.2.5)
+let selectedDays=null;            // null = tous les jours ; sinon Set de clés 'AAAA-MM-JJ' (calendrier, v2.2.5)
 let calSel=new Set(),calNodes=new Map(),calTree=[],calTimer=null,periodMode='cal';
 try{periodMode=localStorage.getItem('waav_periodmode')==='classic'?'classic':'cal';}catch(e){}
 let searchQuery    = '';
@@ -1929,7 +1936,7 @@ function buildPeriodSelector(){
   buildCalendar();applyPeriodMode();
 }
 // ═══════════════════════════════════════════════════════════
-// Calendrier de période (v2.2.4) : Année › Mois › Semaine › Jour, cases à cocher
+// Calendrier de période (v2.2.5) : Année › Mois › Semaine › Jour, cases à cocher
 // ═══════════════════════════════════════════════════════════
 const CAL_DOW=['dim.','lun.','mar.','mer.','jeu.','ven.','sam.'];
 function calIsoWeek(y,m,d){const dt=new Date(Date.UTC(y,m-1,d));const dn=dt.getUTCDay()||7;dt.setUTCDate(dt.getUTCDate()+4-dn);const y0=new Date(Date.UTC(dt.getUTCFullYear(),0,1));return Math.ceil(((dt-y0)/864e5+1)/7);}
@@ -2728,9 +2735,9 @@ async function exportSQLite(){
 // Jamais concernés : base IndexedDB 'wa_archive' (versions 1.8 → 1.9.x) et clés 'waav_*' (réglages)
 // Une page ne peut voir que le stockage de SON origine : voir « Stockage lié à » dans ⚙ Réglages.
 // ═══════════════════════════════════════════════════════════
-const APP_VERSION='2.2.4';
+const APP_VERSION='2.2.5';
 // ═══════════════════════════════════════════════════════════
-// IA (v2.2.4) — optionnelle, désactivée par défaut
+// IA (v2.2.5) — optionnelle, désactivée par défaut
 // ═══════════════════════════════════════════════════════════
 const AI_DEFAULTS={
   ollama:{url:'http://localhost:11434/v1',model:'llama3.1',ctx:8192,quota:0,tpm:0,gap:0,
