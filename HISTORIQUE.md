@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v2.2.6 en cours de validation (dernière version validée : v2.2.1 ; v2.2.2 et v2.2.3 en cours d'essai par l'utilisateur : « fonctionne très bien sur PC ») |
+| Version stable actuelle | v2.2.7 en cours de validation (dernière version validée : v2.2.1 ; v2.2.2 et v2.2.3 en cours d'essai par l'utilisateur : « fonctionne très bien sur PC ») |
 
 ---
 
@@ -624,6 +624,17 @@
 **Statut :** ✅ Terminée — à valider sur le téléphone
 
 ---
+
+### v2.2.7 — IA : demandes suspendables et reprenables 🟡 À VALIDER
+
+- **Base** : v2.2.6.
+- **Demande** : pouvoir suspendre une demande IA, l'enregistrer (ou l'exporter) et la reprendre plus tard (manque de quota, extinction du PC), pour de très grosses périodes (cas réel signalé : 471 685 messages, 2 066 parties, modèle local).
+- **Principe** : « journal de rejeu ». Chaque réponse de l'IA est enregistrée dans l'ordre (`steps`), avec les parties découpées (`parts`) et les métadonnées (`kv`), dans une base IndexedDB **séparée** `waav_ia` (`wa_archive` n'est jamais touchée). À la reprise, le traitement est rejoué depuis le début : les étapes déjà enregistrées sont servies instantanément sans requête, puis les appels réels reprennent. Comme le découpage des fusions est déterministe, la taille de fusion (`chunk`) est enregistrée avec la demande.
+- **Interface** : bouton « ⏸ Suspendre » (termine l'étape en cours, y compris pendant une attente de limite de débit) ; carte « Demande en pause » (avancement, jetons consommés, date, modèle ; ↻ Reprendre, Exporter l'état, Supprimer la demande) affichée aussi après rechargement ; « Importer un état » (zip ou json) ; confirmation avant d'écraser une demande en pause ; confirmation si le modèle change à la reprise ; toute erreur (429 persistant, quota, crédits) laisse la demande en pause avec le travail enregistré ; avertissement à la fermeture de l'onglet pendant une demande ; `navigator.wakeLock` quand disponible. Une seule demande en pause à la fois.
+- **Export d'état** : `waavAiJob` (parties + résultats obtenus) dans un zip ; l'import accepte aussi l'instantané brut de la 2.2.6 (ligne de console `JSON.stringify({waavAiJob:1,job:_aiJob})`), converti en journal (parties de phase 1 + éventuelles fusions du premier niveau).
+- **Vérifications** : syntaxe JS, `<div>` équilibrés, tests Playwright (bureau + mobile) avec faux serveur : référence 22 requêtes ; suspension après 6 étapes puis rechargement puis reprise = 16 requêtes (22 − 6) ; erreur 429 persistante → pause → rechargement → reprise ; export zip contrôlé par `unzip -t`, suppression, import, reprise = 15 requêtes (22 − 7) ; instantané 2.2.6 importé → reprise = 14 requêtes (22 − 8) ; confirmations de remplacement et de changement de modèle ; base vidée après succès. Un bug du rendu de la carte (progression affichée après une suspension) a été corrigé en cours de test.
+- **Non testé** : très gros volumes réels (≈ 40 Mo de parties dans IndexedDB), Firefox, écran de veille réel, extinction réelle du PC.
+- **À savoir** : l'avancement affiché (« 6 / 27 étapes ») repose sur une estimation du nombre de fusions, souvent un peu haute ; la barre se rattrape à la fin. WAAV ne travaille que page ouverte.
 
 ### v2.2.6 — Zip : import, export et nom du fichier d'export 🟡 À VALIDER
 
