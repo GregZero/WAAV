@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v2.2.7 en cours de validation (dernière version validée : v2.2.1 ; v2.2.2 et v2.2.3 en cours d'essai par l'utilisateur : « fonctionne très bien sur PC ») |
+| Version stable actuelle | v2.3.0 en cours de validation (dernière version validée : v2.2.1 ; v2.2.2 et v2.2.3 en cours d'essai par l'utilisateur : « fonctionne très bien sur PC ») |
 
 ---
 
@@ -624,6 +624,15 @@
 **Statut :** ✅ Terminée — à valider sur le téléphone
 
 ---
+
+### v2.3.0 — IA : recherche ciblée sur la sélection 🟡 À VALIDER
+
+- **Base** : v2.2.7 (pause et reprise validées par l'utilisateur).
+- **Demandes** : questions « sur toute l'archive » sans envoyer 100 000+ messages ; mots-clés proposés par l'IA (qui ne reçoit que la question) et validables ; si trop de résultats, demander à chaque fois (garder les meilleurs / tout traiter / affiner) ; contexte ±2 messages ; recherche appliquée à la sélection actuelle (période et participants) ; boutons Suspendre / Annuler et messages d'état dans la carte de la demande, ligne sous la zone de saisie supprimée.
+- **Implémentation** : choix de portée « Sélection actuelle | Recherche ciblée » (mémorisé) sous la zone de saisie ; flux en cartes (`_aiTarget`) : (1) mots-clés (`aiTargetKeywords`, une seule requête avec « Question : … », réponse JSON analysée par `aiParseKw`, pastilles modifiables, ajout, retrait, « Redemander à l'IA », « Mots-clés à la main » sans appel) ; (2) recherche exacte par WAAV (`aiTargetSearch`) : texte normalisé (accents, casse) mis en cache sur les messages (`m._n`), mot = début de mot (« vacance » trouve « vacances »), guillemets = expression exacte, masque de bits par mot-clé (30 max), doublons exclus ; passages = résultats ±2 messages fusionnés, comptage par mot-clé, participant et mois (histogramme) ; (3) si tout tient en une requête (taille de partie − 600 caractères) : confirmation d'envoi directe ; sinon carte de décision : « Garder les N meilleurs » (classement : nombre de mots-clés distincts puis occurrences, sélection tournante par mois pour répartir dans le temps), « Tout traiter (≈ parties, requêtes, durée) » (ancienne mécanique par parties + fusions) ou « Affiner » ; (4) envoi des passages (`— Passage du JJ/MM/AAAA —`) avec les faits calculés par WAAV dans la consigne ; réponse avec dates cliquables (`aiLinkDates` : seules les dates existant dans l'archive deviennent des liens, ouverture du jour) ; l'IA est avertie de ne jamais conclure à l'absence d'un sujet ; réglage « Je valide / Automatique » (`kwAuto`) ; `tgt` (mots-clés, trouvés, envoyés) conservé dans la demande, la pause, l'export d'état et l'historique ; `aiPlanP` factorise le plan d'envoi ; carte de la demande en cours : boutons « ⏸ Suspendre » et « Annuler » ; carte en pause : « Reprendre », « Exporter l'état », « Supprimer » ; `#ai-status` et les boutons du pied de page supprimés.
+- **Vérifications** : syntaxe JS, `<div>` équilibrés, tests Playwright avec faux serveur (3 000 messages fictifs, comptes comparés à un calcul Python indépendant) : comptes exacts (14 messages / 14 passages pour « notaire » ; participants 9 + 5) ; requête de mots-clés = question seule ; requête de réponse = passages seulement (4 017 caractères contre 143 964 pour la conversation) avec faits ; clic sur une date ouvre le bon jour ; cas sans résultat ; mots-clés à la main (1 seule requête) ; cas « trop de résultats » : carte de décision à 3 choix, « garder les meilleurs » = 1 requête, « tout traiter » = 28 requêtes ; mode automatique ; suspension depuis la carte, rechargement, reprise, `tgt` dans l'historique ; mobile 390 px ; non-régression : réponses longues défilantes, pause / reprise / export / import d'état (mêmes chiffres qu'en 2.2.7).
+- **Non testé** : qualité des mots-clés proposés par de vrais modèles, durée réelle sur 471 685 messages (la recherche est exacte et sans IA), Firefox, téléphone réel.
+- **À savoir** : avec des mots-clés très fréquents (budget, vacance…), les passages se fusionnent et couvrent presque toute la conversation : la carte de décision apparaît presque toujours ; mieux vaut des mots-clés rares ou une période réduite. La recherche est un préfixe de mot : « budget » trouve aussi « budgétaire » (la normalisation retire l'accent) ; un mot court trop général donnera beaucoup de résultats. La recherche par le sens (embeddings) est prévue en 2.3.1.
 
 ### v2.2.7 — IA : demandes suspendables et reprenables 🟡 À VALIDER
 
