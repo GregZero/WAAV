@@ -16,7 +16,7 @@
 | Développement | Claude (Anthropic) |
 | Licence | GPL-3.0-or-later |
 | Démarrage du projet | Septembre 2026 |
-| Version stable actuelle | v2.3.0 en cours de validation (dernière version validée : v2.2.1 ; v2.2.2 et v2.2.3 en cours d'essai par l'utilisateur : « fonctionne très bien sur PC ») |
+| Version stable actuelle | v2.4.0 en cours de validation (dernière version validée : v2.2.1 ; v2.2.2 et v2.2.3 en cours d'essai par l'utilisateur : « fonctionne très bien sur PC ») |
 
 ---
 
@@ -624,6 +624,17 @@
 **Statut :** ✅ Terminée — à valider sur le téléphone
 
 ---
+
+### v2.4.0 — Recherche par le sens (embeddings) et mots-clés améliorés 🟡 À VALIDER
+
+- **Base** : v2.3.0 (essais : mots-clés proposés pas toujours adéquats ; interrupteur souhaité sous « Envoyer »).
+- **Demandes** : interrupteur « Recherche ciblée » sous « Envoyer » ; mots-clés plus fiables ; recherche par le sens (embeddings) **autonome** (sans Ollama), proposée en option avec indication claire de ce qui est téléchargé, utilisable **sans IA**, puis liée à l'IA ; le tout en une version. Environnement : plusieurs PC (Windows 10 et 11 ; le Windows 7 sera remplacé par Linux).
+- **Mots-clés améliorés** : nombre de messages à côté de chaque pastille (calcul local, mots à 0 marqués) ; « mots proches dans l'archive » (vocabulaire de la sélection ; distance de Damerau-Levenshtein ≤ 1 ou 2, formes plus courtes ; ex. « budget » → « bugdet ») ; « mots souvent associés » après la recherche (fréquence dans les passages trouvés relativement à la sélection, mots vides exclus) ; consigne plus précise à l'IA (mots courts, langage de conversation, racines, fautes courantes).
+- **Interface** : interrupteur « Recherche ciblée » sous « Envoyer » ; une fois allumé : « Source des passages » (Mots-clés / Sens / Les deux, ces deux dernières désactivées tant que la recherche par le sens n'est pas prête) et « Mots-clés à la main ».
+- **Recherche par le sens** : désactivée par défaut ; réglages « 🧭 Recherche par le sens » : modèle (Standard multilingue `Xenova/multilingual-e5-small` ≈ 135 Mo dont ≈ 118 Mo de modèle quantifié et ≈ 17 Mo de dictionnaire ; Léger français `rolf-mozilla/french-embedding-e5-distilled` ≈ 30 Mo, tiers expérimental), « Activer… » avec fenêtre d'information (moteur transformers.js 3.8.1 depuis cdn.jsdelivr.net, modèle depuis huggingface.co, aucun message envoyé, fonctionnement hors ligne ensuite), « Tester le modèle » (vitesse, dimension, estimation de la durée d'indexation), « Indexer » (confirmation avec durée estimée, progression, ⏸ Suspendre, reprise), « Supprimer l'index », « Supprimer le modèle » (cache `transformers-cache`). Calcul dans un Web Worker module (blob) avec repli dans la page. Index : groupes d'environ 5 messages consécutifs (rupture à plus de 6 h ou 600 caractères), vecteurs normalisés quantifiés en entiers 8 bits par lots de 128 dans une base IndexedDB **séparée** `waav_sem` (jamais `wa_archive` ni `waav_ia`), empreinte de l'archive (nombre, dates, longueurs) : l'index est à refaire seulement si l'archive ou le modèle change. Recherche : similarité (produit scalaire) sur la période et les participants sélectionnés, 200 meilleurs passages. Zone de recherche « Mots | Sens » : Entrée lance la recherche par le sens, résultats dans une fenêtre (pourcentage de proximité, date, « Ouvrir le jour »). Liaison à l'IA : source « Sens » (aucune requête de mots-clés) ou « Les deux » (fusion des passages ; comptes exacts seulement pour les mots-clés, les passages issus du sens étant signalés comme approximatifs à l'IA).
+- **Vérifications** (modèle **simulé** : vecteurs par hachage de mots et de trigrammes, drapeau d'essai `waav_sem_fake` dans le stockage local) : activation, test, indexation (500 passages indexés = 500 attendus, index croissant et cohérent), pause à 160 / 500 puis rechargement puis reprise jusqu'à 500 sans trou, recherche seule (les 10 premiers résultats contiennent le mot cherché), « Ouvrir le jour », filtre de période respecté, source « Sens » (0 requête avant envoi, passages envoyés, mention d'approximation), source « Les deux », nombres sur les pastilles, mot à 0, mots proches (« bugdet »), mots associés, suppression de l'index (bascule masquée), fenêtre d'information (cdn.jsdelivr.net, huggingface.co, taille, « Aucun de vos messages ») et **échec réseau géré** (téléchargement bloqué : message clair, option laissée désactivée) ; non-régression : recherche ciblée (comptes comparés à un calcul Python), carte de décision, suspension, reprise, export / import d'état, réponses longues.
+- **Non testé** (mon environnement n'a pas accès à jsdelivr ni à Hugging Face) : chargement du **vrai** moteur et du **vrai** modèle, fonctionnement du Worker module depuis GitHub Pages et depuis un fichier local, vitesse réelle d'indexation (calcul sur un seul fil faute d'isolation inter-origines), qualité réelle des résultats en français, occupation mémoire sur 400 000+ messages, Firefox, Windows 10 / 11, Linux. Le bouton « Tester le modèle » sert à le vérifier sur chaque machine.
+- **À savoir** : l'index est propre à chaque navigateur et à chaque site (GitHub Pages et fichier local sont séparés) ; la qualité dépend du modèle ; le classement est approximatif et ne permet pas de compter.
 
 ### v2.3.0 — IA : recherche ciblée sur la sélection 🟡 À VALIDER
 

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  WAAV — WhatsApp Archive Viewer v2.3.0
+  WAAV — WhatsApp Archive Viewer v2.4.0
   Copyright (C) 2026 R&R (Régori & Rabrielle)
 
   Ce programme est un logiciel libre : vous pouvez le redistribuer et/ou le modifier
@@ -19,7 +19,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAAV v2.3.0</title>
+<title>WAAV v2.4.0</title>
 <script>(function(){try{var p=localStorage.getItem('waav_theme')||'dark';var l=p==='light'||(p==='system'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches);document.documentElement.setAttribute('data-theme',l?'light':'dark');document.documentElement.setAttribute('data-font',localStorage.getItem('waav_font')==='system'?'system':'jakarta');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <style>
 /* ── POLICES INTÉGRÉES (v2.1.0) — aucun chargement externe ── */
@@ -400,7 +400,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .rr-link{color:var(--green);cursor:pointer;font-weight:700;border-bottom:1px dotted var(--green-dim);}
 ::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:transparent;}::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
 
-/* ── Mode IA (v2.3.0) ── */
+/* ── Mode IA (v2.4.0) ── */
 .sr{position:absolute;left:-9999px;}
 .mode-seg{display:flex;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:3px;gap:3px;}
 .mode-seg button{flex:1;border:0;background:transparent;color:var(--text2);border-radius:9px;padding:6px 4px;font-family:inherit;font-size:.74rem;font-weight:600;cursor:pointer;}
@@ -426,7 +426,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .aiv-input{display:flex;gap:8px;align-items:flex-end;}
 .aiv-input textarea{flex:1;min-width:0;width:auto;}
 .aiv-input .ai-actions{flex-direction:column;margin:0;}
-/* ── Cartes IA et bloc condensé (v2.3.0) ── */
+/* ── Cartes IA et bloc condensé (v2.4.0) ── */
 .ai-side-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
 .ai-side-head .ai-side-title{margin:0;}
 .ai-gear{background:none;border:0;color:var(--green);cursor:pointer;padding:2px;display:flex;border-radius:6px;}
@@ -473,7 +473,30 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .ai-hist i{flex:1;min-width:2px;background:var(--green-dim);border-radius:2px 2px 0 0;}
 .ai-hist-l{display:flex;justify-content:space-between;font-size:.62rem;color:var(--text3);}
 .ai-date{color:var(--green);text-decoration:underline dotted;cursor:pointer;}
-/* ── Calendrier (v2.3.0) ── */
+.ai-switch{display:flex;align-items:center;gap:7px;font-size:.68rem;color:var(--text2);cursor:pointer;margin-top:6px;user-select:none;}
+.ai-switch input{position:absolute;opacity:0;width:0;height:0;}
+.ai-switch .sw{width:30px;height:17px;border-radius:9px;background:var(--bg3);border:1px solid var(--border);position:relative;flex-shrink:0;transition:background .15s;}
+.ai-switch .sw::after{content:'';position:absolute;top:2px;left:2px;width:11px;height:11px;border-radius:50%;background:var(--text3);transition:transform .15s,background .15s;}
+.ai-switch input:checked+.sw{background:var(--green-glow);border-color:var(--green-dim);}
+.ai-switch input:checked+.sw::after{transform:translateX(13px);background:var(--green);}
+.ai-switch input:focus-visible+.sw{outline:2px solid var(--green);outline-offset:2px;}
+.ai-scope select{background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:.7rem;padding:3px 6px;}
+.ai-chip .cc{color:var(--text3);font-size:.68rem;margin-left:2px;}
+.ai-chip.zero{border-style:dashed;opacity:.75;}
+.ai-sugrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0;font-size:.7rem;color:var(--text3);}
+.ai-chip.sug{background:transparent;border-style:dashed;cursor:pointer;color:var(--text2);padding:2px 9px;font-family:inherit;}
+.ai-chip.sug:hover{background:var(--green-glow);}
+#sem-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:997;backdrop-filter:blur(4px);}
+#sem-modal.show{display:flex;}
+.sem-mode{display:flex;gap:4px;margin-top:6px;}
+.sem-mode button{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:3px 6px;color:var(--text2);font-family:inherit;font-size:.7rem;cursor:pointer;}
+.sem-mode button.on{background:var(--green-glow);border-color:var(--green-dim);color:var(--green);font-weight:600;}
+.sem-item{border:1px solid var(--border);border-radius:10px;background:var(--surface);padding:8px 12px;margin:8px 0;}
+.sem-item-h{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:.72rem;color:var(--text3);margin-bottom:4px;}
+.sem-item-h b{color:var(--green);}
+.sem-item-t{font-size:.78rem;line-height:1.5;white-space:pre-wrap;word-wrap:break-word;color:var(--text);}
+.sem-item button{background:none;border:1px solid var(--green-dim);border-radius:10px;color:var(--green);font-family:inherit;font-size:.68rem;padding:2px 9px;cursor:pointer;}
+/* ── Calendrier (v2.4.0) ── */
 #cal-btn{width:100%;display:flex;justify-content:space-between;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:5px 12px;color:var(--text);font-family:inherit;font-size:.74rem;cursor:pointer;text-align:left;}
 #cal-panel{margin-top:6px;border:1px solid var(--border);border-radius:12px;background:var(--bg2);max-height:46vh;overflow:auto;padding:0 0 4px;}
 .cal-actions{display:flex;gap:6px;padding:5px 8px;position:sticky;top:0;background:var(--bg2);z-index:1;border-bottom:1px solid var(--border);}
@@ -486,7 +509,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .cal-cnt{color:var(--text3);font-size:.66rem;flex-shrink:0;}
 .ai-set .mdl{display:flex;flex-direction:column;gap:4px;align-items:flex-end;max-width:55%;min-width:0;}
 .ai-set .mdl select,.ai-set .mdl input{max-width:100%;width:100%;}
-/* ── IA (v2.3.0) ── */
+/* ── IA (v2.4.0) ── */
 #ai-section{padding:6px 13px;flex-shrink:0;}
 .ai-info{font-size:.7rem;color:var(--text2);margin-bottom:8px;line-height:1.4;}
 .ai-sugg{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;}
@@ -528,7 +551,15 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     </div>
     <div class="changelog-body">
       <div class="cl-version current">
-        <div class="cl-ver-label">v2.3.0 <span>IA : recherche ciblée sur toute la sélection</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-ver-label">v2.4.0 <span>recherche par le sens, mots-clés améliorés</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Option « Recherche par le sens » (embeddings calculés dans le navigateur, désactivée par défaut) : fenêtre d'information avant téléchargement (transformers.js depuis cdn.jsdelivr.net, modèle depuis huggingface.co), test et mesure de vitesse, indexation de l'archive avec pause et reprise (base séparée), suppression de l'index et du modèle</div>
+          <div class="cl-item">Zone de recherche « Mots | Sens » (recherche seule, sans IA) ; Recherche ciblée avec source « Mots-clés », « Sens » ou « Les deux »</div>
+          <div class="cl-item">Recherche ciblée : interrupteur sous « Envoyer » ; nombre de messages à côté de chaque mot-clé, « mots proches dans l'archive » (fautes, variantes), « mots souvent associés », consigne améliorée pour l'IA</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v2.3.0 <span>IA : recherche ciblée sur toute la sélection</span></div>
         <div class="cl-items">
           <div class="cl-item">Portée « Recherche ciblée » : l'IA propose des mots-clés à partir de la question seule, WAAV cherche et compte lui-même (par mot-clé, participant, mois), n'envoie à l'IA que les passages trouvés (±2 messages de contexte) ; choix « garder les meilleurs / tout traiter / affiner » quand il y en a trop</div>
           <div class="cl-item">Réponses avec dates cliquables (ouvrent le jour) ; réglage « Je valide / Automatique » pour les mots-clés ; « Mots-clés à la main »</div>
@@ -833,7 +864,8 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         <div class="help-item"><b>Les « jetons ».</b> Une IA ne lit pas des messages mais des « jetons », de petits morceaux de mots (en français, un mot fait en moyenne un à deux jetons). Les services mesurent, limitent ou facturent en jetons. La jauge du panneau vous montre combien votre demande en utilise.</div>
         <div class="help-item"><b>Pourquoi WAAV découpe.</b> Une IA ne peut lire qu'une quantité limitée de texte à la fois (sa « fenêtre de contexte », comme la taille d'une table de travail). Si la sélection est trop longue, WAAV procède comme pour relire un livre : <b>1.</b> il découpe les messages en parties ; <b>2.</b> il fait résumer chaque partie séparément ; <b>3.</b> il rassemble ces petits résumés et les fait fusionner, par étapes s'il y en a beaucoup, jusqu'à obtenir une seule réponse. Plus la période est longue, plus le résultat final est général : pour du détail, choisissez une période plus courte.</div>
         <div class="help-item"><b>Limites de vitesse.</b> Certains services, surtout leurs offres gratuites, limitent le nombre de requêtes ou de jetons par minute. WAAV espace donc ses envois et patiente automatiquement (un compte à rebours s'affiche) : une très longue période peut prendre plusieurs minutes. En cas d'échec, les résumés déjà obtenus sont conservés : le bouton « ↻ Reprendre » continue là où ça s'est arrêté, sans tout refaire. « ⏹ Annuler » interrompt la demande. Pendant l'attente, la bulle de réponse affiche l'étape en cours, une barre de progression, le temps écoulé et une estimation du temps restant (approximative, elle s'affine au fil des étapes).</div>
-        <div class="help-item"><b>Recherche ciblée (grosses archives).</b> Sous la zone de saisie, « Portée » permet de choisir : « Sélection actuelle » envoie à l'IA les messages de la sélection (par parties si besoin), « Recherche ciblée » cherche d'abord et n'envoie que ce qui compte. Déroulement : <b>1.</b> l'IA propose des mots-clés à partir de votre question seule (vos messages ne sont pas envoyés) et vous les modifiez à votre guise ; <b>2.</b> WAAV cherche lui-même, de façon exacte, dans la sélection et affiche les nombres (par mot-clé, par participant, par mois) : c'est la réponse sûre à « combien de fois ? » ; <b>3.</b> les messages trouvés sont envoyés avec 2 messages de contexte autour ; s'il y en a trop pour une requête, WAAV vous demande de garder les meilleurs, de tout traiter ou d'affiner ; <b>4.</b> l'IA répond et cite des dates sur lesquelles vous pouvez cliquer pour ouvrir le jour. « Mots-clés à la main » saute l'étape de l'IA. Rappel : l'IA ne voit que les passages trouvés, pas toute la conversation : si un sujet n'apparaît pas, c'est peut-être que le mot-clé manque.</div>
+        <div class="help-item"><b>Recherche par le sens (option).</b> Dans ⚙ Réglages → « Recherche par le sens », vous pouvez activer une recherche qui trouve des messages par leur <b>sens</b>, pas seulement par leurs mots : « voyage » peut trouver « on part en vacances ». Principe : un petit modèle transforme chaque groupe d'environ 5 messages en une « empreinte » numérique ; chercher revient à comparer l'empreinte de votre phrase à toutes les autres. Étapes : <b>1.</b> « Activer… » : une fenêtre indique exactement ce qui est téléchargé (le moteur transformers.js depuis cdn.jsdelivr.net et le modèle depuis huggingface.co, avec leurs tailles) ; aucun message n'est envoyé ; <b>2.</b> « Tester le modèle » : vérifie que tout fonctionne et estime la durée de l'indexation sur votre ordinateur ; <b>3.</b> « Indexer » : calcule les empreintes de l'archive (de quelques minutes à plusieurs heures, avec pause et reprise ; l'index est enregistré dans une base séparée et à refaire seulement si l'archive change). Ensuite : la zone de recherche propose « Mots | Sens » (Entrée lance la recherche par le sens, résultats classés avec un pourcentage de proximité, dans la période et les participants sélectionnés, sans IA de langage), et la Recherche ciblée peut utiliser « Sens » ou « Les deux » comme source de passages. Limites : le classement est approximatif et ne permet pas de compter (« combien de fois ? » reste le rôle des mots-clés) ; la qualité dépend du modèle ; l'indexation de très grosses archives est longue sur un ordinateur ancien.</div>
+        <div class="help-item"><b>Recherche ciblée (grosses archives).</b> Sous le bouton « Envoyer », l'interrupteur « Recherche ciblée » (éteint : les messages de la sélection sont envoyés à l'IA, par parties si besoin ; allumé : WAAV cherche d'abord et n'envoie que ce qui compte). Une fois allumé, « Source des passages » propose « Mots-clés », « Sens » ou « Les deux » (les deux dernières demandent la recherche par le sens, voir ci-dessus). Déroulement : <b>1.</b> l'IA propose des mots-clés à partir de votre question seule (vos messages ne sont pas envoyés) et vous les modifiez à votre guise ; à côté de chaque mot, WAAV affiche le nombre de messages qui le contiennent (un mot à 0 est inutile), propose les « mots proches dans l'archive » (fautes de frappe, variantes réellement employées) et, après la recherche, les « mots souvent associés » ; <b>2.</b> WAAV cherche lui-même, de façon exacte, dans la sélection et affiche les nombres (par mot-clé, par participant, par mois) : c'est la réponse sûre à « combien de fois ? » ; <b>3.</b> les messages trouvés sont envoyés avec 2 messages de contexte autour ; s'il y en a trop pour une requête, WAAV vous demande de garder les meilleurs, de tout traiter ou d'affiner ; <b>4.</b> l'IA répond et cite des dates sur lesquelles vous pouvez cliquer pour ouvrir le jour. « Mots-clés à la main » saute l'étape de l'IA. Rappel : l'IA ne voit que les passages trouvés, pas toute la conversation : si un sujet n'apparaît pas, c'est peut-être que le mot-clé manque.</div>
         <div class="help-item"><b>Suspendre et reprendre.</b> Pour une très grosse demande, « ⏸ Suspendre » termine l'étape en cours puis s'arrête. Chaque étape terminée est enregistrée dans le navigateur au fur et à mesure : si vous éteignez l'ordinateur, fermez l'onglet ou manquez de quota, seule l'étape en cours est perdue. Au retour, une carte « Demande en pause » affiche l'avancement, avec « ↻ Reprendre » (qui ne refait pas ce qui est fait), « Exporter l'état » et « Supprimer la demande ». WAAV ne travaille que page ouverte : suspendre n'exécute rien en arrière-plan. Une seule demande en pause à la fois. « Exporter l'état » enregistre la demande (parties et résultats déjà obtenus) dans un zip, que « Importer un état » peut recharger plus tard, y compris sur un autre ordinateur.</div>
         <div class="help-item"><b>Réglages avancés.</b> « Fenêtre de contexte » : taille maximale lisible par le modèle (elle détermine la taille des parties). « Quota mensuel de référence » : simple repère pour la jauge (par exemple l'offre gratuite d'un service). « Limite de jetons par minute » et « Délai minimal entre requêtes » : pour respecter les limites du service. Ces valeurs sont des repères modifiables, à ajuster selon votre modèle.</div>
         <div class="help-item"><b>Recherche.</b> La zone de recherche se trouve maintenant sous la période et les participants. Elle continue de filtrer les messages affichés, et donc aussi ceux que l'IA reçoit.</div>
@@ -912,7 +944,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         <h3>✨ Crédits</h3>
         <div class="help-item">Concept original : <span class="rr-link" onclick="startEasterEgg()" title="…">R&amp;R</span> (Régori &amp; Rabrielle)</div>
         <div class="help-item">Développement : Claude (Anthropic)</div>
-        <div class="help-item">WAAV v2.3.0 — WhatsApp Archive Viewer</div>
+        <div class="help-item">WAAV v2.4.0 — WhatsApp Archive Viewer</div>
       </div>
 
     </div>
@@ -941,6 +973,17 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 </div>
 
 <!-- CONFIRM MODAL (suppressions) -->
+<div id="sem-modal" onclick="if(event.target===this)closeSem()">
+  <div class="help-box">
+    <div class="help-header"><h2>🧭 Recherche par le sens</h2><button class="help-close" onclick="closeSem()">Fermer</button></div>
+    <div class="help-body">
+      <div class="ai-note2" id="sem-q"></div>
+      <div id="sem-list"></div>
+      <div class="ai-actions"><button type="button" id="sem-more" onclick="semMore()" style="display:none">Afficher plus</button></div>
+    </div>
+  </div>
+</div>
+
 <div id="confirm-modal">
   <div class="resume-box">
     <h2 id="cf-title">Confirmer</h2>
@@ -1019,6 +1062,18 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
       </div>
 
       <div class="help-section">
+        <h3>🧭 Recherche par le sens (option)</h3>
+        <div class="ai-note">Trouve des messages par leur sens, même sans mot commun avec votre recherche (« voyage » trouve « on part en vacances »). Le calcul se fait dans ce navigateur, sans IA de langage ni envoi de messages. Désactivée par défaut : elle demande un téléchargement, puis une indexation de l'archive.</div>
+        <div class="th-row"><label for="sem-model">Modèle<small id="sem-model-note"></small></label><select id="sem-model" onchange="semModelChanged()"><option value="std">Standard multilingue (≈ 135 Mo)</option><option value="fr">Léger, français (≈ 30 Mo, tiers expérimental)</option></select></div>
+        <div class="th-row"><label>État<small id="sem-status"></small></label><button type="button" class="dedup-btn" id="sem-btn-enable" onclick="semEnable()">Activer…</button></div>
+        <div class="th-row"><label>Test du modèle<small>vérifie le fonctionnement, mesure la vitesse et estime la durée d'indexation</small></label><button type="button" class="dedup-btn" id="sem-btn-test" onclick="semTest()">Tester le modèle</button></div>
+        <div class="th-row"><label>Index de l'archive<small id="sem-idx-status"></small></label><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button type="button" class="dedup-btn" id="sem-btn-index" onclick="semIndexClick()">Indexer</button><button type="button" class="dedup-btn" id="sem-btn-pause" onclick="semStop=true" style="display:none">⏸ Suspendre</button></div></div>
+        <div class="ai-bar" id="sem-bar" style="display:none;margin:2px 0 4px"><i style="width:0%"></i></div>
+        <div class="ai-lbl" id="sem-prog" style="margin-bottom:6px"></div>
+        <div class="th-row"><label>Nettoyage<small>supprime l'index ou le modèle téléchargé de ce navigateur</small></label><div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end"><button type="button" class="dedup-btn" onclick="semDelIndex()">Supprimer l'index</button><button type="button" class="dedup-btn" onclick="semDelModel()">Supprimer le modèle</button></div></div>
+      </div>
+
+      <div class="help-section">
         <h3>🔍 Recherche — seuils d'avertissement</h3>
         <div class="th-row">
           <label for="th-warn">🟡 Avertissement<small>affichage un peu long</small></label>
@@ -1080,7 +1135,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     <h1>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" onclick="openHelp()" style="cursor:pointer;flex-shrink:0;" title="Aide à l'utilisation"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       WAAV
-      <span class="version-badge" onclick="openChangelog()">v2.3.0</span>
+      <span class="version-badge" onclick="openChangelog()">v2.4.0</span>
       <button class="settings-btn" type="button" onclick="openSettings()" title="Réglages" aria-label="Réglages">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
@@ -1153,6 +1208,10 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
       <button id="search-clear" type="button" title="Réinitialiser la recherche (Échap)" aria-label="Réinitialiser la recherche" onmousedown="event.preventDefault()" onclick="clearSearch()">
         <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
+    </div>
+    <div class="sem-mode" id="sem-mode" style="display:none" role="group" aria-label="Type de recherche">
+      <button type="button" id="sm-kw" class="on" onclick="semSetMode('kw')">Mots</button>
+      <button type="button" id="sm-sem" onclick="semSetMode('sem')" title="Recherche par le sens (Entrée pour lancer)">Sens</button>
     </div>
   </div>
 
@@ -1242,14 +1301,14 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     <div class="aiv-input">
       <label for="ai-input" class="sr">Votre consigne ou question</label>
       <textarea id="ai-input" placeholder="Votre consigne ou question sur la sélection…"></textarea>
-      <div class="ai-actions"><button type="button" id="ai-btn-ask" onclick="aiRun()">➤ Envoyer</button></div>
+      <div class="ai-actions"><button type="button" id="ai-btn-ask" onclick="aiRun()">➤ Envoyer</button>
+        <label class="ai-switch" title="WAAV cherche d'abord (mots-clés et/ou sens) et n'envoie à l'IA que les passages trouvés"><input type="checkbox" id="ai-scope-sw" onchange="aiSetScope(this.checked?'tgt':'sel')"><span class="sw"></span><span>Recherche ciblée</span></label></div>
     </div>
-    <div class="ai-scope" role="group" aria-label="Portée de la demande">
-      <span>Portée :</span>
-      <button type="button" id="ai-scope-sel" class="on" onclick="aiSetScope('sel')" title="L'IA reçoit les messages de la sélection (période et participants), par parties si besoin">Sélection actuelle</button>
-      <button type="button" id="ai-scope-tgt" onclick="aiSetScope('tgt')" title="WAAV cherche d'abord des mots-clés dans la sélection et n'envoie à l'IA que les passages trouvés">Recherche ciblée</button>
-      <button type="button" id="ai-btn-manual" onclick="aiTargetManual()" style="display:none" title="Saisir soi-même les mots-clés, sans demander à l'IA">Mots-clés à la main</button>
-    </div>
+    <div class="ai-scope" id="ai-tgt-opts" style="display:none">
+      <span>Source des passages :</span>
+      <select id="ai-src" onchange="aiSetSrc(this.value)" aria-label="Source des passages"><option value="kw">Mots-clés</option><option value="sem">Sens (embeddings)</option><option value="both">Les deux</option></select>
+      <button type="button" id="ai-btn-manual" onclick="aiTargetManual()" title="Saisir soi-même les mots-clés, sans demander à l'IA">Mots-clés à la main</button>
+</div>
   </div>
 </div>
 <div id="messages-area" style="display:none"></div>
@@ -1273,8 +1332,8 @@ let participants   = [];
 let mutedSenders   = new Set();  // kept for filter compat — driven by senderState
 let senderState    = new Map();  // name -> 'left' | 'right' | 'hidden'  (default: 'left' for p[0], 'right' for others)
 let selectedPeriod = 'all';
-let viewMode='conv';              // 'conv' | 'ai' (v2.3.0)
-let selectedDays=null;            // null = tous les jours ; sinon Set de clés 'AAAA-MM-JJ' (calendrier, v2.3.0)
+let viewMode='conv';              // 'conv' | 'ai' (v2.4.0)
+let selectedDays=null;            // null = tous les jours ; sinon Set de clés 'AAAA-MM-JJ' (calendrier, v2.4.0)
 let calSel=new Set(),calNodes=new Map(),calTree=[],calTimer=null,periodMode='cal';
 try{periodMode=localStorage.getItem('waav_periodmode')==='classic'?'classic':'cal';}catch(e){}
 let searchQuery    = '';
@@ -1328,7 +1387,7 @@ function toggleSidebar(){
 // ═══════════════════════════════════════════════════════════
 function openChangelog(){document.getElementById('changelog-modal').classList.add('show');}
 function closeChangelog(){document.getElementById('changelog-modal').classList.remove('show');}
-function openSettings(){syncThresholdInputs();aiLoadUI();document.getElementById('period-mode').value=periodMode;
+function openSettings(){syncThresholdInputs();aiLoadUI();document.getElementById('period-mode').value=periodMode;semUI();
   const sc=document.getElementById('set-collapse');if(sc)sc.value=collapseDefault;
   try{document.getElementById('storage-origin').textContent=decodeURIComponent(location.href.split('#')[0]);}catch(e){}
   scanLegacyData();showStorageInfo();updateFileNameWarning();document.getElementById('settings-modal').classList.add('show');}
@@ -2041,10 +2100,10 @@ function buildPeriodSelector(){
   }
   sel.value=([...sel.options].some(o=>o.value===prev)?prev:'all');
   selectedPeriod=sel.value;
-  buildCalendar();applyPeriodMode();
+  buildCalendar();applyPeriodMode();semUI();
 }
 // ═══════════════════════════════════════════════════════════
-// Calendrier de période (v2.3.0) : Année › Mois › Semaine › Jour, cases à cocher
+// Calendrier de période (v2.4.0) : Année › Mois › Semaine › Jour, cases à cocher
 // ═══════════════════════════════════════════════════════════
 const CAL_DOW=['dim.','lun.','mar.','mer.','jeu.','ven.','sam.'];
 function calIsoWeek(y,m,d){const dt=new Date(Date.UTC(y,m-1,d));const dn=dt.getUTCDay()||7;dt.setUTCDate(dt.getUTCDate()+4-dn);const y0=new Date(Date.UTC(dt.getUTCFullYear(),0,1));return Math.ceil(((dt-y0)/864e5+1)/7);}
@@ -2882,9 +2941,9 @@ async function exportSQLite(){
 // Jamais concernés : base IndexedDB 'wa_archive' (versions 1.8 → 1.9.x) et clés 'waav_*' (réglages)
 // Une page ne peut voir que le stockage de SON origine : voir « Stockage lié à » dans ⚙ Réglages.
 // ═══════════════════════════════════════════════════════════
-const APP_VERSION='2.3.0';
+const APP_VERSION='2.4.0';
 // ═══════════════════════════════════════════════════════════
-// IA (v2.3.0) — optionnelle, désactivée par défaut
+// IA (v2.4.0) — optionnelle, désactivée par défaut
 // ═══════════════════════════════════════════════════════════
 const AI_DEFAULTS={
   ollama:{url:'http://localhost:11434/v1',model:'llama3.1',ctx:8192,quota:0,tpm:0,gap:0,
@@ -3301,15 +3360,17 @@ async function aiHistClear(){
 }
 function aiHistDel(id){_aiHist=_aiHist.filter(x=>x.id!==id);aiHistSave();aiRenderThread();}
 // ═══════════════════════════════════════════════════════════
-// Recherche ciblée (v2.3.0) : mots-clés → recherche exacte par WAAV → passages envoyés à l'IA
+// Recherche ciblée (v2.4.0) : mots-clés et/ou sens → passages → IA
 // ═══════════════════════════════════════════════════════════
-let _aiScope='sel',_aiTarget=null;
-try{_aiScope=localStorage.getItem('waav_ai_scope')==='tgt'?'tgt':'sel';}catch(e){}
+let _aiScope='sel',_aiSrc='kw',_aiTarget=null,_vocab=null;
+try{_aiScope=localStorage.getItem('waav_ai_scope')==='tgt'?'tgt':'sel';const s=localStorage.getItem('waav_ai_src');if(s==='kw'||s==='sem'||s==='both')_aiSrc=s;}catch(e){}
 function aiSetScope(s){_aiScope=s;try{localStorage.setItem('waav_ai_scope',s);}catch(e){}aiScopeUI();}
+function aiSetSrc(s){_aiSrc=s;try{localStorage.setItem('waav_ai_src',s);}catch(e){}aiScopeUI();}
 function aiScopeUI(){
-  const a=document.getElementById('ai-scope-sel');if(!a)return;
-  a.classList.toggle('on',_aiScope==='sel');document.getElementById('ai-scope-tgt').classList.toggle('on',_aiScope==='tgt');
-  document.getElementById('ai-btn-manual').style.display=_aiScope==='tgt'?'':'none';
+  const sw=document.getElementById('ai-scope-sw');if(!sw)return;
+  sw.checked=_aiScope==='tgt';document.getElementById('ai-tgt-opts').style.display=_aiScope==='tgt'?'':'none';
+  document.getElementById('ai-src').value=_aiSrc;{const o=document.getElementById('ai-src').options,ok=semReady();o[1].disabled=!ok;o[2].disabled=!ok;o[1].text='Sens (embeddings)'+(ok?'':' — à activer dans les réglages');o[2].text='Les deux'+(ok?'':' — à activer dans les réglages');}
+  document.getElementById('ai-btn-manual').style.display=(_aiScope==='tgt'&&_aiSrc!=='sem')?'':'none';
   document.getElementById('ai-input').placeholder=_aiScope==='tgt'?'Votre question sur l\'archive (ex. : quand a-t-on parlé du budget ?)':'Votre consigne ou question sur la sélection…';
 }
 function aiNorm(s){return String(s).normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();}
@@ -3340,58 +3401,129 @@ function aiLinkDates(html){
   return html.replace(/\b(\d{2})\/(\d{2})\/(\d{4})\b/g,(s,d,m,y)=>{const k=y+'-'+m+'-'+d;return (typeof dayIndex!=='undefined'&&dayIndex.has(k))?'<a href="#" class="ai-date" data-d="'+k+'" title="Ouvrir ce jour">'+s+'</a>':s;});
 }
 (function(){const th=document.getElementById('ai-thread');if(th)th.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('.ai-date');if(a){e.preventDefault();try{openDayViewer(a.dataset.d);}catch(x){}}});})();
+// ── vocabulaire de la sélection, mots proches, comptages en direct
+const AI_STOP=new Set('le la les un une des de du et en au aux ce cet cette ces je tu il elle on nous vous ils elles me te se lui leur mon ma mes ton ta tes son sa ses notre votre nos vos leurs que qui quoi dont ne pas plus pour par sur sous dans avec sans mais ou donc car si oui non cela est sont suis sommes etes ete etre avoir ai as avons avez ont fait faire fais tres tout tous toute toutes bien aussi comme alors encore deja juste puis peu moi toi eux bon ok voila quand quoi faut vais vas va vont veux peut peux'.split(' '));
+async function aiVocab(){
+  const msgs=filteredMsgs;if(_vocab&&_vocab.src===msgs&&_vocab.n===msgs.length)return _vocab;
+  const map=new Map();
+  for(let i=0;i<msgs.length;i++){const m=msgs[i];if(m.isDup)continue;const nt=m._n||(m._n=aiNorm(m.text||'')),w=nt.match(/[a-z0-9]{3,}/g);if(w)for(const x of w)map.set(x,(map.get(x)||0)+1);if(i%25000===24999)await new Promise(r=>setTimeout(r,0));}
+  _vocab={src:msgs,n:msgs.length,map:map};return _vocab;
+}
+function aiLev(a,b,max){
+  const la=a.length,lb=b.length;if(Math.abs(la-lb)>max)return max+1;
+  let pp=null,prev=[];for(let j=0;j<=lb;j++)prev.push(j);
+  for(let i=1;i<=la;i++){const cur=[i];for(let j=1;j<=lb;j++){let v=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));if(i>1&&j>1&&a[i-1]===b[j-2]&&a[i-2]===b[j-1])v=Math.min(v,pp[j-2]+1);cur.push(v);}pp=prev;prev=cur;}
+  return prev[lb];
+}
+async function aiSimilarWords(kw){
+  const k=aiNorm(kw.replace(/^["«“]|["»”]$/g,'')).trim();if(!/^[a-z0-9]{4,}$/.test(k))return [];
+  const V=await aiVocab(),max=k.length>=7?2:1,out=[];
+  for(const [w,c] of V.map){
+    if(c<2||w===k||Math.abs(w.length-k.length)>max||w.startsWith(k))continue;
+    if(w[0]!==k[0]&&w[1]!==k[1])continue;
+    if(aiLev(w,k,max)<=max||(k.startsWith(w)&&w.length>=4))out.push([w,c]);
+  }
+  return out.sort((a,b)=>b[1]-a[1]).slice(0,8);
+}
+async function aiKwCount(kw){
+  const rx=aiKwRegex(kw),msgs=filteredMsgs;let c=0;
+  for(let i=0;i<msgs.length;i++){const m=msgs[i];if(m.isDup)continue;const nt=m._n||(m._n=aiNorm(m.text||''));if(rx.test(nt))c++;if(i%30000===29999)await new Promise(r=>setTimeout(r,0));}
+  return c;
+}
+async function aiKwEnrich(T){
+  for(const k of T.kws.slice()){
+    if(_aiTarget!==T||T.stage!=='kw')return;
+    if(T.cnt[k]===undefined){T.cnt[k]=await aiKwCount(k);aiKwUpdateChip(T,k);}
+    if(T.sim[k]===undefined){T.sim[k]=await aiSimilarWords(k);aiKwFillSug(T);}
+  }
+}
+function aiKwUpdateChip(T,k){
+  document.querySelectorAll('.ai-chip[data-k]').forEach(c=>{if(c.dataset.k===k){const e=c.querySelector('.cc');if(e)e.textContent=(T.cnt[k]||0).toLocaleString('fr-FR');c.classList.toggle('zero',!T.cnt[k]);c.title=T.cnt[k]?T.cnt[k]+' message(s) dans la sélection':'Aucun message ne contient ce mot dans la sélection';}});
+}
+function aiKwFillSug(T){
+  const box=document.getElementById('ai-kwsug');if(!box||_aiTarget!==T)return;box.innerHTML='';
+  const have=new Set(T.kws.map(k=>aiNorm(k))),seen=new Set();let any=false;
+  for(const k of T.kws){for(const [w,c] of (T.sim[k]||[])){if(have.has(w)||seen.has(w))continue;seen.add(w);any=true;
+    const b=document.createElement('button');b.type='button';b.className='ai-chip sug';b.textContent=w+' · '+c.toLocaleString('fr-FR')+' +';b.title='Forme proche trouvée dans vos messages : ajouter';b.onclick=()=>aiTargetAddKw(w);box.appendChild(b);}}
+  if(any){const l=document.createElement('span');l.textContent='Mots proches dans l\'archive :';box.insertBefore(l,box.firstChild);}
+}
+function aiAssocWords(T,wins){
+  const cnt=new Map(),V=_vocab&&_vocab.map;
+  for(const w of wins){for(let j=w.a;j<=w.b;j++){const m=filteredMsgs[j];if(m.isDup)continue;const nt=m._n||(m._n=aiNorm(m.text||'')),ws=nt.match(/[a-z0-9]{4,}/g);if(ws)for(const x of ws){if(AI_STOP.has(x))continue;cnt.set(x,(cnt.get(x)||0)+1);}}}
+  const kn=T.kws.map(k=>aiNorm(k.replace(/^["«“]|["»”]$/g,''))),out=[];
+  for(const [w,c] of cnt){if(c<3||kn.some(k=>w.startsWith(k)||k.startsWith(w)))continue;const base=(V&&V.get(w))||c,lift=c/base;out.push([w,c,c*Math.log(1+lift*10)]);}
+  return out.sort((a,b)=>b[2]-a[2]).slice(0,10).map(x=>[x[0],x[1]]);
+}
 function aiTargetManual(){aiTargetStart(true);}
 async function aiTargetStart(manual){
   const q=document.getElementById('ai-input').value.trim();
   if(!q){showToast('Saisissez une question');return;}
   if(_aiRunning){showToast('Une demande est en cours : suspendez-la ou attendez sa fin');return;}
   if(!filteredMsgs.length){showToast('Aucun message dans la sélection');return;}
-  if(!manual&&aiCfg.provider!=='ollama'&&!_aiKeyMem){showToast('Clé d\'API manquante — voir les réglages');return;}
+  const src=_aiSrc;
+  if(src!=='kw'&&!semReady()){showToast('Recherche par le sens non prête : activez-la et indexez l\'archive dans les réglages ⚙');return;}
+  if(src!=='sem'&&!manual&&aiCfg.provider!=='ollama'&&!_aiKeyMem){showToast('Clé d\'API manquante — voir les réglages');return;}
   if(_aiTarget&&_aiTarget.ac)_aiTarget.ac.abort();
-  _aiTarget={q:q,stage:manual?'kw':'kwload',kws:[],err:null,ac:null,res:null};
+  _aiTarget={q:q,src:src,stage:(manual||src==='sem')?'kw':'kwload',kws:[],err:null,ac:null,res:null,cnt:{},sim:{}};
   aiRenderThread();
-  if(!manual)await aiTargetKeywords();
+  if(src==='sem'){await aiTargetSearch();return;}
+  if(manual){aiKwEnrich(_aiTarget);return;}
+  await aiTargetKeywords();
 }
 async function aiTargetKeywords(){
   const T=_aiTarget;if(!T)return;
   T.stage='kwload';T.err=null;T.ac=new AbortController();aiRenderThread();
   try{
-    const sys='Tu aides à retrouver des passages dans une conversation WhatsApp. À partir de la question, propose entre 4 et 12 mots-clés ou courtes expressions à chercher (racines ou formes courtes, synonymes, variantes familières, noms propres de la question). Réponds uniquement par un tableau JSON de chaînes, sans commentaire.';
+    const sys='Tu aides à retrouver des passages dans une conversation WhatsApp informelle entre proches. À partir de la question, propose 6 à 12 mots-clés à chercher : privilégie des mots COURTS et du langage de conversation (familier, abréviations, formes courantes), des racines qui couvrent plusieurs formes (par exemple « voyag » pour voyage, voyager, voyagé), des synonymes simples, des fautes de frappe courantes et, si pertinent, les noms propres de la question. Évite les expressions longues et les mots rares ou soutenus. Réponds uniquement par un tableau JSON de chaînes, sans commentaire.';
     const r=await aiCallRetry(sys,'Question : '+T.q,T.ac.signal,()=>{});
-    aiUsageAdd(r.tokens);T.kws=aiParseKw(r.text);
+    aiUsageAdd(r.tokens);T.kws=aiParseKw(r.text);T.cnt={};T.sim={};
     T.stage='kw';
     if(!T.kws.length)T.err='Aucun mot-clé exploitable dans la réponse de l\'IA : saisissez-les à la main.';
     else if(aiCfg.kwAuto){T.ac=null;await aiTargetSearch();return;}
   }catch(e){T.stage='kw';T.err=e.name==='AbortError'?'Demande annulée.':e.message;}
-  if(_aiTarget===T){T.ac=null;aiRenderThread();}
+  if(_aiTarget===T){T.ac=null;aiRenderThread();aiKwEnrich(T);}
+}
+function aiMergeWins(list){
+  list.sort((x,y)=>x.a-y.a||x.b-y.b);const out=[];let cur=null;
+  for(const w of list){
+    if(cur&&w.a<=cur.b+1){cur.b=Math.max(cur.b,w.b);cur.mask|=w.mask;cur.hits+=w.hits;cur.sim=Math.max(cur.sim||0,w.sim||0);cur.sem=cur.sem||w.sem;}
+    else{if(cur)out.push(cur);cur={a:w.a,b:w.b,mask:w.mask,hits:w.hits,sim:w.sim||0,sem:!!w.sem};}
+  }
+  if(cur)out.push(cur);return out;
 }
 async function aiTargetSearch(){
-  const T=_aiTarget;if(!T||!T.kws.length)return;
+  const T=_aiTarget;if(!T)return;
+  const useKw=T.src!=='sem',useSem=T.src!=='kw';
+  if(useKw&&!useSem&&!T.kws.length)return;
   T.stage='search';T.err=null;aiRenderThread();await new Promise(r=>setTimeout(r,30));
-  const msgs=filteredMsgs,n=msgs.length,kws=T.kws.slice(0,30),rx=kws.map(aiKwRegex);
+  const msgs=filteredMsgs,n=msgs.length,kws=useKw?T.kws.slice(0,30):[],rx=kws.map(aiKwRegex);
   const hit=new Int32Array(n),perKw=new Array(kws.length).fill(0),perS={},perM={};let found=0;
-  for(let i=0;i<n;i++){
+  const mkey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  for(let i=0;i<n&&rx.length;i++){
     const m=msgs[i];if(m.isDup)continue;
     const nt=m._n||(m._n=aiNorm(m.text||''));let mask=0;
     for(let k=0;k<rx.length;k++)if(rx[k].test(nt)){mask|=(1<<k);perKw[k]++;}
-    if(mask){hit[i]=mask;found++;perS[m.sender]=(perS[m.sender]||0)+1;const d=m.date,key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');perM[key]=(perM[key]||0)+1;}
+    if(mask){hit[i]=mask;found++;perS[m.sender]=(perS[m.sender]||0)+1;const key=mkey(m.date);perM[key]=(perM[key]||0)+1;}
     if(i%25000===24999)await new Promise(r=>setTimeout(r,0));
     if(_aiTarget!==T)return;
   }
-  const pc=x=>{let c=0;while(x){c+=x&1;x>>>=1;}return c;},wins=[];let cur=null;
-  for(let i=0;i<n;i++){
-    if(!hit[i])continue;const a=Math.max(0,i-2),b=Math.min(n-1,i+2);
-    if(cur&&a<=cur.b+1){cur.b=Math.max(cur.b,b);cur.mask|=hit[i];cur.hits++;}
-    else{if(cur)wins.push(cur);cur={a:a,b:b,mask:hit[i],hits:1};}
+  const list=[];
+  for(let i=0;i<n;i++){if(hit[i])list.push({a:Math.max(0,i-2),b:Math.min(n-1,i+2),mask:hit[i],hits:1});}
+  let semN=0;
+  if(useSem){
+    try{const sw=await semQueryWins(T.q);if(_aiTarget!==T)return;semN=sw.length;for(const w of sw)list.push({a:w.a,b:w.b,mask:0,hits:0,sim:w.sim,sem:true});}
+    catch(e){T.stage='kw';T.err='Recherche par le sens : '+e.message;aiRenderThread();return;}
   }
-  if(cur)wins.push(cur);
+  const wins=aiMergeWins(list),pc=x=>{let c=0;while(x){c+=x&1;x>>>=1;}return c;};
   let total=0;
-  for(const w of wins){let len=0;for(let j=w.a;j<=w.b;j++)len+=(msgs[j].text||'').length+28;w.len=len+40;total+=w.len;const d=msgs[w.a].date;w.mk=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');w.score=pc(w.mask)*100000+w.hits;}
-  const chunk=Math.max(2000,aiChunkChars()-600),budget=chunk;
-  const groups=aiGroupWins(wins,chunk),keep=aiPickWindows(wins,budget);
-  T.kws=kws;T.res={found:found,total:msgs.filter(m=>!m.isDup).length,perKw:perKw,perS:perS,perM:perM,wins:wins,nwin:wins.length,chars:total,fits:groups.length<=1,nparts:groups.length,keepN:keep.length,keepChars:keep.reduce((a,w)=>a+w.len,0)};
+  for(const w of wins){let len=0;for(let j=w.a;j<=w.b;j++)len+=(msgs[j].text||'').length+28;w.len=len+40;total+=w.len;w.mk=mkey(msgs[w.a].date);w.score=pc(w.mask)*100000+w.hits+(w.sim||0)*1000;}
+  if(!useKw){for(const w of wins){for(let j=w.a;j<=w.b;j++){const m=msgs[j];if(m.isDup)continue;perS[m.sender]=(perS[m.sender]||0)+1;}const k=w.mk;perM[k]=(perM[k]||0)+1;}}
+  const chunk=Math.max(2000,aiChunkChars()-600),groups=aiGroupWins(wins,chunk),keep=aiPickWindows(wins,chunk);
+  let assoc=[];if(useKw&&found){await aiVocab();assoc=aiAssocWords({kws:kws},wins.filter(w=>w.mask));}
+  T.kws=kws.length?kws:T.kws;
+  T.res={found:found,total:msgs.filter(m=>!m.isDup).length,perKw:perKw,perS:perS,perM:perM,wins:wins,nwin:wins.length,chars:total,fits:groups.length<=1,nparts:groups.length,keepN:keep.length,keepChars:keep.reduce((a,w)=>a+w.len,0),useKw:useKw,useSem:useSem,semN:semN,assoc:assoc};
   T.stage='results';aiRenderThread();
-  if(found&&T.res.fits)aiTargetSend('all');
+  if(wins.length&&T.res.fits)aiTargetSend('all');
 }
 async function aiTargetSend(mode){
   const T=_aiTarget;if(!T||!T.res||_aiRunning)return;
@@ -3408,11 +3540,14 @@ async function aiTargetSend(mode){
   if(!ok)return;
   if(_aiJob){const ok2=await askConfirm({title:'Remplacer la demande en pause ?',okLabel:'Remplacer',html:'Une demande est en pause (<b>'+(_aiJob.cache||[]).length+' / '+(_aiJob.total||'?')+'</b> étapes). La nouvelle demande l\'écrase : utilisez « Exporter l\'état » avant si vous voulez la garder.'});if(!ok2)return;}
   const kwtxt=T.kws.map(k=>'« '+k+' »').join(', '),per=T.kws.map((k,i)=>'« '+k+' » : '+R.perKw[i]).join(' ; '),ps=Object.keys(R.perS).sort((a,b)=>R.perS[b]-R.perS[a]).map(s=>s+' : '+R.perS[s]).join(' ; ');
-  const facts='Faits calculés par WAAV sur la sélection ('+R.total.toLocaleString('fr-FR')+' messages) : '+R.found+' message(s) contiennent au moins un mot-clé ('+per+') ; par participant : '+ps+'. Mots-clés cherchés : '+kwtxt+'.';
-  const sys='Tu analyses des passages extraits d\'une conversation WhatsApp (format « JJ/MM/AAAA HH:MM Nom: message »). Les passages sont des messages trouvés autour de mots-clés, pas toute la conversation : ne conclus jamais à l\'absence d\'un sujet. Réponds en français, de façon factuelle, uniquement d\'après ces passages et les faits fournis, sans rien inventer. Cite les dates (JJ/MM/AAAA) des passages sur lesquels tu t\'appuies. Mets en forme en Markdown simple : titres avec ##, listes à puces, **gras** pour les points clés.';
-  const sel='Recherche ciblée : '+kwtxt+' · '+R.found.toLocaleString('fr-FR')+' messages trouvés · '+wins.length.toLocaleString('fr-FR')+' passages envoyés'+(wins.length<R.nwin?' sur '+R.nwin.toLocaleString('fr-FR'):'');
+  let facts;
+  if(R.useKw&&T.kws.length)facts='Faits calculés par WAAV sur la sélection ('+R.total.toLocaleString('fr-FR')+' messages) : '+R.found+' message(s) contiennent au moins un mot-clé ('+per+') ; par participant : '+ps+'. Mots-clés cherchés : '+kwtxt+'.'+(R.useSem?' Des passages proches par le sens (approximatif) ont aussi été ajoutés.':'');
+  else facts='Aucun comptage exact n\'est disponible : les passages ont été choisis par proximité de sens avec la question (approximatif).';
+  const sys='Tu analyses des passages extraits d\'une conversation WhatsApp (format « JJ/MM/AAAA HH:MM Nom: message »). Les passages sont des messages trouvés autour de mots-clés ou par proximité de sens, pas toute la conversation : ne conclus jamais à l\'absence d\'un sujet. Réponds en français, de façon factuelle, uniquement d\'après ces passages et les faits fournis, sans rien inventer. Cite les dates (JJ/MM/AAAA) des passages sur lesquels tu t\'appuies. Mets en forme en Markdown simple : titres avec ##, listes à puces, **gras** pour les points clés.';
+  const srcl=T.src==='sem'?'sens':(T.src==='both'?'mots-clés + sens':'mots-clés');
+  const sel='Recherche ciblée ('+srcl+') : '+(T.kws.length?kwtxt+' · '+R.found.toLocaleString('fr-FR')+' messages trouvés · ':'')+wins.length.toLocaleString('fr-FR')+' passages envoyés'+(wins.length<R.nwin?' sur '+R.nwin.toLocaleString('fr-FR'):'');
   _aiJob={q:T.q,sys:sys,task:'Question : '+T.q+'\n'+facts+'\nRéponds uniquement d\'après ces passages ; si les passages ne permettent pas de répondre, dis-le.',parts:parts,partials:[],level:null,batches:null,out:[],used:0,done:0,total:pl.reqs,secs0:pl.secs,cache:[],seq:0,chunk:aiChunkChars(),files:aiFileNames(),provider:aiCfg.provider,model:aiCfg.model,created:Date.now(),sel:sel,
-    tgt:{kws:T.kws.slice(),found:R.found,sent:wins.length,windows:R.nwin,mode:mode}};
+    tgt:{kws:T.kws.slice(),found:R.found,sent:wins.length,windows:R.nwin,mode:mode,src:T.src}};
   _aiTarget=null;document.getElementById('ai-input').value='';
   await aiJobSaveNew(_aiJob);aiExec();
 }
@@ -3420,18 +3555,21 @@ function aiTargetClose(){const T=_aiTarget;if(T&&T.ac)T.ac.abort();_aiTarget=nul
 function aiTargetAddKw(v){
   const T=_aiTarget;if(!T)return;v=String(v||'').trim();if(!v)return;
   if(T.kws.length>=30){showToast('30 mots-clés au maximum');return;}
-  if(!T.kws.some(k=>aiNorm(k)===aiNorm(v)))T.kws.push(v);aiRenderThread();
+  if(!T.kws.some(k=>aiNorm(k)===aiNorm(v)))T.kws.push(v);aiRenderThread();aiKwEnrich(T);
 }
+async function aiTargetAddRun(w){const T=_aiTarget;if(!T)return;if(!T.kws.some(k=>aiNorm(k)===aiNorm(w)))T.kws.push(w);await aiTargetSearch();}
 function aiStatsEl(T,mk){
   const R=T.res,box=mk('ai-stats'),fr=x=>x.toLocaleString('fr-FR');
-  box.appendChild(mk('ai-stat-l1',fr(R.found)+' message'+(R.found>1?'s':'')+' trouvé'+(R.found>1?'s':'')+' sur '+fr(R.total)+' dans la sélection · '+fr(R.nwin)+' passage'+(R.nwin>1?'s':'')+' (±2 messages de contexte)'));
+  if(R.useKw)box.appendChild(mk('ai-stat-l1',fr(R.found)+' message'+(R.found>1?'s':'')+' trouvé'+(R.found>1?'s':'')+' sur '+fr(R.total)+' dans la sélection · '+fr(R.nwin)+' passage'+(R.nwin>1?'s':'')+' (±2 messages de contexte)'+(R.useSem?' dont '+fr(R.semN)+' proche'+(R.semN>1?'s':'')+' par le sens (approximatif)':'')));
+  else box.appendChild(mk('ai-stat-l1',fr(R.nwin)+' passage'+(R.nwin>1?'s':'')+' proche'+(R.nwin>1?'s':'')+' par le sens de votre question (classement approximatif, sans comptage exact)'));
   const mx=Math.max(1,...R.perKw);
-  T.kws.forEach((k,i)=>{const row=mk('ai-kw-row'),b=mk('ai-kw-b');b.innerHTML='<i style="width:'+Math.max(R.perKw[i]?3:0,Math.round(R.perKw[i]/mx*100))+'%"></i>';row.append(mk('ai-kw-n',k),b,mk('ai-kw-c',fr(R.perKw[i])));box.appendChild(row);});
+  T.kws.forEach((k,i)=>{if(!R.useKw)return;const row=mk('ai-kw-row'),b=mk('ai-kw-b');b.innerHTML='<i style="width:'+Math.max(R.perKw[i]?3:0,Math.round(R.perKw[i]/mx*100))+'%"></i>';row.append(mk('ai-kw-n',k),b,mk('ai-kw-c',fr(R.perKw[i]||0)));box.appendChild(row);});
   const ps=Object.keys(R.perS).sort((a,b)=>R.perS[b]-R.perS[a]);
-  if(ps.length){const l=mk('ai-stat-l1','Par participant : '+ps.map(s=>s+' '+fr(R.perS[s])).join(' · '));box.appendChild(l);}
+  if(ps.length)box.appendChild(mk('ai-stat-l1',(R.useKw?'Par participant : ':'Messages par participant : ')+ps.map(s=>s+' '+fr(R.perS[s])).join(' · ')));
   let ms=Object.keys(R.perM).sort(),vals=ms.map(k=>R.perM[k]),labs=ms;
   if(ms.length>36){const y={};ms.forEach(k=>{y[k.slice(0,4)]=(y[k.slice(0,4)]||0)+R.perM[k];});labs=Object.keys(y).sort();vals=labs.map(k=>y[k]);}
   if(vals.length>1){const h=mk('ai-hist'),vm=Math.max(...vals);vals.forEach((v,i)=>{const b=document.createElement('i');b.style.height=Math.max(2,Math.round(v/vm*44))+'px';b.title=labs[i]+' : '+fr(v);h.appendChild(b);});box.appendChild(h);const lb=mk('ai-hist-l');lb.append(mk('',labs[0]),mk('',labs[labs.length-1]));box.appendChild(lb);}
+  if(R.assoc&&R.assoc.length){const row=mk('ai-sugrow');row.appendChild(mk('','Mots souvent associés :'));R.assoc.forEach(([w,c])=>{const b=document.createElement('button');b.type='button';b.className='ai-chip sug';b.textContent=w+' · '+c+' +';b.title='Ajouter ce mot et relancer la recherche';b.onclick=()=>aiTargetAddRun(w);row.appendChild(b);});box.appendChild(row);}
   return box;
 }
 function aiRenderTarget(el,mk){
@@ -3443,26 +3581,262 @@ function aiRenderTarget(el,mk){
   else if(T.stage==='kw'){
     B.appendChild(mk('ai-pend-lab',T.kws.length?'Mots-clés à chercher (modifiables) :':'Saisissez les mots-clés à chercher :'));
     if(T.err){const e=mk('ai-pend-time',T.err);e.style.color='#ff8a80';B.appendChild(e);}
-    const ch=mk('ai-chips');T.kws.forEach((k,i)=>{const s=document.createElement('span');s.className='ai-chip';s.appendChild(document.createTextNode(k));const x=document.createElement('button');x.type='button';x.textContent='×';x.title='Retirer';x.setAttribute('aria-label','Retirer '+k);x.onclick=()=>{T.kws.splice(i,1);aiRenderThread();};s.appendChild(x);ch.appendChild(s);});B.appendChild(ch);
+    const ch=mk('ai-chips');T.kws.forEach((k,i)=>{const s=document.createElement('span');s.className='ai-chip'+(T.cnt[k]===0?' zero':'');s.dataset.k=k;s.appendChild(document.createTextNode(k));const cc=document.createElement('span');cc.className='cc';cc.textContent=T.cnt[k]===undefined?'…':T.cnt[k].toLocaleString('fr-FR');s.appendChild(cc);const x=document.createElement('button');x.type='button';x.textContent='×';x.title='Retirer';x.setAttribute('aria-label','Retirer '+k);x.onclick=()=>{T.kws.splice(i,1);aiRenderThread();aiKwEnrich(T);};s.appendChild(x);ch.appendChild(s);});B.appendChild(ch);
+    const sug=mk('ai-sugrow');sug.id='ai-kwsug';B.appendChild(sug);
     const add=mk('ai-addkw'),inp=document.createElement('input');inp.type='text';inp.placeholder='Ajouter un mot-clé ou une « expression exacte »';inp.setAttribute('aria-label','Ajouter un mot-clé');
     inp.onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();aiTargetAddKw(inp.value);}};add.append(inp,btn('+ Ajouter',()=>aiTargetAddKw(inp.value)));B.appendChild(add);
-    B.appendChild(mk('ai-note2','Insensible aux majuscules et aux accents ; « vacance » trouve « vacances » ; les guillemets cherchent l\'expression telle quelle.'));
-    acts.append(btn('🔍 Lancer la recherche',aiTargetSearch,true,!T.kws.length));if(T.kws.length)acts.append(btn('Redemander à l\'IA',aiTargetKeywords));acts.append(btn('Fermer',aiTargetClose));B.appendChild(acts);
+    B.appendChild(mk('ai-note2','Le nombre à côté de chaque mot est le nombre de messages de la sélection qui le contiennent. Insensible aux majuscules et aux accents ; « vacance » trouve « vacances » ; les guillemets cherchent l\'expression telle quelle.'));
+    acts.append(btn('🔍 Lancer la recherche',aiTargetSearch,true,!T.kws.length&&T.src!=='both'));if(T.kws.length&&T.src!=='sem')acts.append(btn('Redemander à l\'IA',aiTargetKeywords));acts.append(btn('Fermer',aiTargetClose));B.appendChild(acts);
+    setTimeout(()=>aiKwFillSug(T),0);
   }
   else if(T.stage==='search'){B.appendChild(mk('ai-pend-lab','Recherche dans '+filteredMsgs.length.toLocaleString('fr-FR')+' messages…'));}
   else if(T.stage==='results'){
     B.appendChild(aiStatsEl(T,mk));const R=T.res;
-    if(!R.found){B.appendChild(mk('ai-pend-lab','Aucun message ne contient ces mots-clés.'));acts.append(btn('Modifier les mots-clés',()=>{T.stage='kw';aiRenderThread();},true),btn('Fermer',aiTargetClose));}
-    else if(R.fits){acts.append(btn('✨ Envoyer à l\'IA (1 requête)',()=>aiTargetSend('all'),true),btn('Modifier les mots-clés',()=>{T.stage='kw';aiRenderThread();}),btn('Fermer',aiTargetClose));}
+    if(!R.nwin){B.appendChild(mk('ai-pend-lab','Aucun passage trouvé.'));acts.append(btn('Modifier les mots-clés',()=>{T.stage='kw';aiRenderThread();aiKwEnrich(T);},true),btn('Fermer',aiTargetClose));}
+    else if(R.fits){acts.append(btn('✨ Envoyer à l\'IA (1 requête)',()=>aiTargetSend('all'),true),btn('Modifier les mots-clés',()=>{T.stage='kw';aiRenderThread();aiKwEnrich(T);}),btn('Fermer',aiTargetClose));}
     else{
       B.appendChild(mk('ai-pend-lab',R.nwin.toLocaleString('fr-FR')+' passages trouvés : ils ne tiennent pas en une seule requête.'));
       const pl=aiPlanP(aiGroupWins(R.wins,Math.max(2000,aiChunkChars()-600)).map(g=>'x'.repeat(Math.min(g.reduce((a,w)=>a+w.len,0),aiChunkChars()))));
-      acts.append(btn('Garder les '+R.keepN.toLocaleString('fr-FR')+' meilleurs (1 requête)',()=>aiTargetSend('best'),true),btn('Tout traiter (≈ '+R.nparts+' parties, ≈ '+pl.reqs+' requêtes'+(pl.secs>=45?', ≈ '+aiDur(pl.secs):'')+')',()=>aiTargetSend('all')),btn('Affiner les mots-clés',()=>{T.stage='kw';aiRenderThread();}),btn('Fermer',aiTargetClose));
+      acts.append(btn('Garder les '+R.keepN.toLocaleString('fr-FR')+' meilleurs (1 requête)',()=>aiTargetSend('best'),true),btn('Tout traiter (≈ '+R.nparts+' parties, ≈ '+pl.reqs+' requêtes'+(pl.secs>=45?', ≈ '+aiDur(pl.secs):'')+')',()=>aiTargetSend('all')),btn('Affiner les mots-clés',()=>{T.stage='kw';aiRenderThread();aiKwEnrich(T);}),btn('Fermer',aiTargetClose));
     }
     B.appendChild(acts);
   }
   el.appendChild(c.card);
 }
+// ═══════════════════════════════════════════════════════════
+// Recherche par le sens (v2.4.0) : embeddings calculés dans le navigateur (option)
+// ═══════════════════════════════════════════════════════════
+const SEM_LIB='https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.1';
+const SEM_MODELS={
+  std:{id:'Xenova/multilingual-e5-small',label:'Standard multilingue',size:'≈ 135 Mo',qp:'query: ',pp:'passage: ',dtype:'q8',files:'le modèle quantifié (≈ 118 Mo) et son dictionnaire de mots (≈ 17 Mo)',note:'Modèle multilingue e5-small (licence MIT), le même que celui utilisé par Firefox pour ses fonctions locales.'},
+  fr:{id:'rolf-mozilla/french-embedding-e5-distilled',label:'Léger, français',size:'≈ 30 Mo',qp:'',pp:'',dtype:'q8',files:'le modèle quantifié (≈ 28 Mo) et son dictionnaire',note:'Modèle tiers expérimental, très léger, centré sur le français : peut disparaître ou changer.'}
+};
+let semCfg={on:false,model:'std',rate:0};
+try{const s=JSON.parse(localStorage.getItem('waav_sem')||'null');if(s&&typeof s==='object')semCfg=Object.assign(semCfg,s);}catch(e){}
+function semSave(){try{localStorage.setItem('waav_sem',JSON.stringify(semCfg));}catch(e){}}
+let semBackend=null,semBackendKey='',semLoaded=false,semBusy=false,semStop=false,semMeta=null,semIdxData=null,semProg=null,semMode='kw',semResults=null,semLastErr='',semFpC=null,_semDbP=null;
+const semFake=()=>{try{return localStorage.getItem('waav_sem_fake')==='1';}catch(e){return false;}};
+const SEM_WORKER_SRC="import {pipeline,env} from '"+SEM_LIB+"';\nenv.allowLocalModels=false;let ex=null;\nself.onmessage=async e=>{const d=e.data;try{\nif(d.type==='load'){ex=await pipeline('feature-extraction',d.model,{dtype:d.dtype,progress_callback:p=>self.postMessage({prog:p})});self.postMessage({id:d.id,ok:true});}\nelse if(d.type==='embed'){const o=await ex(d.texts,{pooling:'mean',normalize:true});const f=new Float32Array(o.data);self.postMessage({id:d.id,ok:true,data:f,dim:o.dims[o.dims.length-1]},[f.buffer]);}\n}catch(err){self.postMessage({id:d.id,ok:false,error:String(err&&err.message||err)});}};";
+function semMkWorker(){
+  const w=new Worker(URL.createObjectURL(new Blob([SEM_WORKER_SRC],{type:'text/javascript'})),{type:'module'});
+  let seq=0,onProg=null;const pend=new Map();
+  w.onmessage=e=>{const d=e.data;if(d.prog){if(onProg)onProg(d.prog);return;}const p=pend.get(d.id);if(p){pend.delete(d.id);d.ok?p.res(d):p.rej(new Error(d.error));}};
+  w.onerror=e=>{const err=new Error('calcul en arrière-plan impossible ('+(e.message||'réseau ou navigateur ?')+')');for(const p of pend.values())p.rej(err);pend.clear();};
+  const call=m=>new Promise((res,rej)=>{const id=++seq;pend.set(id,{res:res,rej:rej});w.postMessage(Object.assign({id:id},m));});
+  return {kind:'worker',load:(model,dtype,cb)=>{onProg=cb;return call({type:'load',model:model,dtype:dtype});},
+    embed:async texts=>{const r=await call({type:'embed',texts:texts});const out=[];for(let i=0;i<texts.length;i++)out.push(r.data.subarray(i*r.dim,(i+1)*r.dim));return {vecs:out,dim:r.dim};},dispose:()=>{try{w.terminate();}catch(e){}}};
+}
+function semMkMain(){
+  let ex=null;
+  return {kind:'main',load:async(model,dtype,cb)=>{const T=await import(SEM_LIB);T.env.allowLocalModels=false;ex=await T.pipeline('feature-extraction',model,{dtype:dtype,progress_callback:cb});},
+    embed:async texts=>{const o=await ex(texts,{pooling:'mean',normalize:true}),dim=o.dims[o.dims.length-1],f=new Float32Array(o.data),out=[];for(let i=0;i<texts.length;i++)out.push(f.subarray(i*dim,(i+1)*dim));await new Promise(r=>setTimeout(r,0));return {vecs:out,dim:dim};},dispose:()=>{}};
+}
+function semMkFake(){
+  const D=128,emb=s=>{const v=new Float32Array(D),tk=aiNorm(s).replace(/[^a-z0-9 ]/g,' ').split(/\s+/).filter(x=>x.length>2);
+    for(const w of tk){let h=0;for(let i=0;i<w.length;i++)h=(h*31+w.charCodeAt(i))>>>0;v[h%D]+=1;v[(h>>>7)%D]+=0.5;for(let i=0;i+3<=w.length;i++){let g=0;for(let j=i;j<i+3;j++)g=(g*37+w.charCodeAt(j))>>>0;v[g%D]+=0.3;}}
+    let n=0;for(let i=0;i<D;i++)n+=v[i]*v[i];n=Math.sqrt(n)||1;for(let i=0;i<D;i++)v[i]/=n;return v;};
+  return {kind:'fake',load:async(m,d,cb)=>{if(cb)cb({status:'progress',file:'fake',loaded:1,total:1});},embed:async texts=>{let dl=0;try{dl=+localStorage.getItem('waav_sem_fake_delay')||0;}catch(e){}if(dl)await new Promise(r=>setTimeout(r,dl));return {vecs:texts.map(emb),dim:D};},dispose:()=>{}};
+}
+function semProgressAgg(cb){const files={};return p=>{if(!p||!p.file)return;if(p.status==='progress'||p.status==='done'||p.status==='progress_total'){files[p.file]={l:p.loaded||p.total||0,t:p.total||0};}let l=0,t=0;for(const k in files){l+=files[k].l;t+=files[k].t;}if(cb)cb({loaded:l,total:t});};}
+async function semEnsureLoaded(cb){
+  const key=semCfg.model+(semFake()?'|fake':'');
+  if(semBackend&&semBackendKey===key&&semLoaded)return semBackend;
+  if(semBackend){semBackend.dispose();semBackend=null;semLoaded=false;}
+  const M=SEM_MODELS[semCfg.model],prog=semProgressAgg(cb);
+  if(semFake()){semBackend=semMkFake();await semBackend.load(M.id,M.dtype,prog);}
+  else{
+    try{semBackend=semMkWorker();await semBackend.load(M.id,M.dtype,prog);}
+    catch(e1){try{semBackend.dispose();}catch(x){}semBackend=semMkMain();await semBackend.load(M.id,M.dtype,prog);}
+  }
+  semBackendKey=key;semLoaded=true;return semBackend;
+}
+// ── base de l'index (séparée de wa_archive et de waav_ia)
+function semDb(){if(_semDbP)return _semDbP;_semDbP=new Promise((res,rej)=>{const r=indexedDB.open('waav_sem',1);r.onupgradeneeded=()=>{const d=r.result;d.createObjectStore('meta');d.createObjectStore('batches');};r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});return _semDbP;}
+async function semTx(store,mode,fn){const d=await semDb();return new Promise((res,rej)=>{const tx=d.transaction(store,mode);let out;try{out=fn(tx.objectStore(store));}catch(e){rej(e);return;}tx.oncomplete=()=>res(out&&out.result!==undefined?out.result:out);tx.onerror=tx.onabort=()=>rej(tx.error);});}
+const semGetMeta=()=>semTx('meta','readonly',o=>o.get('meta'));
+const semPutMeta=m=>semTx('meta','readwrite',o=>o.put(m,'meta'));
+function semMarkIdx(){for(let i=0;i<allMessages.length;i++)allMessages[i]._i=i;}
+function semFpOf(){
+  if(semFpC&&semFpC.src===allMessages&&semFpC.n===allMessages.length)return semFpC.fp;
+  let s=0;for(const m of allMessages)s=(s+(m.text?m.text.length:0)*31+1)%1000000007;const n=allMessages.length;
+  const fp=n+'|'+(n?allMessages[0].date.getTime():0)+'|'+(n?allMessages[n-1].date.getTime():0)+'|'+s;semFpC={src:allMessages,n:n,fp:fp};return fp;
+}
+const semModelKey=()=>semCfg.model+(semFake()?'|fake':'');
+const semValid=()=>!!(semMeta&&semMeta.complete&&semMeta.model===semModelKey()&&allMessages.length&&semMeta.fp===semFpOf());
+const semReady=()=>!!(semCfg.on&&semValid());
+function semWindows(){
+  const out=[];let cur=null;
+  for(let i=0;i<allMessages.length;i++){
+    const m=allMessages[i];if(m.isDup||!m.text)continue;const len=m.sender.length+m.text.length+2;
+    if(cur&&(cur.n>=5||cur.len+len>600||(m.date-cur.last)>6*3600e3)){out.push({a:cur.a,b:cur.b});cur=null;}
+    if(!cur)cur={a:i,b:i,n:0,len:0,last:m.date};
+    cur.b=i;cur.n++;cur.len+=len;cur.last=m.date;
+  }
+  if(cur)out.push({a:cur.a,b:cur.b});return out;
+}
+function semWinText(a,b){const out=[];for(let i=a;i<=b;i++){const m=allMessages[i];if(m.isDup||!m.text)continue;out.push(m.sender+': '+m.text);}return out.join('\n').slice(0,900);}
+async function semBuild(){
+  if(semBusy)return;if(!allMessages.length){showToast('Aucune archive chargée');return;}
+  semBusy=true;semStop=false;semLastErr='';semUI();
+  try{
+    const be=await semEnsureLoaded(p=>{semProg={phase:'model',loaded:p.loaded,total:p.total};semUI();}),M=SEM_MODELS[semCfg.model];
+    semMarkIdx();const wins=semWindows(),fp=semFpOf();
+    let meta=await semGetMeta();
+    if(!meta||meta.fp!==fp||meta.model!==semModelKey()||meta.nWin!==wins.length){
+      await semTx('batches','readwrite',o=>o.clear());
+      meta={fp:fp,model:semModelKey(),dim:0,nWin:wins.length,nDone:0,nBatches:0,complete:false,created:Date.now()};await semPutMeta(meta);
+    }
+    semMeta=meta;semIdxData=null;
+    const t0=Date.now(),done0=meta.nDone;semProg={phase:'index',done:meta.nDone,total:wins.length,t0:t0,done0:done0};
+    const BATCH=128,SUB=32;
+    while(meta.nDone<wins.length&&!semStop){
+      const base=meta.nDone,end=Math.min(wins.length,base+BATCH),Aa=[],Bb=[];let cnt=0,Vq=null,dim=meta.dim;
+      for(let s=base;s<end&&!semStop;s+=SUB){
+        const e2=Math.min(end,s+SUB),texts=[];
+        for(let i=s;i<e2;i++)texts.push(M.pp+semWinText(wins[i].a,wins[i].b));
+        const r=await be.embed(texts);dim=r.dim;
+        if(!Vq)Vq=new Int8Array((end-base)*dim);
+        for(let i=0;i<r.vecs.length;i++){const v=r.vecs[i],o=(cnt+i)*dim;for(let d=0;d<dim;d++){const x=Math.round(v[d]*127);Vq[o+d]=x>127?127:(x<-127?-127:x);}Aa.push(wins[s+i].a);Bb.push(wins[s+i].b);}
+        cnt+=r.vecs.length;semProg.done=base+cnt;semUI();await new Promise(r=>setTimeout(r,0));
+      }
+      if(cnt){await semTx('batches','readwrite',o=>o.put({a:Int32Array.from(Aa),b:Int32Array.from(Bb),v:Vq.slice(0,cnt*dim),dim:dim},meta.nBatches));meta.nBatches++;meta.nDone=base+cnt;meta.dim=dim;meta.updated=Date.now();await semPutMeta(meta);}
+    }
+    const el=(Date.now()-t0)/1000;if(meta.nDone>done0&&el>1){semCfg.rate=(meta.nDone-done0)/el;semSave();}
+    if(meta.nDone>=wins.length){meta.complete=true;await semPutMeta(meta);semIdxData=null;showToast('✅ Index de recherche par le sens prêt ('+wins.length.toLocaleString('fr-FR')+' passages)');}
+    else showToast('Indexation suspendue : '+meta.nDone.toLocaleString('fr-FR')+' / '+wins.length.toLocaleString('fr-FR')+' passages — « Indexer » reprend là où elle s\'est arrêtée');
+    semMeta=meta;
+  }catch(e){semLastErr=e.message;showToast('⚠️ Indexation : '+e.message);}
+  finally{semBusy=false;semProg=null;try{semMeta=await semGetMeta();}catch(e){}semUI();}
+}
+async function semLoadIdx(){
+  if(semIdxData&&semIdxData.fp===semMeta.fp)return semIdxData;
+  const arr=await semTx('batches','readonly',o=>o.getAll());let n=0;const dim=semMeta.dim;for(const b of arr)n+=b.a.length;
+  const A=new Int32Array(n),B=new Int32Array(n),V=new Int8Array(n*dim);let p=0;
+  for(const b of arr){A.set(b.a,p);B.set(b.b,p);V.set(b.v,p*dim);p+=b.a.length;}
+  semIdxData={fp:semMeta.fp,n:n,dim:dim,A:A,B:B,V:V};return semIdxData;
+}
+async function semRank(q,K){
+  if(!semValid())throw new Error('l\'index n\'est pas prêt ou ne correspond plus à l\'archive');
+  const be=await semEnsureLoaded(),M=SEM_MODELS[semCfg.model],idx=await semLoadIdx();
+  const r=await be.embed([M.qp+q]),qv=r.vecs[0];
+  if(r.dim!==idx.dim)throw new Error('la dimension du modèle diffère de celle de l\'index : refaites l\'index');
+  semMarkIdx();const sel=new Set();for(const m of filteredMsgs)sel.add(m._i);
+  const n=idx.n,dim=idx.dim,V=idx.V,A=idx.A,sc=new Float32Array(n),keep=[];
+  for(let i=0;i<n;i++){if(!sel.has(A[i]))continue;let s=0;const o=i*dim;for(let d=0;d<dim;d++)s+=V[o+d]*qv[d];sc[i]=s/127;keep.push(i);}
+  keep.sort((x,y)=>sc[y]-sc[x]);
+  return keep.slice(0,K).map(i=>({a:idx.A[i],b:idx.B[i],sim:sc[i]}));
+}
+async function semQueryWins(q){
+  const top=await semRank(q,200),pos=new Map();filteredMsgs.forEach((m,i)=>pos.set(m._i,i));
+  const out=[];for(const w of top){let lo=-1,hi=-1;for(let j=w.a;j<=w.b;j++){const p=pos.get(j);if(p!==undefined){if(lo<0)lo=p;hi=p;}}if(lo>=0)out.push({a:lo,b:hi,sim:w.sim});}
+  return out;
+}
+// ── recherche seule (sans IA) : fenêtre de résultats
+function semSetMode(m){
+  semMode=m;document.getElementById('sm-kw').classList.toggle('on',m==='kw');document.getElementById('sm-sem').classList.toggle('on',m==='sem');
+  document.getElementById('search-input').placeholder=m==='sem'?'Idée ou question à chercher par le sens… (Entrée)':'Rechercher… (Entrée ou clic ailleurs)';
+}
+(function(){const k=handleSearchKey,b=handleSearchBlur;
+  handleSearchKey=function(e){if(semMode==='sem'){if(e.key==='Enter'){e.preventDefault();semSearchUI(e.target.value);}else if(e.key==='Escape'){e.target.value='';updateSearchClear();}return;}return k.apply(this,arguments);};
+  handleSearchBlur=function(v){if(semMode==='sem')return;return b.apply(this,arguments);};})();
+async function semSearchUI(q){
+  q=String(q||'').trim();if(!q)return;
+  if(!semReady()){showToast('Recherche par le sens non prête : activez-la et indexez l\'archive dans les réglages ⚙');return;}
+  semResults={q:q,top:null,shown:25,err:null};document.getElementById('sem-modal').classList.add('show');semRender();
+  try{semResults.top=await semRank(q,200);}catch(e){semResults.err=e.message;}
+  semRender();
+}
+function closeSem(){document.getElementById('sem-modal').classList.remove('show');}
+function semMore(){if(semResults){semResults.shown+=25;semRender();}}
+function semRender(){
+  const R=semResults;if(!R)return;
+  document.getElementById('sem-q').textContent='« '+R.q+' » — classement par proximité de sens dans la sélection actuelle (période et participants) ; approximatif, sans comptage exact.';
+  const L=document.getElementById('sem-list');L.innerHTML='';const more=document.getElementById('sem-more');more.style.display='none';
+  const mk=(c,tx)=>{const d=document.createElement('div');d.className=c;if(tx!=null)d.textContent=tx;return d;};
+  if(R.err){const e=mk('ai-note2','⚠️ '+R.err);e.style.color='#ff8a80';L.appendChild(e);return;}
+  if(!R.top){L.appendChild(mk('ai-note2','Recherche en cours…'));return;}
+  if(!R.top.length){L.appendChild(mk('ai-note2','Aucun passage dans la sélection.'));return;}
+  R.top.slice(0,R.shown).forEach(w=>{
+    const m0=allMessages[w.a],d=m0.date,key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const it=mk('sem-item'),h=mk('sem-item-h'),l=document.createElement('span'),b=document.createElement('b');b.textContent=Math.round(w.sim*100)+' %';
+    l.append(b,document.createTextNode(' · '+aiDateFr(d)+' '+String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0')));
+    const bt=document.createElement('button');bt.type='button';bt.textContent='Ouvrir le jour';bt.onclick=()=>{closeSem();try{openDayViewer(key);}catch(x){}};
+    h.append(l,bt);it.appendChild(h);
+    const lines=[];for(let i=w.a;i<=w.b;i++){const m=allMessages[i];if(!m.isDup&&m.text)lines.push(m.sender+': '+m.text);}
+    it.appendChild(mk('sem-item-t',lines.join('\n')));L.appendChild(it);
+  });
+  if(R.shown<R.top.length)more.style.display='';
+}
+// ── réglages : activation, test, index, nettoyage
+const semFmtB=n=>n>=1e6?(n/1e6).toFixed(0)+' Mo':Math.round(n/1e3)+' Ko';
+function semUI(){
+  const g=id=>document.getElementById(id);if(!g('sem-status'))return;
+  const M=SEM_MODELS[semCfg.model];g('sem-model').value=semCfg.model;g('sem-model-note').textContent=M.note;
+  const ok=semValid(),part=semMeta&&!semMeta.complete&&semMeta.model===semModelKey();
+  g('sem-status').textContent=semFake()?'Mode d\'essai (modèle simulé)':(semCfg.on?(semLoaded?'Activée · modèle chargé':'Activée · le modèle se charge à la première utilisation'):'Désactivée');
+  g('sem-btn-enable').textContent=semCfg.on?'Désactiver':'Activer…';
+  let ix='Aucun index';
+  if(semMeta){
+    if(semMeta.model!==semModelKey())ix='Index d\'un autre modèle : à refaire';
+    else if(semMeta.complete&&allMessages.length&&semMeta.fp!==semFpOf())ix='L\'archive a changé : index à refaire';
+    else if(semMeta.complete)ix='Prêt · '+semMeta.nWin.toLocaleString('fr-FR')+' passages indexés';
+    else ix='Incomplet · '+semMeta.nDone.toLocaleString('fr-FR')+' / '+semMeta.nWin.toLocaleString('fr-FR')+' passages';
+  }
+  g('sem-idx-status').textContent=ix;
+  g('sem-btn-index').textContent=part?'Reprendre l\'indexation':(semMeta&&semMeta.complete&&!ok?'Refaire l\'index':'Indexer');
+  g('sem-btn-index').disabled=semBusy||!semCfg.on;g('sem-btn-pause').style.display=semBusy?'':'none';g('sem-btn-test').disabled=semBusy||!semCfg.on;
+  const bar=g('sem-bar'),pr=g('sem-prog');
+  if(semProg){bar.style.display='';let pct=0,txt='';
+    if(semProg.phase==='model'){pct=semProg.total?semProg.loaded/semProg.total*100:5;txt='Téléchargement du modèle… '+semFmtB(semProg.loaded)+(semProg.total?' / '+semFmtB(semProg.total):'');}
+    else{pct=semProg.total?semProg.done/semProg.total*100:0;const el=(Date.now()-semProg.t0)/1000,r=el>2?(semProg.done-semProg.done0)/el:0;txt='Indexation : '+semProg.done.toLocaleString('fr-FR')+' / '+semProg.total.toLocaleString('fr-FR')+' passages'+(r>0?' · '+r.toFixed(1)+' passages/s · ≈ '+aiDur((semProg.total-semProg.done)/r)+' restantes':'');}
+    bar.firstChild.style.width=Math.max(2,Math.min(100,pct)).toFixed(0)+'%';pr.textContent=txt;}
+  else{bar.style.display='none';if(!pr.dataset.keep)pr.textContent=semLastErr?('⚠️ '+semLastErr):'';}
+  const vis=semReady();g('sem-mode').style.display=vis?'':'none';if(!vis&&semMode==='sem')semSetMode('kw');
+  if(typeof aiScopeUI==='function')aiScopeUI();
+}
+function semModelChanged(){semCfg.model=document.getElementById('sem-model').value;semSave();if(semBackend){semBackend.dispose();semBackend=null;}semLoaded=false;semIdxData=null;semUI();}
+async function semEnable(){
+  if(semCfg.on){semCfg.on=false;semSave();semUI();return;}
+  const M=SEM_MODELS[semCfg.model];
+  if(!semFake()){
+    const ok=await askConfirm({title:'Activer la recherche par le sens ?',okLabel:'⬇ Télécharger et activer',
+      html:'<b>Ce qui sera téléchargé</b> (une seule fois, puis conservé par le navigateur) :<br>• le moteur de calcul <b>transformers.js 3.8.1</b> (programme et moteur WebAssembly, de l\'ordre de 10 à 30 Mo, estimation) depuis <b>cdn.jsdelivr.net</b> ;<br>• le modèle <b>'+M.id+'</b> ('+M.size+') depuis <b>huggingface.co</b> : '+M.files+'.<br><br><b>Aucun de vos messages n\'est envoyé</b> : seuls ces fichiers sont téléchargés, le calcul se fait sur votre ordinateur. Ensuite, la recherche par le sens fonctionne hors ligne. Vous pourrez tout supprimer dans les réglages.<br><br>Il faudra ensuite <b>indexer</b> votre archive (quelques minutes à plusieurs heures selon sa taille et votre ordinateur ; la durée est estimée avant le lancement).'});
+    if(!ok)return;
+  }
+  semBusy=true;semUI();semLastErr='';
+  try{await semEnsureLoaded(p=>{semProg={phase:'model',loaded:p.loaded,total:p.total};semUI();});semCfg.on=true;semSave();showToast('✅ Recherche par le sens activée : lancez « Tester le modèle » puis « Indexer »');}
+  catch(e){semLastErr='Téléchargement ou chargement impossible : '+e.message+' (réseau, bloqueur de contenu, navigateur trop ancien ?)';showToast('⚠️ '+semLastErr);}
+  finally{semBusy=false;semProg=null;semUI();}
+}
+async function semTest(){
+  if(semBusy||!semCfg.on)return;semBusy=true;semUI();const pr=document.getElementById('sem-prog');pr.dataset.keep='1';pr.textContent='Test en cours…';
+  try{
+    const be=await semEnsureLoaded(),M=SEM_MODELS[semCfg.model];
+    const S=['On part en vacances cet été, tu as réservé le logement ?','Le budget est trop serré ce mois-ci.','Rendez-vous chez le notaire demain à neuf heures.','Tu peux acheter du pain en rentrant ?','Merci pour hier soir, c\'était super.','On se retrouve à la gare vers dix-huit heures.','J\'ai pris un congé pour la semaine prochaine.','Le médecin m\'a dit de me reposer.','La voiture est au garage depuis lundi.','Je n\'arrive pas à dormir en ce moment.','Bon anniversaire, on fait un gâteau ?','Il pleut depuis ce matin, on reste à la maison.','Tu as des nouvelles de ta mère ?','On a signé le contrat ce matin.','Quel film on regarde ce soir ?','Je termine le travail et je te rappelle.'].map(x=>M.pp+x);
+    await be.embed(S.slice(0,2));const t0=performance.now(),r=await be.embed(S),el=(performance.now()-t0)/1000,rate=S.length/el;
+    const a=r.vecs[0],b=r.vecs[1],c=r.vecs[2];const dot=(u,v)=>{let s=0;for(let i=0;i<u.length;i++)s+=u[i]*v[i];return s;};
+    semCfg.rate=rate;semSave();semMarkIdx();const n=semWindows().length;
+    pr.textContent='✅ Modèle opérationnel ('+(be.kind==='worker'?'calcul en arrière-plan':(be.kind==='main'?'calcul dans la page':'simulé'))+') · dimension '+r.dim+' · '+rate.toFixed(1)+' passages/s'+(n?' · votre archive ≈ '+n.toLocaleString('fr-FR')+' passages ≈ '+aiDur(n/rate)+' d\'indexation':'')+' · proximité vacances/budget '+dot(a,b).toFixed(2)+' (devrait être plus faible que le sens proche).';
+  }catch(e){pr.textContent='⚠️ Test impossible : '+e.message;semLastErr=e.message;}
+  finally{semBusy=false;semUI();}
+}
+async function semIndexClick(){
+  if(semBusy||!semCfg.on)return;if(!allMessages.length){showToast('Chargez d\'abord une archive');return;}
+  semMarkIdx();const n=semWindows().length,r=semCfg.rate;
+  const est=r>0?'≈ <b>'+aiDur(n/r)+'</b> (d\'après le dernier test)':'inconnue : lancez d\'abord « Tester le modèle »';
+  const ok=await askConfirm({title:'Indexer l\'archive ?',okLabel:'Indexer',html:'<b>'+n.toLocaleString('fr-FR')+'</b> passages (groupes d\'environ 5 messages) seront transformés en empreintes, dans ce navigateur. Durée estimée : '+est+'.<br>Vous pouvez suspendre à tout moment et reprendre plus tard ; l\'index est conservé dans une base séparée de vos archives (≈ '+Math.max(1,Math.round(n*(semMeta&&semMeta.dim||384)/1e6))+' Mo). Gardez la page ouverte pendant l\'indexation.'});
+  if(!ok)return;const pr=document.getElementById('sem-prog');delete pr.dataset.keep;semBuild();
+}
+async function semDelIndex(){
+  const ok=await askConfirm({title:'Supprimer l\'index ?',okLabel:'🗑 Supprimer',html:'L\'index de recherche par le sens sera supprimé de ce navigateur. Il faudra le refaire pour utiliser de nouveau cette recherche.'});
+  if(!ok)return;try{await semTx('batches','readwrite',o=>o.clear());await semTx('meta','readwrite',o=>o.clear());}catch(e){}semMeta=null;semIdxData=null;semUI();
+}
+async function semDelModel(){
+  const ok=await askConfirm({title:'Supprimer le modèle téléchargé ?',okLabel:'🗑 Supprimer',html:'Le modèle sera supprimé du cache de ce navigateur et la recherche par le sens sera désactivée ; il faudra le télécharger de nouveau pour la réutiliser. Le moteur de calcul reste dans le cache normal du navigateur.'});
+  if(!ok)return;try{if(window.caches){for(const k of await caches.keys())if(/transformers/i.test(k))await caches.delete(k);}}catch(e){}
+  if(semBackend){semBackend.dispose();semBackend=null;}semLoaded=false;semCfg.on=false;semSave();semUI();showToast('Modèle supprimé');
+}
+semGetMeta().then(m=>{semMeta=m||null;semUI();}).catch(()=>{});
 let _aiFold={},_aiPendEl=null,_aiLabel='',_aiTick=null;
 const AI_SVG={
   chev:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>',
