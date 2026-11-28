@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!--
-  WAAV — WhatsApp Archive Viewer v2.4.1
+  WAAV — WhatsApp Archive Viewer v2.4.2
   Copyright (C) 2026 R&R (Régori & Rabrielle)
 
   Ce programme est un logiciel libre : vous pouvez le redistribuer et/ou le modifier
@@ -19,7 +19,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WAAV v2.4.1</title>
+<title>WAAV v2.4.2</title>
 <script>(function(){try{var p=localStorage.getItem('waav_theme')||'dark';var l=p==='light'||(p==='system'&&window.matchMedia&&matchMedia('(prefers-color-scheme: light)').matches);document.documentElement.setAttribute('data-theme',l?'light':'dark');document.documentElement.setAttribute('data-font',localStorage.getItem('waav_font')==='system'?'system':'jakarta');}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <style>
 /* ── POLICES INTÉGRÉES (v2.1.0) — aucun chargement externe ── */
@@ -482,7 +482,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
 .ai-switch input:focus-visible+.sw{outline:2px solid var(--green);outline-offset:2px;}
 .ai-scope select{background:var(--bg3);border:1px solid var(--border);border-radius:10px;color:var(--text);font-family:inherit;font-size:.7rem;padding:3px 6px;}
 .ai-chip .cc{color:var(--text3);font-size:.68rem;margin-left:2px;}
-.ai-chip.zero{border-style:dashed;opacity:.75;} .ai-chip[data-k]{cursor:pointer;} .ai-chip.off{opacity:.45;border-style:dotted;background:transparent;text-decoration:line-through;}
+.ai-chip.zero{border-style:dashed;opacity:.75;} .ai-chip[data-k]{cursor:pointer;} .ai-chip.off{opacity:.45;border-style:dotted;background:transparent;text-decoration:line-through;} .search-opts{display:flex;gap:4px;margin-top:6px;} .search-opts button{flex:0 0 auto;border:1px solid var(--border);background:transparent;color:var(--text2);border-radius:8px;padding:3px 8px;font-family:inherit;font-size:.7rem;font-weight:600;cursor:pointer;} .search-opts button.on{background:var(--green-glow);color:var(--green);border-color:var(--green-dim);} #search-help{margin-top:6px;font-size:.68rem;line-height:1.5;color:var(--text2);border:1px solid var(--border);border-radius:8px;padding:6px 8px;} #search-sum{margin-top:6px;align-items:center;gap:6px;flex-wrap:wrap;font-size:.7rem;color:var(--text2);} #search-sum button{border:1px solid var(--green-dim);background:var(--green-glow);color:var(--green);border-radius:8px;padding:2px 8px;font-family:inherit;font-size:.68rem;cursor:pointer;} #stats-view{display:none;flex:1;min-height:0;flex-direction:column;} #main.stats-mode #stats-view{display:flex;} #main.stats-mode #messages-area,#main.stats-mode #empty-state{display:none !important;} #st-body{overflow:auto;padding:14px 18px;display:flex;flex-direction:column;gap:14px;flex:1;min-height:0;} .st-card{border:1px solid var(--border);border-radius:12px;padding:12px 14px;background:var(--surface);flex-shrink:0;} .st-card h3{margin:0 0 8px;font-size:.9rem;color:var(--green);} .st-sub{margin:10px 0 3px;font-size:.72rem;font-weight:700;color:var(--text2);} .st-row{display:grid;grid-template-columns:150px 1fr 110px;gap:8px;align-items:center;font-size:.74rem;margin:3px 0;color:var(--text);} .st-row>span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;} .st-row>span:last-child{text-align:right;color:var(--text2);} .st-bar{height:9px;border-radius:5px;background:var(--green-dim);} .st-table{border-collapse:collapse;font-size:.74rem;width:100%;color:var(--text);} .st-table td,.st-table th{padding:3px 8px;border-bottom:1px solid var(--border);text-align:right;} .st-table td:first-child,.st-table th:first-child{text-align:left;} .st-note{font-size:.72rem;color:var(--text2);margin:4px 0;} .st-note select{background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;font-family:inherit;} .st-q{display:flex;gap:6px;} .st-q input{flex:1;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:8px;padding:5px 8px;font-family:inherit;font-size:.74rem;} .st-q button{border:1px solid var(--green-dim);background:var(--green-glow);color:var(--green);border-radius:8px;padding:4px 10px;font-family:inherit;cursor:pointer;}
 .ai-sugrow{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0;font-size:.7rem;color:var(--text3);}
 .ai-chip.sug{background:transparent;border-style:dashed;cursor:pointer;color:var(--text2);padding:2px 9px;font-family:inherit;}
 .ai-chip.sug:hover{background:var(--green-glow);}
@@ -551,7 +551,15 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     </div>
     <div class="changelog-body">
       <div class="cl-version current">
-        <div class="cl-ver-label">v2.4.1 <span>aide aux mots-clés pertinente</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-ver-label">v2.4.2 <span>recherche et statistiques sans IA</span> <span class="cl-badge-current">ACTUEL</span></div>
+        <div class="cl-items">
+          <div class="cl-item">Recherche par mots avancée, sans IA : casse, mot entier, jokers * et ?, ET / OU / SAUF, « expression exacte », /regex/ ; insensible aux accents par défaut ; la recherche ne porte plus sur le nom de l'auteur ; ligne « N messages trouvés » avec « Analyser avec l'IA » et « Statistiques »</div>
+          <div class="cl-item">Nouvel onglet « 📊 Stats » : qui lance la discussion (silence réglable), premier message du jour, temps de réponse, activité par heure, comptage d'une expression par personne et par année</div>
+          <div class="cl-item">Une question de calcul posée à l'IA propose d'ouvrir les statistiques ; quand seul un extrait est envoyé, l'IA est avertie et ne conclut plus sur des fréquences</div>
+        </div>
+      </div>
+      <div class="cl-version">
+        <div class="cl-ver-label">v2.4.1 <span>aide aux mots-clés pertinente</span></div>
         <div class="cl-items">
           <div class="cl-item">Mots-clés proposés par l'IA nettoyés : ponctuation et apostrophes retirées, mots vides et verbes courants ignorés, pluriels regroupés ; nouvelle consigne avec un exemple thématique (10 à 20 noms concrets du thème)</div>
           <div class="cl-item">Mots présents dans plus de 5 % des messages de la sélection : grisés et mis de côté (non cherchés), un clic les réactive</div>
@@ -875,7 +883,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         <div class="help-item"><b>Pourquoi WAAV découpe.</b> Une IA ne peut lire qu'une quantité limitée de texte à la fois (sa « fenêtre de contexte », comme la taille d'une table de travail). Si la sélection est trop longue, WAAV procède comme pour relire un livre : <b>1.</b> il découpe les messages en parties ; <b>2.</b> il fait résumer chaque partie séparément ; <b>3.</b> il rassemble ces petits résumés et les fait fusionner, par étapes s'il y en a beaucoup, jusqu'à obtenir une seule réponse. Plus la période est longue, plus le résultat final est général : pour du détail, choisissez une période plus courte.</div>
         <div class="help-item"><b>Limites de vitesse.</b> Certains services, surtout leurs offres gratuites, limitent le nombre de requêtes ou de jetons par minute. WAAV espace donc ses envois et patiente automatiquement (un compte à rebours s'affiche) : une très longue période peut prendre plusieurs minutes. En cas d'échec, les résumés déjà obtenus sont conservés : le bouton « ↻ Reprendre » continue là où ça s'est arrêté, sans tout refaire. « ⏹ Annuler » interrompt la demande. Pendant l'attente, la bulle de réponse affiche l'étape en cours, une barre de progression, le temps écoulé et une estimation du temps restant (approximative, elle s'affine au fil des étapes).</div>
         <div class="help-item"><b>Recherche par le sens (option).</b> Dans ⚙ Réglages → « Recherche par le sens », vous pouvez activer une recherche qui trouve des messages par leur <b>sens</b>, pas seulement par leurs mots : « voyage » peut trouver « on part en vacances ». Principe : un petit modèle transforme chaque groupe d'environ 5 messages en une « empreinte » numérique ; chercher revient à comparer l'empreinte de votre phrase à toutes les autres. Étapes : <b>1.</b> « Activer… » : une fenêtre indique exactement ce qui est téléchargé (le moteur transformers.js depuis cdn.jsdelivr.net et le modèle depuis huggingface.co, avec leurs tailles) ; aucun message n'est envoyé ; <b>2.</b> « Tester le modèle » : vérifie que tout fonctionne et estime la durée de l'indexation sur votre ordinateur ; <b>3.</b> « Indexer » : calcule les empreintes de l'archive (de quelques minutes à plusieurs heures, avec pause et reprise ; l'index est enregistré dans une base séparée et à refaire seulement si l'archive change). Ensuite : la zone de recherche propose « Mots | Sens » (Entrée lance la recherche par le sens, résultats classés avec un pourcentage de proximité, dans la période et les participants sélectionnés, sans IA de langage), et la Recherche ciblée peut utiliser « Sens » ou « Les deux » comme source de passages. Limites : le classement est approximatif et ne permet pas de compter (« combien de fois ? » reste le rôle des mots-clés) ; la qualité dépend du modèle ; l'indexation de très grosses archives est longue sur un ordinateur ancien.</div>
-        <div class="help-item"><b>Recherche ciblée (grosses archives).</b> Sous le bouton « Envoyer », l'interrupteur « Recherche ciblée » (éteint : les messages de la sélection sont envoyés à l'IA, par parties si besoin ; allumé : WAAV cherche d'abord et n'envoie que ce qui compte). Une fois allumé, « Source des passages » propose « Mots-clés », « Sens » ou « Les deux » (les deux dernières demandent la recherche par le sens, voir ci-dessus). Déroulement : <b>1.</b> l'IA propose des mots-clés à partir de votre question seule (vos messages ne sont pas envoyés) et vous les modifiez à votre guise ; à côté de chaque mot, WAAV affiche le nombre de messages qui le contiennent (un mot à 0 est inutile), nettoie les propositions de l'IA (ponctuation, mots vides, verbes courants, pluriels) et grise les mots présents dans plus de 5 % des messages (cliquez sur un mot pour le mettre de côté ou le réactiver) ; « Compléter avec l'IA » demande de nouveaux mots du même thème ; avec la recherche par le sens, WAAV propose aussi des « mots trouvés dans les passages proches par le sens » (tirés de votre conversation, rien n'est envoyé) ; les « fautes de frappe possibles » sont les formes proches et plus rares réellement présentes dans l'archive ; après la recherche, WAAV propose les « mots souvent associés » ; <b>2.</b> WAAV cherche lui-même, de façon exacte, dans la sélection et affiche les nombres (par mot-clé, par participant, par mois) : c'est la réponse sûre à « combien de fois ? » ; <b>3.</b> les messages trouvés sont envoyés avec 2 messages de contexte autour ; s'il y en a trop pour une requête, WAAV vous demande de garder les meilleurs, de tout traiter ou d'affiner ; <b>4.</b> l'IA répond et cite des dates sur lesquelles vous pouvez cliquer pour ouvrir le jour. « Mots-clés à la main » saute l'étape de l'IA. Rappel : l'IA ne voit que les passages trouvés, pas toute la conversation : si un sujet n'apparaît pas, c'est peut-être que le mot-clé manque.</div>
+        <div class="help-item"><b>Recherche avancée et statistiques (2.4.2).</b> La recherche par mots n'utilise plus l'IA : « Aa » respecte majuscules et accents, « Mot entier » évite les mots plus longs, <code>vac*</code> et <code>v?ndre</code> sont des jokers, <code>mot1 | mot2</code> (ou OU) cherche l'un ou l'autre, <code>-mot</code> exclut, <code>"expression exacte"</code> et <code>/regex/</code> sont acceptés. Sous la recherche, « Analyser avec l'IA » envoie à l'IA exactement les messages trouvés. L'onglet « 📊 Stats » calcule, sans IA et sans erreur d'échantillonnage : qui lance les discussions, les temps de réponse, l'activité par heure et le nombre de messages contenant une expression, par personne et par année. Une question de calcul posée à l'IA propose d'ouvrir ces statistiques.</div><div class="help-item"><b>Recherche ciblée (grosses archives).</b> Sous le bouton « Envoyer », l'interrupteur « Recherche ciblée » (éteint : les messages de la sélection sont envoyés à l'IA, par parties si besoin ; allumé : WAAV cherche d'abord et n'envoie que ce qui compte). Une fois allumé, « Source des passages » propose « Mots-clés », « Sens » ou « Les deux » (les deux dernières demandent la recherche par le sens, voir ci-dessus). Déroulement : <b>1.</b> l'IA propose des mots-clés à partir de votre question seule (vos messages ne sont pas envoyés) et vous les modifiez à votre guise ; à côté de chaque mot, WAAV affiche le nombre de messages qui le contiennent (un mot à 0 est inutile), nettoie les propositions de l'IA (ponctuation, mots vides, verbes courants, pluriels) et grise les mots présents dans plus de 5 % des messages (cliquez sur un mot pour le mettre de côté ou le réactiver) ; « Compléter avec l'IA » demande de nouveaux mots du même thème ; avec la recherche par le sens, WAAV propose aussi des « mots trouvés dans les passages proches par le sens » (tirés de votre conversation, rien n'est envoyé) ; les « fautes de frappe possibles » sont les formes proches et plus rares réellement présentes dans l'archive ; après la recherche, WAAV propose les « mots souvent associés » ; <b>2.</b> WAAV cherche lui-même, de façon exacte, dans la sélection et affiche les nombres (par mot-clé, par participant, par mois) : c'est la réponse sûre à « combien de fois ? » ; <b>3.</b> les messages trouvés sont envoyés avec 2 messages de contexte autour ; s'il y en a trop pour une requête, WAAV vous demande de garder les meilleurs, de tout traiter ou d'affiner ; <b>4.</b> l'IA répond et cite des dates sur lesquelles vous pouvez cliquer pour ouvrir le jour. « Mots-clés à la main » saute l'étape de l'IA. Rappel : l'IA ne voit que les passages trouvés, pas toute la conversation : si un sujet n'apparaît pas, c'est peut-être que le mot-clé manque.</div>
         <div class="help-item"><b>Suspendre et reprendre.</b> Pour une très grosse demande, « ⏸ Suspendre » termine l'étape en cours puis s'arrête. Chaque étape terminée est enregistrée dans le navigateur au fur et à mesure : si vous éteignez l'ordinateur, fermez l'onglet ou manquez de quota, seule l'étape en cours est perdue. Au retour, une carte « Demande en pause » affiche l'avancement, avec « ↻ Reprendre » (qui ne refait pas ce qui est fait), « Exporter l'état » et « Supprimer la demande ». WAAV ne travaille que page ouverte : suspendre n'exécute rien en arrière-plan. Une seule demande en pause à la fois. « Exporter l'état » enregistre la demande (parties et résultats déjà obtenus) dans un zip, que « Importer un état » peut recharger plus tard, y compris sur un autre ordinateur.</div>
         <div class="help-item"><b>Réglages avancés.</b> « Fenêtre de contexte » : taille maximale lisible par le modèle (elle détermine la taille des parties). « Quota mensuel de référence » : simple repère pour la jauge (par exemple l'offre gratuite d'un service). « Limite de jetons par minute » et « Délai minimal entre requêtes » : pour respecter les limites du service. Ces valeurs sont des repères modifiables, à ajuster selon votre modèle.</div>
         <div class="help-item"><b>Recherche.</b> La zone de recherche se trouve maintenant sous la période et les participants. Elle continue de filtrer les messages affichés, et donc aussi ceux que l'IA reçoit.</div>
@@ -954,7 +962,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         <h3>✨ Crédits</h3>
         <div class="help-item">Concept original : <span class="rr-link" onclick="startEasterEgg()" title="…">R&amp;R</span> (Régori &amp; Rabrielle)</div>
         <div class="help-item">Développement : Claude (Anthropic)</div>
-        <div class="help-item">WAAV v2.4.1 — WhatsApp Archive Viewer</div>
+        <div class="help-item">WAAV v2.4.2 — WhatsApp Archive Viewer</div>
       </div>
 
     </div>
@@ -1145,7 +1153,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     <h1>
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" onclick="openHelp()" style="cursor:pointer;flex-shrink:0;" title="Aide à l'utilisation"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       WAAV
-      <span class="version-badge" onclick="openChangelog()">v2.4.1</span>
+      <span class="version-badge" onclick="openChangelog()">v2.4.2</span>
       <button class="settings-btn" type="button" onclick="openSettings()" title="Réglages" aria-label="Réglages">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
@@ -1219,6 +1227,9 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
         <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
       </button>
     </div>
+    <div class="search-opts" id="search-opts"><button type="button" id="so-cs" title="Respecter les majuscules et les accents" onclick="searchOptToggle('cs')">Aa</button><button type="button" id="so-ww" title="Mot entier seulement" onclick="searchOptToggle('ww')">Mot entier</button><button type="button" title="Aide de la recherche" onclick="searchHelpToggle()">?</button></div>
+    <div id="search-help" style="display:none"><b>mot1 mot2</b> : les deux mots · <b>mot1 | mot2</b> ou <b>mot1 OU mot2</b> : l'un ou l'autre · <b>-mot</b> ou <b>SAUF mot</b> : sans ce mot · <b>"expression exacte"</b> · <b>vac*</b> : commence par vac · <b>v?ndre</b> : une lettre quelconque · <b>/expr/</b> : expression régulière · <b>Aa</b> : majuscules et accents respectés.</div>
+    <div id="search-sum" style="display:none"></div>
     <div class="sem-mode" id="sem-mode" style="display:none" role="group" aria-label="Type de recherche">
       <button type="button" id="sm-kw" class="on" onclick="semSetMode('kw')">Mots</button>
       <button type="button" id="sm-sem" onclick="semSetMode('sem')" title="Recherche par le sens (Entrée pour lancer)">Sens</button>
@@ -1229,6 +1240,7 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     <div class="mode-seg" role="group" aria-label="Mode d'affichage">
       <button type="button" id="mode-conv" class="on" onclick="setViewMode('conv')">Conversations</button>
       <button type="button" id="mode-ai" onclick="setViewMode('ai')" title="IA désactivée — à activer dans les réglages">✨ IA</button>
+      <button type="button" id="mode-stats" onclick="setViewMode('stats')" title="Calculs exacts sur toute l'archive, sans IA">📊 Stats</button>
     </div>
     <div id="ai-side" style="display:none">
       <div class="ai-side-head"><span class="ai-side-title">IA — informations</span>
@@ -1300,6 +1312,11 @@ body.sidebar-hidden #sidebar{width:0;min-width:0;border-right:none;overflow:hidd
     </div>
   </div>
 
+  <div id="stats-view">
+  <div class="aiv-head"><div><div class="aiv-title">Statistiques</div><div class="aiv-sub" id="st-sub"></div></div><div class="aiv-btns"><button type="button" onclick="stRender()">Recalculer</button></div></div>
+  <div id="st-body"></div>
+  </div>
+
   <div id="ai-view">
   <div class="aiv-head">
     <div><div class="aiv-title">IA — résumer / questionner</div><div class="aiv-sub" id="aiv-sub"></div></div>
@@ -1342,7 +1359,7 @@ let participants   = [];
 let mutedSenders   = new Set();  // kept for filter compat — driven by senderState
 let senderState    = new Map();  // name -> 'left' | 'right' | 'hidden'  (default: 'left' for p[0], 'right' for others)
 let selectedPeriod = 'all';
-let viewMode='conv';              // 'conv' | 'ai' (v2.4.0)
+let viewMode='conv';              // 'conv' | 'ai' | 'stats' (v2.4.2)
 let selectedDays=null;            // null = tous les jours ; sinon Set de clés 'AAAA-MM-JJ' (calendrier, v2.4.0)
 let calSel=new Set(),calNodes=new Map(),calTree=[],calTimer=null,periodMode='cal';
 try{periodMode=localStorage.getItem('waav_periodmode')==='classic'?'classic':'cal';}catch(e){}
@@ -1647,20 +1664,176 @@ document.addEventListener('keydown',e=>{
 // ═══════════════════════════════════════════════════════════
 // FILTER — uses index, O(k) where k = messages in period
 // ═══════════════════════════════════════════════════════════
+// ── Recherche avancée (v2.4.2) : casse, mot entier, jokers * ?, ET / OU (|) / SAUF (-), "expression", /regex/ ──
+let searchOpts={cs:false,ww:false};
+try{Object.assign(searchOpts,JSON.parse(localStorage.getItem('waav_searchopts')||'{}'));}catch(e){}
+const ST_ACC={a:'àâäáãåa',e:'éèêëe',i:'îïíìi',o:'ôöòóõo',u:'ùûüúu',c:'çc',n:'ñn',y:'ÿýy'};
+function stAccChar(ch){
+  const b=ch.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase(),v=ST_ACC[b];
+  if(v)return '['+v+v.toUpperCase()+']';
+  return ch.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+}
+function stTermSrc(term,phrase){
+  const L='\\p{L}\\p{N}';let src='';
+  for(const ch of term){
+    if(!phrase&&ch==='*')src+='['+L+']*';
+    else if(!phrase&&ch==='?')src+='['+L+']';
+    else if(/\s/.test(ch))src+='\\s+';
+    else src+=searchOpts.cs?ch.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'):stAccChar(ch);
+  }
+  if(searchOpts.ww)src='(?<!['+L+'])'+src+'(?!['+L+'])';
+  return src;
+}
+function stTerm(raw,phrase,neg){
+  const t0=raw.trim(),plain=phrase||!/[*?]/.test(t0),src=stTermSrc(t0,phrase);
+  if(plain&&!searchOpts.cs&&!searchOpts.ww){
+    const nv=aiNorm(t0);
+    return {neg:neg,src:src,test:m=>(m._n||(m._n=aiNorm(m.text||''))).includes(nv)};
+  }
+  const rx=new RegExp(src,(searchOpts.cs?'':'i')+'u');
+  return {neg:neg,src:src,test:m=>rx.test(m.text||'')};
+}
+let _sm={key:null};
+function stMatcher(q){
+  const key=q+'\u0001'+searchOpts.cs+searchOpts.ww;
+  if(_sm.key===key)return _sm;
+  const out={key:key,fn:()=>true,hl:null,err:null};_sm=out;
+  q=String(q||'').trim();if(!q)return out;
+  try{
+    const rm=q.match(/^\/(.+)\/([a-z]*)$/s);
+    if(rm){
+      const fl=(searchOpts.cs?'':'i')+(rm[2].includes('s')?'s':'')+(rm[2].includes('m')?'m':'');
+      let rx;try{rx=new RegExp(rm[1],fl+'u');}catch(e){rx=new RegExp(rm[1],fl);}
+      out.fn=m=>rx.test(m.text||'');out.hl=new RegExp(rx.source,rx.flags+'g');return out;
+    }
+    const alts=[[]];let neg=false;const re=/(-?)"([^"]+)"|(\S+)/g;let m;
+    while((m=re.exec(q))){
+      if(m[3]!==undefined){
+        const w=m[3];
+        if(w==='|'||w==='OU'){alts.push([]);continue;}
+        if(w==='ET')continue;
+        if(w==='SAUF'){neg=true;continue;}
+        let n=neg,x=w;neg=false;
+        if(x[0]==='-'&&x.length>1){n=true;x=x.slice(1);}
+        alts[alts.length-1].push(stTerm(x,false,n));
+      }else{alts[alts.length-1].push(stTerm(m[2],true,neg||m[1]==='-'));neg=false;}
+    }
+    out.fn=msg=>{for(const a of alts){if(!a.length)continue;let ok=true;for(const x of a){if(x.test(msg)===x.neg){ok=false;break;}}if(ok)return true;}return false;};
+    const pos=[];alts.forEach(a=>a.forEach(x=>{if(!x.neg)pos.push(x.src);}));
+    if(pos.length)out.hl=new RegExp('('+pos.join('|')+')',(searchOpts.cs?'':'i')+'gu');
+  }catch(e){out.err=e.message;out.fn=()=>true;}
+  return out;
+}
+function searchOptsUI(){
+  const c=document.getElementById('so-cs'),w=document.getElementById('so-ww');
+  if(c)c.classList.toggle('on',!!searchOpts.cs);if(w)w.classList.toggle('on',!!searchOpts.ww);
+}
+function searchOptToggle(k){
+  searchOpts[k]=!searchOpts[k];try{localStorage.setItem('waav_searchopts',JSON.stringify(searchOpts));}catch(e){}
+  searchOptsUI();if(searchQuery)applySearch(searchQuery,true);
+}
+searchOptsUI();
+function searchHelpToggle(){const e=document.getElementById('search-help');e.style.display=e.style.display==='none'?'block':'none';}
+function searchSumUpdate(){
+  const e=document.getElementById('search-sum');if(!e)return;
+  if(!searchQuery){e.style.display='none';return;}
+  e.style.display='flex';
+  e.innerHTML='<span>'+filteredMsgs.length.toLocaleString('fr-FR')+' message'+(filteredMsgs.length>1?'s':'')+' trouvé'+(filteredMsgs.length>1?'s':'')+'</span><button type="button" onclick="setViewMode(\'ai\')">✨ Analyser avec l\'IA</button><button type="button" onclick="setViewMode(\'stats\')">📊 Statistiques</button>';
+}
+
+// ═══════════════════════════════════════════════════════════
+// STATISTIQUES (v2.4.2) — calculs exacts sur la période, sans IA
+// ═══════════════════════════════════════════════════════════
+let _stGap=4,_stMsgs=null;try{_stGap=parseFloat(localStorage.getItem('waav_st_gap'))||4;}catch(e){}
+const stEsc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const stFmt=n=>Math.round(n).toLocaleString('fr-FR');
+function stDur(ms){const s=ms/1000;if(s<90)return Math.round(s)+' s';const m=s/60;if(m<90)return Math.round(m)+' min';const h=m/60;if(h<48)return h.toFixed(1).replace('.',',')+' h';return Math.round(h/24)+' j';}
+function stBase(){
+  const base=selectedDays?calBase():(periodIndex[selectedPeriod]||periodIndex.all||[]);
+  const out=[];let sorted=true,prev=0;
+  for(const i of base){const m=allMessages[i];if(m.isDup)continue;const t=+m.date;if(t<prev)sorted=false;prev=t;out.push(m);}
+  if(!sorted)out.sort((a,b)=>a.date-b.date);
+  return out;
+}
+function stAnalyse(msgs,gapH){
+  const gap=gapH*3600000,r={n:msgs.length,per:{},len:{},firstDay:{},starts:{},ends:{},byYear:{},hours:{},delays:{},nDay:0,nStart:0};
+  let prev=null,last=null,dk=null;
+  for(const m of msgs){
+    const s=m.sender,t=+m.date;
+    r.per[s]=(r.per[s]||0)+1;r.len[s]=(r.len[s]||0)+(m.text||'').length;
+    (r.hours[s]||(r.hours[s]=new Array(24).fill(0)))[m.date.getHours()]++;
+    const k=dayKeyOf(m.date);if(k!==dk){dk=k;r.firstDay[s]=(r.firstDay[s]||0)+1;r.nDay++;}
+    if(prev===null||t-prev>=gap){
+      r.starts[s]=(r.starts[s]||0)+1;r.nStart++;
+      const y=m.date.getFullYear(),o=r.byYear[y]||(r.byYear[y]={});o[s]=(o[s]||0)+1;
+      if(last)r.ends[last.sender]=(r.ends[last.sender]||0)+1;
+    }else if(last&&last.sender!==s){(r.delays[s]||(r.delays[s]=[])).push(t-prev);}
+    prev=t;last=m;
+  }
+  if(last)r.ends[last.sender]=(r.ends[last.sender]||0)+1;
+  return r;
+}
+function stRows(obj,total){
+  const ks=Object.keys(obj).sort((a,b)=>obj[b]-obj[a]).slice(0,12),mx=Math.max(1,...ks.map(k=>obj[k]));
+  return ks.map(k=>'<div class="st-row"><span title="'+stEsc(k)+'">'+stEsc(k)+'</span><span><div class="st-bar" style="width:'+Math.max(1,obj[k]/mx*100)+'%"></div></span><span>'+stFmt(obj[k])+(total?' · '+Math.round(obj[k]/total*100)+' %':'')+'</span></div>').join('');
+}
+function stSetGap(v){_stGap=parseFloat(v)||4;try{localStorage.setItem('waav_st_gap',String(_stGap));}catch(e){}stRender();}
+function stRender(){
+  const body=document.getElementById('st-body');if(!body)return;
+  body.innerHTML='<div class="st-note">Calcul en cours…</div>';
+  setTimeout(()=>{
+    const msgs=stBase();_stMsgs=msgs;
+    document.getElementById('st-sub').textContent=stFmt(msgs.length)+' messages · '+document.getElementById('cal-btn-txt').textContent+' · sans doublons';
+    if(!msgs.length){body.innerHTML='<div class="st-note">Aucun message dans la période.</div>';return;}
+    const r=stAnalyse(msgs,_stGap),names=Object.keys(r.per).sort((a,b)=>r.per[b]-r.per[a]).slice(0,6);
+    const gsel='<select onchange="stSetGap(this.value)">'+[1,2,4,6,12,24].map(h=>'<option value="'+h+'"'+(h===_stGap?' selected':'')+'>'+h+' h</option>').join('')+'</select>';
+    let h='<div class="st-card"><h3>Qui écrit ?</h3>'+stRows(r.per,r.n)+'<div class="st-note">Longueur moyenne : '+names.map(s=>stEsc(s)+' '+Math.round(r.len[s]/r.per[s])+' car.').join(' · ')+'</div></div>';
+    h+='<div class="st-card"><h3>Qui lance la discussion ?</h3><div class="st-note">Une discussion commence après un silence d\'au moins '+gsel+' (' +stFmt(r.nStart)+' discussions sur '+stFmt(r.nDay)+' jours).</div>'
+      +'<div class="st-sub">Premier message après un silence</div>'+stRows(r.starts,r.nStart)
+      +'<div class="st-sub">Premier message de chaque journée</div>'+stRows(r.firstDay,r.nDay)
+      +'<div class="st-sub">Dernier message avant un silence</div>'+stRows(r.ends,r.nStart)
+      +'<div class="st-sub">Par année (début de discussion)</div><table class="st-table"><tr><th></th>'+names.map(s=>'<th>'+stEsc(s)+'</th>').join('')+'</tr>'
+      +Object.keys(r.byYear).sort().map(y=>'<tr><td>'+y+'</td>'+names.map(s=>'<td>'+stFmt(r.byYear[y][s]||0)+'</td>').join('')+'</tr>').join('')+'</table></div>';
+    const med=a=>{const s=a.slice().sort((x,y)=>x-y);return s[Math.floor(s.length/2)];};
+    h+='<div class="st-card"><h3>Temps de réponse</h3><table class="st-table"><tr><th></th><th>Réponses</th><th>Médiane</th><th>Moyenne</th></tr>'
+      +names.filter(s=>r.delays[s]).map(s=>{const d=r.delays[s];return '<tr><td>'+stEsc(s)+'</td><td>'+stFmt(d.length)+'</td><td>'+stDur(med(d))+'</td><td>'+stDur(d.reduce((a,b)=>a+b,0)/d.length)+'</td></tr>';}).join('')
+      +'</table><div class="st-note">Délai entre un message et la réponse de l\'autre personne, quand le silence est inférieur au seuil ci-dessus.</div></div>';
+    const tot=new Array(24).fill(0);names.forEach(s=>r.hours[s].forEach((c,i)=>tot[i]+=c));const mx=Math.max(1,...tot);
+    h+='<div class="st-card"><h3>Activité par heure</h3>'+tot.map((c,i)=>'<div class="st-row"><span>'+String(i).padStart(2,'0')+' h</span><span><div class="st-bar" style="width:'+Math.max(c?1:0,c/mx*100)+'%"></div></span><span title="'+names.map(s=>stEsc(s)+' '+r.hours[s][i]).join(' · ')+'">'+stFmt(c)+'</span></div>').join('')+'</div>';
+    h+='<div class="st-card"><h3>Mots et expressions par personne</h3><div class="st-q"><input id="st-q" type="text" placeholder="Mot, jokers, \&quot;expression\&quot;, OU, -sans… (voir ? sous la recherche)" onkeydown="if(event.key===\'Enter\')stCount()"><button type="button" onclick="stCount()">Compter</button></div><div id="st-qout"></div></div>';
+    body.innerHTML=h;
+    const q=document.getElementById('st-q');if(q&&searchQuery){q.value=searchQuery;stCount();}
+  },20);
+}
+function stCount(){
+  const q=document.getElementById('st-q').value.trim(),out=document.getElementById('st-qout');
+  if(!q){out.innerHTML='';return;}
+  const sm=stMatcher(q);if(sm.err){out.innerHTML='<div class="st-note">Expression invalide : '+stEsc(sm.err)+'</div>';return;}
+  const msgs=_stMsgs||stBase(),per={},yr={};let n=0;
+  for(const m of msgs){if(sm.fn(m)){n++;per[m.sender]=(per[m.sender]||0)+1;const y=m.date.getFullYear();yr[y]=(yr[y]||0)+1;}}
+  out.innerHTML='<div class="st-note"><b>'+stFmt(n)+'</b> message'+(n>1?'s':'')+' sur '+stFmt(msgs.length)+' ('+(msgs.length?(n/msgs.length*100).toFixed(1).replace('.',','):'0')+' %)</div>'+stRows(per,n)
+    +(n?'<table class="st-table"><tr>'+Object.keys(yr).sort().map(y=>'<th>'+y+'</th>').join('')+'</tr><tr>'+Object.keys(yr).sort().map(y=>'<td>'+stFmt(yr[y])+'</td>').join('')+'</tr></table>':'');
+}
+// ── Questions de calcul : orientées vers les statistiques (v2.4.2) ──
+function stLooksCalc(q){
+  const n=aiNorm(q);
+  return /\b(qui|lequel|laquelle)\b.*\b(le plus|le moins|plus souvent|moins souvent|en premier|commence|initie|lance)\b|combien (de fois|de messages|de jours|d'?heures)|a quelle heure|en moyenne|\bstatistiques?\b|\bplus souvent\b|\bnombre de (messages|fois|jours)\b|temps de reponse/.test(n);
+}
 function computeFiltered(){
   const base=selectedDays?calBase():(periodIndex[selectedPeriod]||periodIndex.all||[]);
   if(!searchQuery&&!mutedSenders.size){
     filteredMsgs=base.map(i=>allMessages[i]);
-    return;
+    searchSumUpdate();return;
   }
-  const q=searchQuery?searchQuery.toLowerCase():null;
+  const sm=searchQuery?stMatcher(searchQuery):null;
   filteredMsgs=[];
   for(const i of base){
     const m=allMessages[i];
     if(mutedSenders.has(m.sender))continue;
-    if(q&&!m.text.toLowerCase().includes(q)&&!m.sender.toLowerCase().includes(q))continue;
+    if(sm&&!sm.fn(m))continue;
     filteredMsgs.push(m);
   }
+  searchSumUpdate();
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2279,7 +2452,7 @@ function buildBubble(msg){
   const bbl=document.createElement('div');bbl.className='bubble';
   const fd=msg.date.toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' · '+msg.date.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
   bbl.setAttribute('data-date',fd);
-  if(searchQuery){const q=searchQuery.toLowerCase();if(msg.text.toLowerCase().includes(q)||msg.sender.toLowerCase().includes(q))bbl.classList.add('highlighted');}
+  if(searchQuery&&stMatcher(searchQuery).fn(msg))bbl.classList.add('highlighted');
   const dupLabel=isDup&&dupHighlight?'<div class="dup-label">⚠️ doublon</div>':'';
   const sender='<div class="bubble-sender" style="color:'+colorFor(msg.sender)+'">'+esc(msg.sender)+'</div>';
   const body=msg.isMedia?'<div class="media-placeholder">📎 <em>Média non disponible</em></div>':'<div class="bubble-text">'+hlSearch(esc(msg.text))+'</div>';
@@ -2472,8 +2645,8 @@ function renderMessages(preserveState){
     // Expand and load days that have matching messages
     area.querySelectorAll('.day-group').forEach(dg=>{
       const msgs=dg._msgs||[];
-      const q=searchQuery.toLowerCase();
-      const hasMatch=msgs.some(m=>m.text.toLowerCase().includes(q)||m.sender.toLowerCase().includes(q));
+      const sm=stMatcher(searchQuery);
+      const hasMatch=msgs.some(m=>sm.fn(m));
       if(hasMatch){
         dg.classList.remove('collapsed');
         loadDayGroup(dg);
@@ -2511,8 +2684,8 @@ function renderMessages(preserveState){
 
 function hlSearch(t){
   if(!searchQuery)return t;
-  const q=searchQuery.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
-  return t.replace(new RegExp('('+q+')','gi'),'<mark>$1</mark>');
+  const s=stMatcher(searchQuery);if(!s.hl)return t;
+  return t.replace(s.hl,x=>x?'<mark>'+x+'</mark>':x);
 }
 
 // ═══════════════════════════════════════════════════════════
@@ -2628,6 +2801,7 @@ async function applySearch(v,preserve){
   try{
     const input=document.getElementById('search-input');
     const prev=searchQuery;
+    {const sm0=v?stMatcher(v):null;if(sm0&&sm0.err){showToast('Recherche invalide : '+sm0.err);return;}}
     if(/^r\s*&\s*r$/i.test(v))startEasterEgg();
     searchQuery=v;
     computeFiltered();
@@ -2951,7 +3125,7 @@ async function exportSQLite(){
 // Jamais concernés : base IndexedDB 'wa_archive' (versions 1.8 → 1.9.x) et clés 'waav_*' (réglages)
 // Une page ne peut voir que le stockage de SON origine : voir « Stockage lié à » dans ⚙ Réglages.
 // ═══════════════════════════════════════════════════════════
-const APP_VERSION='2.4.1';
+const APP_VERSION='2.4.2';
 // ═══════════════════════════════════════════════════════════
 // IA (v2.4.0) — optionnelle, désactivée par défaut
 // ═══════════════════════════════════════════════════════════
@@ -3055,12 +3229,14 @@ let _aiPending=null,_aiErr=null,_aiHist=[],_convScroll=0;
 function setViewMode(m){
   if(m==='ai'&&!aiCfg.on){showToast('IA désactivée — à activer dans les réglages');return;}
   if(m===viewMode)return;
-  const ma=document.getElementById('messages-area');
-  if(m==='ai')_convScroll=ma.scrollTop;
-  viewMode=m;document.getElementById('main').classList.toggle('ai-mode',m==='ai');
+  const ma=document.getElementById('messages-area'),mn=document.getElementById('main');
+  if(viewMode==='conv')_convScroll=ma.scrollTop;
+  viewMode=m;mn.classList.toggle('ai-mode',m==='ai');mn.classList.toggle('stats-mode',m==='stats');
   document.getElementById('ai-side').style.display=m==='ai'?'':'none';
-  document.getElementById('mode-ai').classList.toggle('on',m==='ai');document.getElementById('mode-conv').classList.toggle('on',m!=='ai');
+  document.getElementById('mode-ai').classList.toggle('on',m==='ai');document.getElementById('mode-conv').classList.toggle('on',m==='conv');
+  const ms=document.getElementById('mode-stats');if(ms)ms.classList.toggle('on',m==='stats');
   if(m==='ai'){aiRefreshPanel();aiRenderThread();}
+  else if(m==='stats')stRender();
   else requestAnimationFrame(()=>{ma.style.scrollBehavior='auto';ma.scrollTop=_convScroll;ma.style.scrollBehavior='';});
   if(window.innerWidth<=600&&document.body.classList.contains('sidebar-visible'))toggleSidebar();
 }
@@ -3336,6 +3512,9 @@ async function aiStateImport(inp){
   }catch(e){showToast('⚠️ '+e.message);}
 }
 async function aiRun(){
+  {const q0=document.getElementById('ai-input').value.trim();
+    if(q0&&stLooksCalc(q0)){const go=await askConfirm({title:'Cette question demande un calcul',okLabel:'📊 Ouvrir les statistiques',cancelLabel:'✨ Continuer avec l\'IA',html:'Compter ou mesurer (qui écrit le plus, qui lance la discussion, à quelle heure, combien de fois…) se fait <b>exactement et gratuitement</b> sur toute l\'archive, sans IA. Envoyée à l\'IA, une telle question ne porterait que sur un extrait et la réponse serait peu fiable.'});
+      if(go){setViewMode('stats');return;}}}
   if(_aiScope==='tgt'){return aiTargetStart(false);}
   const q=document.getElementById('ai-input').value.trim();
   if(!q){showToast('Saisissez une consigne ou choisissez une suggestion');return;}
@@ -3628,7 +3807,7 @@ async function aiTargetSend(mode){
   let facts;
   if(R.useKw&&T.kws.length)facts='Faits calculés par WAAV sur la sélection ('+R.total.toLocaleString('fr-FR')+' messages) : '+R.found+' message(s) contiennent au moins un mot-clé ('+per+') ; par participant : '+ps+'. Mots-clés cherchés : '+kwtxt+'.'+(R.useSem?' Des passages proches par le sens (approximatif) ont aussi été ajoutés.':'');
   else facts='Aucun comptage exact n\'est disponible : les passages ont été choisis par proximité de sens avec la question (approximatif).';
-  const sys='Tu analyses des passages extraits d\'une conversation WhatsApp (format « JJ/MM/AAAA HH:MM Nom: message »). Les passages sont des messages trouvés autour de mots-clés ou par proximité de sens, pas toute la conversation : ne conclus jamais à l\'absence d\'un sujet. Réponds en français, de façon factuelle, uniquement d\'après ces passages et les faits fournis, sans rien inventer. Cite les dates (JJ/MM/AAAA) des passages sur lesquels tu t\'appuies. Mets en forme en Markdown simple : titres avec ##, listes à puces, **gras** pour les points clés.';
+  const sys='Tu analyses des passages extraits d\'une conversation WhatsApp (format « JJ/MM/AAAA HH:MM Nom: message »). Les passages sont des messages trouvés autour de mots-clés ou par proximité de sens, pas toute la conversation : ne conclus jamais à l\'absence d\'un sujet. Réponds en français, de façon factuelle, uniquement d\'après ces passages et les faits fournis, sans rien inventer. Cite les dates (JJ/MM/AAAA) des passages sur lesquels tu t\'appuies. Mets en forme en Markdown simple : titres avec ##, listes à puces, **gras** pour les points clés.'+(wins.length<R.nwin?' ATTENTION : seuls '+wins.length.toLocaleString('fr-FR')+' passages sur '+R.nwin.toLocaleString('fr-FR')+' ont été retenus (extrait) : n\'en tire aucune conclusion de fréquence, de proportion ou de "le plus souvent" sur toute la conversation, et dis-le clairement dans ta réponse.':'');
   const srcl=T.src==='sem'?'sens':(T.src==='both'?'mots-clés + sens':'mots-clés');
   const sel='Recherche ciblée ('+srcl+') : '+(T.kws.length?kwtxt+' · '+R.found.toLocaleString('fr-FR')+' messages trouvés · ':'')+wins.length.toLocaleString('fr-FR')+' passages envoyés'+(wins.length<R.nwin?' sur '+R.nwin.toLocaleString('fr-FR'):'');
   _aiJob={q:T.q,sys:sys,task:'Question : '+T.q+'\n'+facts+'\nRéponds uniquement d\'après ces passages ; si les passages ne permettent pas de répondre, dis-le.',parts:parts,partials:[],level:null,batches:null,out:[],used:0,done:0,total:pl.reqs,secs0:pl.secs,cache:[],seq:0,chunk:aiChunkChars(),files:aiFileNames(),provider:aiCfg.provider,model:aiCfg.model,created:Date.now(),sel:sel,

@@ -96,6 +96,7 @@ L'historique du développement (versions, demandes, choix techniques, fonctionna
 
 - **v2.2 à v2.4** ✅ : assistant IA (Ollama, Mistral, Claude), calendrier de période, import / export zip, demandes reprenables, recherche ciblée, recherche par le sens
 - **v2.4.1** ✅ : aide aux mots-clés plus pertinente (nettoyage, mots fréquents grisés, « Compléter avec l'IA », suggestions par le thème et par le sens)
+- **v2.4.2** ✅ : recherche avancée sans IA (casse, mot entier, jokers, ET / OU / SAUF, expressions, regex), onglet Statistiques (qui lance la discussion, temps de réponse, activité par heure, comptage par personne), orientation des questions de calcul
 - Ensuite : validation de la recherche par le sens sur tous les systèmes, marque-pages, affichage des médias, synchronisation MySQL (API PHP)
 
 ---
